@@ -1,0 +1,13 @@
+bin
+.metadata
+RemoteSystemsTempFiles
+Servers
+algorithm
+hadoop_mr
+gather
+gather_ml
+ml
+hotnews
+mahout-distribution-0.9
+python_dm
+shell

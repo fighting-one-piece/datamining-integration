@@ -1,0 +1,15 @@
+1 no age:youth income:high student:no credit:fair  
+2 no age:youth income:high student:no credit:excellent  
+3 yes age:middle_aged income:high student:no credit:fair  
+4 yes age:senior income:medium student:no credit:fair  
+5 yes age:senior income:low student:yes credit:fair  
+6 no age:senior income:low student:yes credit:excellent  
+7 yes age:middle_aged income:low student:yes credit:excellent
+8 no age:youth income:medium student:no credit:fair  
+9 yes age:youth income:low student:yes credit:fair  
+10 yes age:senior income:medium student:yes credit:fair  
+11 yes age:youth income:medium student:yes credit:excellent  
+12 yes age:middle_aged income:medium student:no credit:excellent  
+13 yes age:middle_aged income:high student:yes credit:fair  
+14 no age:senior income:medium student:no credit:excellent 
+15 no age:senior income:high student:no credit:fair 
