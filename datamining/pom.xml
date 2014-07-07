@@ -276,24 +276,27 @@
 	</repositories>
 	
 	<properties>
+		<junit.version>4.10</junit.version>
 		<json.version>2.4</json.version>
 		<jackson.version>1.9.9</jackson.version>
 		<fastjson.version>1.1.41</fastjson.version>
-		<mmseg4j.version>1.10.0</mmseg4j.version>
+		<mmseg4j.version>1.9.1</mmseg4j.version>
 		<hadoop.version>1.0.4</hadoop.version>
-		<spark.version>1.1.1</spark.version>
-		<spark.ml.version>1.0.0</spark.ml.version>
+		<spark.version>1.0.0</spark.version>
+		<spark.mllib.version>1.0.0</spark.mllib.version>
 		<spark.assembly.version>1.0.0</spark.assembly.version>
 	</properties>
 	
 	<dependencies>
-		<!--JSON依赖包 -->
+		<!--JUnit依赖包 -->
 		<dependency>
-			<groupId>net.sf.json-lib</groupId>
-			<artifactId>json-lib</artifactId>
-			<version>${json.version}</version>
+			<groupId>junit</groupId>
+			<artifactId>junit</artifactId>
+			<version>${junit.version}</version>
+			<scope>test</scope>
 		</dependency>
-
+		
+		<!--JSON依赖包 -->
 		<dependency>
 			<groupId>net.sf.json-lib</groupId>
 			<artifactId>json-lib</artifactId>
@@ -327,6 +330,12 @@
 			<version>${mmseg4j.version}</version>
 		</dependency>
 		
+		<dependency>
+			<groupId>com.chenlb.mmseg4j</groupId>
+			<artifactId>mmseg4j-analysis</artifactId>
+			<version>${mmseg4j.version}</version>
+		</dependency>
+		
 		<!--HADOOP依赖包 -->
 		<dependency>
 			<groupId>org.apache.hadoop</groupId>
@@ -335,22 +344,46 @@
 		</dependency>
 		
 		<!--SPARK依赖包 -->
-<!-- 		<dependency> -->
-<!-- 			<groupId>com.sparkjava</groupId> -->
-<!-- 			<artifactId>spark-core</artifactId> -->
-<!-- 			<version>${spark.version}</version> -->
-<!-- 		</dependency> -->
-		
-<!-- 		<dependency> -->
-<!-- 			<groupId>org.apache.spark</groupId> -->
-<!-- 			<artifactId>spark-mllib_2.10</artifactId> -->
-<!-- 			<version>${spark.ml.version}</version> -->
-<!-- 		</dependency> -->
+		<dependency>
+			<groupId>org.apache.spark</groupId>
+			<artifactId>spark-core_2.10</artifactId>
+			<version>${spark.version}</version>
+		</dependency>
 		
 		<dependency>
 			<groupId>org.apache.spark</groupId>
-			<artifactId>spark-assembly_2.10</artifactId>
-			<version>${spark.assembly.version}</version>
+			<artifactId>spark-mllib_2.10</artifactId>
+			<version>${spark.version}</version>
+		</dependency>
+		
+		<dependency>
+			<groupId>org.apache.spark</groupId>
+			<artifactId>spark-bagel_2.10</artifactId>
+			<version>${spark.version}</version>
+		</dependency>
+
+		<dependency>
+			<groupId>org.apache.spark</groupId>
+			<artifactId>spark-repl_2.10</artifactId>
+			<version>${spark.version}</version>
+		</dependency>
+		
+		<dependency>
+			<groupId>org.apache.spark</groupId>
+			<artifactId>spark-streaming_2.10</artifactId>
+			<version>${spark.version}</version>
+		</dependency>
+		
+		<dependency>
+			<groupId>org.apache.spark</groupId>
+			<artifactId>spark-graphx_2.10</artifactId>
+			<version>${spark.version}</version>
+		</dependency>
+		
+		<dependency>
+			<groupId>org.apache.spark</groupId>
+			<artifactId>spark-sql_2.10</artifactId>
+			<version>${spark.version}</version>
 		</dependency>
 		
 	</dependencies>
