@@ -48,6 +48,7 @@ def standEst(dataMat, user, simMeas, item):
         if userRating == 0: continue
         overLap = nonzero(logical_and(dataMat[:,item].A>0, \
                                       dataMat[:,j].A>0))[0]
+        print 'overLap: %s' %overLap
         if len(overLap) == 0: similarity = 0
         else: similarity = simMeas(dataMat[overLap,item], \
                                    dataMat[overLap,j])
@@ -108,3 +109,15 @@ def imgCompress(numSV=3, thresh=0.8):
     reconMat = U[:,:numSV]*SigRecon*VT[:numSV,:]
     print "****reconstructed matrix using %d singular values******" % numSV
     printMat(reconMat, thresh)
+    
+if __name__ == '__main__':
+    dataMat = mat([[4,4,0,2,2],
+                      [4,0,0,3,3],
+                      [4,0,0,1,1],
+                      [1,1,1,2,0],
+                      [2,2,2,0,0],
+                      [1,1,1,0,0],
+                      [5,5,5,0,0],
+                      ])
+    print dataMat
+    print recommend(dataMat, 2)

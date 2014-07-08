@@ -1,7 +1,4 @@
 #-*- coding: utf-8 -*-
-'''
-
-'''
 
 class Doc:
     
