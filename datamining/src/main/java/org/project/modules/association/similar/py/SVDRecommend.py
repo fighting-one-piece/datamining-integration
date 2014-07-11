@@ -17,6 +17,20 @@ def similarByConsine(x, y):
     b = np.linalg.norm(x) * np.linalg.norm(y)
     return 0.5 + 0.5 * (a / b)
 
+#截取特征值
+def cutEigValue(eigValues):
+    totalSum = 0.0
+    for eigValue in eigValues:
+        totalSum += eigValue**2
+    threshold = 0.9 * totalSum
+    print 'threshold:%d' %threshold
+    sum = 0.0; index = 0
+    for eigValue in eigValues:
+        sum += eigValue**2
+        index += 1
+        print 'sum:%d' %sum
+        if (sum >= threshold): return index
+    
 #预估用户某一项的评分
 def estimate(dataMat, user, item, similar):
     n = np.shape(dataMat)[1]
@@ -46,10 +60,11 @@ def svdestimate(dataMat, user, item, similar):
     n = np.shape(dataMat)[1]
     totalSim = 0.0; totalUserSim = 0.0
     U, Sigma, VT = np.linalg.svd(dataMat)
-    print 'sigma:%s' % Sigma
+    index = cutEigValue(Sigma)
+    print 'sigma:%s index:%s' % (Sigma, index)
     #取前面4个特征值
-    Sig4 = np.mat(np.eye(4) * Sigma[:4]) 
-    newDataMat = dataMat.T * U[:, :4] * Sig4.I  
+    Sig = np.mat(np.eye(index) * Sigma[:index]) 
+    newDataMat = dataMat.T * U[:, :index] * Sig.I  
     print 'newDataMat:%s' %newDataMat
     for i in range(n):
         userScore = dataMat[user, i]

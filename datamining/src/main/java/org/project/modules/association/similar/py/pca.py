@@ -1,3 +1,5 @@
+#-*- coding: utf-8 -*-
+
 '''
 Created on Jun 1, 2011
 
@@ -12,13 +14,24 @@ def loadDataSet(fileName, delim='\t'):
     return mat(datArr)
 
 def pca(dataMat, topNfeat=9999999):
+    #计算平均值
     meanVals = mean(dataMat, axis=0)
+    #数据去除平均值
     meanRemoved = dataMat - meanVals #remove mean
+    #计算协方差
     covMat = cov(meanRemoved, rowvar=0)
+    #获取特征值和特征向量
     eigVals,eigVects = linalg.eig(mat(covMat))
+    #排序特征值
     eigValInd = argsort(eigVals)            #sort, sort goes smallest to largest
+    #截取特征值，最大值开始
     eigValInd = eigValInd[:-(topNfeat+1):-1]  #cut off unwanted dimensions
+    print 'eigValInd:%s' %eigValInd
+    #截取与特征值大小相同的列的特征向量
     redEigVects = eigVects[:,eigValInd]       #reorganize eig vects largest to smallest
+    print 'redEigVects:%s' %redEigVects
+    print shape(meanRemoved)
+    print shape(redEigVects)
     lowDDataMat = meanRemoved * redEigVects#transform data into new dimensions
     reconMat = (lowDDataMat * redEigVects.T) + meanVals
     return lowDDataMat, reconMat

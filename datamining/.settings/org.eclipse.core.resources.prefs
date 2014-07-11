@@ -2,4 +2,6 @@ eclipse.preferences.version=1
 encoding//src/main/java/org/project/modules/association/similar/py/Doc.py=utf-8
 encoding//src/main/java/org/project/modules/association/similar/py/SVDRecommend.py=utf-8
 encoding//src/main/java/org/project/modules/association/similar/py/WordUtils.py=utf-8
+encoding//src/main/java/org/project/modules/association/similar/py/pca.py=utf-8
+encoding//src/main/java/org/project/modules/classifier/decisiontree/py/DataHandler.py=utf-8
 encoding/<project>=UTF-8

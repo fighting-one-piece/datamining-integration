@@ -5,7 +5,7 @@ Adaboost is short for Adaptive Boosting
 '''
 from numpy import *
 
-def loadSimpData():
+def loadSimpleData():
     datMat = matrix([[ 1. ,  2.1],
         [ 2. ,  1.1],
         [ 1.3,  1. ],
@@ -123,3 +123,7 @@ def plotROC(predStrengths, classLabels):
     ax.axis([0,1,0,1])
     plt.show()
     print "the Area Under the Curve is: ",ySum*xStep
+
+if __name__ == '__main__':
+    dataMat, classLabels = loadSimpleData()
+    print adaBoostTrainDS(dataMat, classLabels, 9)
