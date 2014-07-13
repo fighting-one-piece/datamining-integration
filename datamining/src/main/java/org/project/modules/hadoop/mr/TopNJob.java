@@ -222,6 +222,11 @@ class KVWritable implements WritableComparable<KVWritable> {
 	
 	private Text value = null;
 	
+	public KVWritable() {
+		key = new IntWritable();
+		value = new Text();
+	}
+	
 	public KVWritable(String k, String v) {
 		key = new IntWritable(Integer.parseInt(k));
 		value = new Text(v);
