@@ -282,6 +282,7 @@
 		<fastjson.version>1.1.41</fastjson.version>
 		<mmseg4j.version>1.9.1</mmseg4j.version>
 		<hadoop.version>1.0.4</hadoop.version>
+		<hive.version>0.12.0</hive.version>
 		<spark.version>1.0.0</spark.version>
 		<spark.mllib.version>1.0.0</spark.mllib.version>
 		<spark.assembly.version>1.0.0</spark.assembly.version>
@@ -385,6 +386,37 @@
 			<artifactId>spark-sql_2.10</artifactId>
 			<version>${spark.version}</version>
 		</dependency>
+		
+		<!-- HIVE 依赖 -->
+		<dependency>
+			<groupId>org.apache.hive</groupId>
+			<artifactId>hive-common</artifactId>
+			<version>${hive.version}</version>
+		</dependency>
+
+		<dependency>
+			<groupId>org.apache.hive</groupId>
+			<artifactId>hive-metastore</artifactId>
+			<version>${hive.version}</version>
+		</dependency>
+
+		<dependency>
+			<groupId>org.apache.hive</groupId>
+			<artifactId>hive-exec</artifactId>
+			<version>${hive.version}</version>
+		</dependency>
+
+		<dependency>
+			<groupId>org.apache.hive</groupId>
+			<artifactId>hive-contrib</artifactId>
+			<version>${hive.version}</version>
+		</dependency>
+
+		<dependency>
+			<groupId>org.apache.hive</groupId>
+			<artifactId>hive-service</artifactId>
+			<version>${hive.version}</version>
+		</dependency> 
 		
 	</dependencies>
   
