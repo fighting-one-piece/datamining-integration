@@ -42,10 +42,8 @@ public class ForestBuilder extends BuilderAbstractImpl {
 		List<TreeNode> results = new ArrayList<TreeNode>();
 		handleFuture(futures, results);
 		int futureLen = futures.size();
-		int resultsLen = results.size();
-		while (resultsLen < futureLen) {
+		while (futureLen > 0) {
 			handleFuture(futures, results);
-			resultsLen = results.size();
 		}
 		pools.shutdown();
 		return results;

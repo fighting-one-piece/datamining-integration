@@ -2,7 +2,7 @@
 '''
 
 '''
-
+import re
 import jieba as ws
 
 #词工具类
@@ -14,6 +14,7 @@ class WordUtils:
         seg_list = ws.cut(input, cut_all=False)
         words = []
         for word in seg_list:
+            if len(word) < 2 or re.match(r'\d+', word): continue
             words.append(word)
         return words
     

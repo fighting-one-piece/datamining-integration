@@ -8,6 +8,7 @@ import org.apache.hadoop.fs.FileSystem;
 import org.apache.hadoop.fs.Path;
 import org.apache.hadoop.io.BytesWritable;
 import org.apache.hadoop.io.IOUtils;
+import org.apache.hadoop.io.LongWritable;
 import org.apache.hadoop.io.NullWritable;
 import org.apache.hadoop.mapreduce.InputSplit;
 import org.apache.hadoop.mapreduce.JobContext;
@@ -16,7 +17,7 @@ import org.apache.hadoop.mapreduce.TaskAttemptContext;
 import org.apache.hadoop.mapreduce.lib.input.FileInputFormat;
 import org.apache.hadoop.mapreduce.lib.input.FileSplit;
 
-public class CombineSmallFileInputFormat extends FileInputFormat<NullWritable, BytesWritable> {
+public class SplitBigFileInputFormat extends FileInputFormat<LongWritable, BytesWritable> {
 	
 	@Override
 	public List<InputSplit> getSplits(JobContext job) throws IOException {
@@ -24,34 +25,37 @@ public class CombineSmallFileInputFormat extends FileInputFormat<NullWritable, B
 	}
 
 	@Override
-	public RecordReader<NullWritable, BytesWritable> createRecordReader(
-			InputSplit inputSplit, TaskAttemptContext context) throws IOException,
+	public RecordReader<LongWritable, BytesWritable> createRecordReader(
+			InputSplit split, TaskAttemptContext context) throws IOException,
 			InterruptedException {
-		return new CombineSmallFileRecordReader();
+		return new SplitBigFileRecordReader();
 	}
-	
+
 }
 
-class CombineSmallFileRecordReader extends RecordReader<NullWritable, BytesWritable> {
+class SplitBigFileRecordReader extends RecordReader<LongWritable, BytesWritable> {
 
 	private FileSplit fileSplit = null;
 	private JobContext jobContext = null;
-	private NullWritable currentKey = null;
+	private LongWritable currentKey = null;
 	private BytesWritable currentValue = null;
 	private boolean isFinishConvert = false;
+	private int start = 0;  
+    private int end = 0;  
+    private int fileLen = 0;
+    private int len = 100;
 	
 	@Override
 	public void initialize(InputSplit inputSplit, TaskAttemptContext context)
 			throws IOException, InterruptedException {
 		this.fileSplit = (FileSplit) inputSplit;
 		this.jobContext = context;
-		this.currentKey = NullWritable.get();
-		context.getConfiguration().set("map.input.file.name", 
-				fileSplit.getPath().getName());
+		this.fileLen = (int) fileSplit.getLength();
+		this.end = fileLen;
 	}
 	
 	@Override
-	public NullWritable getCurrentKey() throws IOException,
+	public LongWritable getCurrentKey() throws IOException,
 			InterruptedException {
 		return currentKey;
 	}
@@ -68,15 +72,21 @@ class CombineSmallFileRecordReader extends RecordReader<NullWritable, BytesWrita
 			return false;
 		} else {
 			currentValue = new BytesWritable();
-			int len = (int) fileSplit.getLength();
-			byte[] content = new byte[len];
 			Path path = fileSplit.getPath();
 			FileSystem fs = path.getFileSystem(jobContext.getConfiguration());
 			FSDataInputStream fsDataInputStream = null;
 			try {
 				fsDataInputStream = fs.open(path);
-				IOUtils.readFully(fsDataInputStream, content, 0, len);
+				if ((start + len) > end) {
+					len = end;
+				}
+				byte[] content = new byte[len];
+				IOUtils.readFully(fsDataInputStream, content, start, len);				
 				currentValue.set(content, 0, len);
+				start += len;
+				if (start >= end) {
+					start = end;
+				}
 			} finally {
 				if (null != fsDataInputStream) {
 					IOUtils.closeStream(fsDataInputStream);

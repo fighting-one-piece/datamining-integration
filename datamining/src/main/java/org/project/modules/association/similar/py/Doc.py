@@ -207,6 +207,16 @@ class DocHelper:
                 sum += 1
         return sum
     
+    @staticmethod
+    def calculateTF(doc):
+        tf = {}
+        for word in doc.getWords():
+            if tf.has_key(word):
+                tf[word] = tf.get(word) + 1
+            else:
+                tf[word] = 1
+        return tf
+    
     #计算TFIDF
     @staticmethod
     def calculateTFIDF(docs):

@@ -12,6 +12,17 @@ def testSplitWord():
         for word in doc.getWords():
             print word
 
+def testTF():
+    path = r'D:\resources\target'
+    docs = DocHelper.genDocs(path)
+    DocHelper.calculateTFIDF(docs)
+    for doc in docs:
+        print '----------'
+        tf = DocHelper.calculateTF(doc)
+        tfidf = doc.getTfidfWords()
+        for item in DocHelper.sortWordValueMap(tf)[0:20]:
+            print '%s-%s-%s' %(item[0],item[1],tfidf.get(item[0]))
+
 def testSimilarity(): 
     path = r'D:\resources\chinese'
     docs = DocHelper.genDocs(path)
@@ -40,8 +51,9 @@ def testInformationGain():
         print '%s-%s' %(item[0],item[1])
 
 if __name__ == '__main__':
-    testCHI()
-    print '----------' 
-    testInformationGain()
+    testTF()
+    #testCHI()
+    #print '----------' 
+    #testInformationGain()
 
     
