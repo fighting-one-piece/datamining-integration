@@ -21,18 +21,18 @@ import org.apache.hadoop.mapreduce.lib.output.FileOutputFormat;
 import org.apache.hadoop.mapreduce.lib.output.TextOutputFormat;
 import org.apache.hadoop.util.GenericOptionsParser;
 
-public class MartrixMultiplyMR {
+public class MatrixMatrixMultiplyMR {
 	
 	public static final Pattern DELIMITER = Pattern.compile("[\t,]");
 	
 	private static void configureJob(Job job) {
-		job.setJarByClass(MartrixMultiplyMR.class);
+		job.setJarByClass(MatrixMatrixMultiplyMR.class);
 		
-		job.setMapperClass(MartrixMultiplyMapper.class);
+		job.setMapperClass(MatrixMatrixMultiplyMapper.class);
 		job.setMapOutputKeyClass(Text.class);
 		job.setMapOutputValueClass(Text.class);
 
-		job.setReducerClass(MartrixMultiplyReducer.class);
+		job.setReducerClass(MatrixMatrixMultiplyReducer.class);
 		job.setOutputKeyClass(Text.class);
 		job.setOutputValueClass(BytesWritable.class);
 		
@@ -46,10 +46,12 @@ public class MartrixMultiplyMR {
 			String[] inputArgs = new GenericOptionsParser(
 						configuration, args).getRemainingArgs();
 			if (inputArgs.length != 2) {
-				System.out.println("error, please input two path. input and output");
-				System.exit(2);
+				System.out.println("error, please input three path.");
+				System.out.println("1、 matrix file path.");
+				System.out.println("2、 output file path.");
+				System.exit(1);
 			}
-			Job job = new Job(configuration, "Martrix Multiply");
+			Job job = new Job(configuration, "Martrix Martrix Multiply");
 			
 			FileInputFormat.addInputPath(job, new Path(inputArgs[0]));
 			FileOutputFormat.setOutputPath(job, new Path(inputArgs[1]));
@@ -66,7 +68,7 @@ public class MartrixMultiplyMR {
 	}
 }
 
-class MartrixMultiplyMapper extends Mapper<LongWritable, Text, Text, Text> {
+class MatrixMatrixMultiplyMapper extends Mapper<LongWritable, Text, Text, Text> {
 
 	/** 行*/
 	private int rowNum = 0;
@@ -91,7 +93,7 @@ class MartrixMultiplyMapper extends Mapper<LongWritable, Text, Text, Text> {
 	@Override
 	protected void map(LongWritable key, Text value, Context context)
 			throws IOException, InterruptedException {
-		String[] tokens = MartrixMultiplyMR.DELIMITER.split(value.toString());
+		String[] tokens = MatrixMatrixMultiplyMR.DELIMITER.split(value.toString());
         if (fileName.equals("m1")) {
             for (int i = 1; i <= rowNum; i++) {
                 Text k = new Text(rowIndexA + "," + i);
@@ -117,7 +119,7 @@ class MartrixMultiplyMapper extends Mapper<LongWritable, Text, Text, Text> {
 	}
 }
 
-class MartrixMultiplyReducer extends Reducer<Text, Text, Text, IntWritable> {
+class MatrixMatrixMultiplyReducer extends Reducer<Text, Text, Text, IntWritable> {
 	
 	@Override
 	protected void reduce(Text key, Iterable<Text> values, Context context)
@@ -129,10 +131,10 @@ class MartrixMultiplyReducer extends Reducer<Text, Text, Text, IntWritable> {
             String val = value.toString();
             System.out.print("("+val+")");
             if (val.startsWith("A:")) {
-                String[] kv = MartrixMultiplyMR.DELIMITER.split(val.substring(2));
+                String[] kv = MatrixMatrixMultiplyMR.DELIMITER.split(val.substring(2));
                 mapA.put(kv[0], kv[1]);
             } else if (val.startsWith("B:")) {
-                String[] kv = MartrixMultiplyMR.DELIMITER.split(val.substring(2));
+                String[] kv = MatrixMatrixMultiplyMR.DELIMITER.split(val.substring(2));
                 mapB.put(kv[0], kv[1]);
             }
         }

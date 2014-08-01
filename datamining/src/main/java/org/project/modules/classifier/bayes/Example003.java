@@ -3,7 +3,6 @@ package org.project.modules.classifier.bayes;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
-import java.util.Random;
 import java.util.Set;
 
 public class Example003 {
@@ -132,7 +131,5 @@ public class Example003 {
 		for (Map.Entry<Integer, Double> entry : classify(example).entrySet()) {
 			System.out.println("key: " + entry.getKey() + " value: " + entry.getValue());
 		}
-		Random random = new Random();
-		System.out.println(random.nextGaussian());
 	}
 }

@@ -6,6 +6,7 @@ import org.apache.hadoop.hbase.client.Scan;
 import org.apache.hadoop.hbase.filter.FirstKeyOnlyFilter;
 import org.apache.hadoop.hbase.filter.KeyOnlyFilter;
 import org.apache.hadoop.hbase.filter.PrefixFilter;
+import org.apache.hadoop.hbase.util.Bytes;
 import org.junit.Test;
 import org.project.modules.hbase.utils.HBaseUtils;
 
@@ -57,11 +58,16 @@ public class HBaseUtilsTest {
 	@Test
 	public void testGet() {
 		Scan scan = new Scan();
-		scan.setBatch(10);
-		scan.setCaching(10);
+		scan.setBatch(1000);
+		scan.setCaching(1000);
 		scan.setMaxVersions(1);
-		ResultScanner resultScanner = HBaseUtils.getRecords("user", scan);
+		scan.setStartRow(Bytes.toBytes("10101"));
+		scan.setStopRow(Bytes.toBytes("11101"));
+		long start = System.currentTimeMillis();
+		ResultScanner resultScanner = HBaseUtils.getRecords("doc", scan);
 		HBaseUtils.printRecords(resultScanner);
+		long end = System.currentTimeMillis();
+		System.out.println("spend time: " + (end - start) / 1000);
 	}
 	
 	@Test

@@ -1,9 +1,12 @@
 package org.project.modules.classifier.decisiontree;
 
 import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.io.StringReader;
@@ -17,6 +20,7 @@ import java.util.Set;
 import org.apache.commons.io.IOUtils;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.fs.FSDataInputStream;
+import org.apache.hadoop.fs.FSDataOutputStream;
 import org.apache.hadoop.fs.FileSystem;
 import org.apache.hadoop.fs.Path;
 import org.apache.hadoop.io.IntWritable;
@@ -253,6 +257,24 @@ public class DecisionTreeMRTest {
 		// writeObject可以转换java对象，eg:JavaBean/Map/List/Array等
 		jsonGenerator.writeObject(tree);
 		System.out.println();
+	}
+	
+	@Test
+	public void appendFile() {
+		InputStream in = null;
+		FSDataOutputStream out = null;
+		try {
+			in = new FileInputStream(new File("D:\\resources\\a.txt"));
+			FileSystem fs = FileSystem.get(conf);
+			Path path = new Path(DFS_URL + "004/output/part-00000");
+			out = fs.append(path);
+			IOUtils.copy(in, out);
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			IOUtils.closeQuietly(in);
+			IOUtils.closeQuietly(out);
+		}
 	}
 
 	@Test
