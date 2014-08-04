@@ -12,3 +12,5 @@ hotnews
 mahout-distribution-0.9
 python_dm
 shell
+datamining/target/classes/META-INF/
+datamining/target/classes/META-INF/*
