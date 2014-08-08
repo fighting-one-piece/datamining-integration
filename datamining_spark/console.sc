@@ -1,6 +1,9 @@
 object console {
   println("Welcome to the Scala worksheet")       //> Welcome to the Scala worksheet
   val arr = Array("one", "two", "three")          //> arr  : Array[String] = Array(one, two, three)
+  val len = arr.length                            //> len  : Int = 3
+  for (a <- 0 to len)
+  	print(a)                                  //> 0123
   arr.foreach(i => println(i))                    //> one
                                                   //| two
                                                   //| three

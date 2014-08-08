@@ -1,6 +1,9 @@
 object console {;import org.scalaide.worksheet.runtime.library.WorksheetSupport._; def main(args: Array[String])=$execute{;$skip(60); 
   println("Welcome to the Scala worksheet");$skip(41); 
-  val arr = Array("one", "two", "three");System.out.println("""arr  : Array[String] = """ + $show(arr ));$skip(31); 
+  val arr = Array("one", "two", "three");System.out.println("""arr  : Array[String] = """ + $show(arr ));$skip(23); 
+  val len = arr.length;System.out.println("""len  : Int = """ + $show(len ));$skip(34); 
+  for (a <- 0 to len)
+  	print(a);$skip(31); 
   arr.foreach(i => println(i));$skip(22); 
   println(arr.length);$skip(23); 
   arr.foreach(println);$skip(45); 
