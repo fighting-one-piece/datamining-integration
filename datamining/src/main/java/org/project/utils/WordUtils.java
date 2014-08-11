@@ -35,6 +35,28 @@ public class WordUtils {
 	/* 分隔符的集合 */
 	public static final String delimiters = " \t\n\r\f~!@#$%^&*()_+|`-=\\{}[]:\";'<>?,./'";
 	
+	public static Set<String> stopWords = null;
+	
+	static {
+		stopWords = new HashSet<String>();
+		InputStream in = null;
+		BufferedReader br = null;
+		try {
+			in = WordUtils.class.getClassLoader().getResourceAsStream("dic/stopwords/baidu.dic");
+			br = new BufferedReader(new InputStreamReader(in));
+			String line = br.readLine();
+			while (null != line && !"".equals(line)) {
+				stopWords.add(line);
+				line = br.readLine();
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			IOUtils.closeQuietly(in);
+			IOUtils.closeQuietly(br);
+		}
+	}
+	
 	/**
 	 * 分词
 	 * @param input 输入文本
@@ -211,23 +233,6 @@ public class WordUtils {
 	
 	
 	public static String[] removeStopWords(String[] words) {
-		Set<String> stopWords = new HashSet<String>();
-		InputStream in = null;
-		BufferedReader br = null;
-		try {
-			in = WordUtils.class.getClassLoader().getResourceAsStream("dic/stopwords/baidu.dic");
-			br = new BufferedReader(new InputStreamReader(in));
-			String line = br.readLine();
-			while (null != line && !"".equals(line)) {
-				stopWords.add(line);
-				line = br.readLine();
-			}
-		} catch (Exception e) {
-			e.printStackTrace();
-		} finally {
-			IOUtils.closeQuietly(in);
-			IOUtils.closeQuietly(br);
-		}
 		List<String> filterWords = new ArrayList<String>();
 		for (String word : words) {
 			if (!stopWords.contains(word)) {
