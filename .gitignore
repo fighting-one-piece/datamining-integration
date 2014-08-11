@@ -3,7 +3,6 @@ target
 .metadata
 RemoteSystemsTempFiles
 Servers
-algorithm
 hadoop_mr
 gather
 gather_ml
