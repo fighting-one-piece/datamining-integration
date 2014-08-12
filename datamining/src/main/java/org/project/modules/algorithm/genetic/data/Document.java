@@ -22,8 +22,12 @@ public class Document {
 	private Map<String, Double> tfidfWords = null;
 	/** 文章相似度*/
 	private List<DocumentSimilarity> similarities = null;
-	/** 适应率*/
+	/** 适应度*/
 	private double fit = 0;
+	/** 选择概率*/
+	private double selectionP = 0;
+	/** 积累概率*/
+	private double accumulationP = 0;
 
 	public String getName() {
 		return name;
@@ -92,7 +96,23 @@ public class Document {
 	public void setFit(double fit) {
 		this.fit = fit;
 	}
-	
+
+	public double getSelectionP() {
+		return selectionP;
+	}
+
+	public void setSelectionP(double selectionP) {
+		this.selectionP = selectionP;
+	}
+
+	public double getAccumulationP() {
+		return accumulationP;
+	}
+
+	public void setAccumulationP(double accumulationP) {
+		this.accumulationP = accumulationP;
+	}
+
 	
 
 }

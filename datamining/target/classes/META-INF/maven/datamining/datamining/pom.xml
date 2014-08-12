@@ -290,6 +290,10 @@
 		<solr.version>4.5.1</solr.version>
 		<solr.core.version>4.5.1</solr.core.version>
 		<solr.solrj.version>4.5.1</solr.solrj.version>
+		<jsoup.version>1.7.3</jsoup.version>
+		<mysql.version>5.1.27</mysql.version>
+		<commons.dbcp.version>1.4</commons.dbcp.version>
+		<commons.httpclient.version>4.3.5</commons.httpclient.version>
 	</properties>
 	
 	<dependencies>
@@ -299,6 +303,27 @@
 			<artifactId>junit</artifactId>
 			<version>${junit.version}</version>
 			<scope>test</scope>
+		</dependency>
+		
+		<!--MYSQL驱动依赖包 -->
+		<dependency>
+			<groupId>mysql</groupId>
+			<artifactId>mysql-connector-java</artifactId>
+			<version>${mysql.version}</version>
+		</dependency>
+		
+		<!--DBCP依赖包 -->
+		<dependency>
+			<groupId>commons-dbcp</groupId>
+			<artifactId>commons-dbcp</artifactId>
+			<version>${commons.dbcp.version}</version>
+		</dependency>
+		
+		<!--HttpClient依赖包 -->
+		<dependency>
+		    <groupId>org.apache.httpcomponents</groupId>
+		    <artifactId>httpclient</artifactId>
+		    <version>${commons.httpclient.version}</version>
 		</dependency>
 		
 		<!--JSON依赖包 -->
@@ -474,6 +499,20 @@
 			<version>1.6</version>
 			<scope>system</scope>
 			<systemPath>${JAVA_HOME}/lib/tools.jar</systemPath>
+		</dependency>
+		
+		<!--JSOUP依赖包 -->
+		<dependency>
+			<groupId>org.jsoup</groupId>
+			<artifactId>jsoup</artifactId>
+			<version>${jsoup.version}</version>
+		</dependency>
+		
+		<!--Oozie依赖包 -->
+		<dependency>
+			<groupId>com.yahoo.oozie</groupId>
+			<artifactId>oozie-client</artifactId>
+			<version>3.0.0</version>
 		</dependency>
 		
 	</dependencies>
