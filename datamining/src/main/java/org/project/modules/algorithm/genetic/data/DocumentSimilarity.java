@@ -10,7 +10,7 @@ public class DocumentSimilarity {
 	
 	private double[] vector2 = null;
 	
-	private double cosine = 0;
+	private double distance = 0;
 
 	public String getDocName1() {
 		return docName1;
@@ -44,12 +44,12 @@ public class DocumentSimilarity {
 		this.vector2 = vector2;
 	}
 
-	public double getCosine() {
-		return cosine;
+	public double getDistance() {
+		return distance;
 	}
 
-	public void setCosine(double cosine) {
-		this.cosine = cosine;
+	public void setDistance(double distance) {
+		this.distance = distance;
 	}
 	
 	@Override
@@ -57,7 +57,7 @@ public class DocumentSimilarity {
 		StringBuilder sb = new StringBuilder();
 		sb.append("doc1:").append(docName1).append("--");
 		sb.append("doc2:").append(docName2).append("--");
-		sb.append("cosine:").append(cosine);
+		sb.append("distance:").append(distance);
 		return sb.toString();
 	}
 	

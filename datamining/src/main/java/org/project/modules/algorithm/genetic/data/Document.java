@@ -16,12 +16,14 @@ public class Document {
 	private String category = null;
 	/** 文章分词*/
 	private String[] words = null;
-	/** 文章分词*/
+	/** 文章分词向量*/
 	private double[] wordsVec = null;
 	/** 词语计算TFIDF*/
 	private Map<String, Double> tfidfWords = null;
 	/** 文章相似度*/
 	private List<DocumentSimilarity> similarities = null;
+	/** 适应率*/
+	private double fit = 0;
 
 	public String getName() {
 		return name;
@@ -82,5 +84,15 @@ public class Document {
 	public void setSimilarities(List<DocumentSimilarity> similarities) {
 		this.similarities = similarities;
 	}
+
+	public double getFit() {
+		return fit;
+	}
+
+	public void setFit(double fit) {
+		this.fit = fit;
+	}
+	
+	
 
 }
