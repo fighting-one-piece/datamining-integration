@@ -113,10 +113,26 @@ public class HBaseUtilsTest {
 	
 	@Test
 	public void testTableRowCount() {
-		String coprocessorClassName = "org.apache.hadoop.hbase.coprocessor.AggregateImplementation";
-		HBaseUtils.addTableCoprocessor("user", coprocessorClassName);
+//		String coprocessorClassName = "org.apache.hadoop.hbase.coprocessor.AggregateImplementation";
+//		HBaseUtils.addTableCoprocessor("user", coprocessorClassName);
 		long rowCount = HBaseUtils.rowCount("user", "basic");
 		System.out.println("rowCount: " + rowCount);
+	}
+	
+	@Test
+	public void testTableSum() {
+//		String coprocessorClassName = "org.apache.hadoop.hbase.coprocessor.AggregateImplementation";
+//		HBaseUtils.addTableCoprocessor("user", coprocessorClassName);
+		double sum = HBaseUtils.sum("user", "basic", "age");
+		System.out.println("sum: " + sum);
+	}
+	
+	@Test
+	public void testTableAvg() {
+//		String coprocessorClassName = "org.apache.hadoop.hbase.coprocessor.AggregateImplementation";
+//		HBaseUtils.addTableCoprocessor("user", coprocessorClassName);
+		double avg = HBaseUtils.avg("user", "basic", "age");
+		System.out.println("avg: " + avg);
 	}
 
 	@Test

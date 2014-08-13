@@ -22,6 +22,7 @@ import org.apache.hadoop.hbase.client.coprocessor.LongColumnInterpreter;
 import org.apache.hadoop.hbase.filter.FirstKeyOnlyFilter;
 import org.apache.hadoop.hbase.util.Bytes;
 import org.apache.log4j.Logger;
+import org.project.modules.hbase.udf.DoubleColumnInterpreter;
 
 public class HBaseUtils {
 	
@@ -92,6 +93,7 @@ public class HBaseUtils {
 		AggregationClient ac = new AggregationClient(configuration);  
 		Scan scan = new Scan();
 		scan.addFamily(Bytes.toBytes(family));
+		scan.setFilter(new FirstKeyOnlyFilter());
 		long rowCount = 0;
 		try {
 			rowCount = ac.rowCount(Bytes.toBytes(tableName), new LongColumnInterpreter(), scan);
@@ -233,6 +235,34 @@ public class HBaseUtils {
 		for (Result result : resultScanner) {
 			printRecord(result);
 		}
+	}
+	
+	/** 求和*/
+	public static double sum(String tableName, String family, String qualifier) {
+		AggregationClient ac = new AggregationClient(configuration);  
+		Scan scan = new Scan();
+		scan.addColumn(Bytes.toBytes(family), Bytes.toBytes(qualifier));
+		double sum = 0;
+		try {
+			sum = ac.sum(Bytes.toBytes(tableName), new DoubleColumnInterpreter(), scan);
+		} catch (Throwable e) {
+			logger.info(e.getMessage(), e);
+		}  
+		return sum;
+	}
+	
+	/** 求平均值*/
+	public static double avg(String tableName, String family, String qualifier) {
+		AggregationClient ac = new AggregationClient(configuration);  
+		Scan scan = new Scan();
+		scan.addColumn(Bytes.toBytes(family), Bytes.toBytes(qualifier));
+		double avg = 0;
+		try {
+			avg = ac.avg(Bytes.toBytes(tableName), new DoubleColumnInterpreter(), scan);
+		} catch (Throwable e) {
+			logger.info(e.getMessage(), e);
+		}  
+		return avg;
 	}
 	
 	public static void closePool() {
