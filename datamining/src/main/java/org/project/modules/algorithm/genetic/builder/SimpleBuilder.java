@@ -11,7 +11,6 @@ import org.apache.log4j.Logger;
 import org.project.modules.algorithm.genetic.data.DataLoader;
 import org.project.modules.algorithm.genetic.data.DataSet;
 import org.project.modules.algorithm.genetic.data.Document;
-import org.project.modules.algorithm.genetic.data.DocumentSimilarity;
 import org.project.utils.DistanceUtils;
 import org.project.utils.RandomUtils;
 
@@ -35,7 +34,7 @@ public class SimpleBuilder {
 	private DataSet loadDocuments() {
 		DataSet dataSet = null;
 		try {
-			String path = DataLoader.class.getClassLoader().getResource("新闻").toURI().getPath();
+			String path = DataLoader.class.getClassLoader().getResource("测试").toURI().getPath();
 			dataSet = DataLoader.load(path);
 		} catch (URISyntaxException e) {
 			logger.error(e.getMessage(), e);
@@ -50,7 +49,10 @@ public class SimpleBuilder {
 			allWords.addAll(doc.getWordSet());
 		}
 		List<String> words = new ArrayList<String>(allWords);
-		LEN = allWords.size() * 2 / 3;
+		int all_words_len = allWords.size();
+		System.out.println("all word len: " + all_words_len);
+		LEN = all_words_len * 2 / 3;
+		System.out.println("init word len: " + LEN);
 		String[] rWords = new String[LEN];
 		for (int i = 0, len = words.size(); i < LEN; i++) {
 			rWords[i] = words.get(RandomUtils.nextInt(len));
@@ -76,27 +78,15 @@ public class SimpleBuilder {
 			for (Document odoc : docs) {
 				double[] owordsVec = odoc.getWordsVec();
 				double distance = DistanceUtils.euclidean(wordsVec, owordsVec);
-				DocumentSimilarity docSimilarity = new DocumentSimilarity();
-				docSimilarity.setDocName1(doc.getName());
-				docSimilarity.setDocName2(odoc.getName());
-				docSimilarity.setVector1(wordsVec);
-				docSimilarity.setVector2(owordsVec);
-				docSimilarity.setDistance(distance);
-				doc.getSimilarities().add(docSimilarity);
 				sum += distance;
 			}
 			double f = sum / docs.size();
-			System.out.println("sum: " + sum + " f: " + f);
 			double oneNum = 0;
 			for (double wordVec : wordsVec) {
-				if (wordVec == 1) {
-					oneNum += 1;
-				}
+				if (wordVec == 1) oneNum += 1;
 			}
 			double p = oneNum / LEN;
-			System.out.println("p: " + p);
 			double fit = 1 / (f + p + 0.1);
-			System.out.println("fit: " + fit);
 			doc.setFit(fit);
 			if (fit > maxFit) maxFit = fit;
 		}
@@ -113,10 +103,8 @@ public class SimpleBuilder {
 		double accumulationP = 0;
 		for (Document doc : docs) {
 			double selectionP = doc.getFit() / fitSum;
-			System.out.println("selectionP: " + selectionP);
 			doc.setSelectionP(selectionP);
 			accumulationP += selectionP;
-			System.out.println("accumulationP: " + accumulationP);
 			doc.setAccumulationP(accumulationP);
 		}
 		int rlen = docs.size();
@@ -125,10 +113,6 @@ public class SimpleBuilder {
 			rnum[i] = RandomUtils.nextDouble();
 		}
 		Arrays.sort(rnum);
-		for (double r : rnum) {
-			System.out.print(r + "\t");
-		}
-		System.out.println();
 		DataSet newDataSet = new DataSet();
 		int aIndex = 0;
 		int nIndex = 0;
@@ -155,8 +139,12 @@ public class SimpleBuilder {
 			}
 			double[] a = docs.get(i).getWordsVec();
 			double[] b = docs.get(i + 1).getWordsVec();
-			//int n = RandomUtils.nextInt(LEN * PC);
-			for (int start = 40, end = 90; start < end; start++) {
+			int x = RandomUtils.nextInt(LEN);
+			int y = RandomUtils.nextInt(LEN);
+			int start = x > y ? y : x;
+			int end = x > y ? x : y;
+			System.out.println("start: " + start + " end: " + end);
+			for (; start < end; start++) {
 				a[start] = a[start] + b[start];
 				b[start] = a[start] - b[start];
 				a[start] = a[start] - b[start];
@@ -173,11 +161,14 @@ public class SimpleBuilder {
 			}
 			System.out.println("mutation occur");
 			double[] wordsVec = doc.getWordsVec();
-			int index = RandomUtils.nextInt(LEN);
-			wordsVec[index] = wordsVec[index] == 1 ? 0 : 1;
+			for (int i = 0; i < 5; i++) {
+				int index = RandomUtils.nextInt(LEN);
+				wordsVec[index] = wordsVec[index] == 1 ? 0 : 1;
+			}
 		}
 	}
 	
+	//计算终止概率
 	public double calculatePT(DataSet dataSet) {
 		double post = dataSet.getPostMaxFit();
 		double pre = dataSet.getPreMaxFit();
@@ -188,25 +179,34 @@ public class SimpleBuilder {
 	}
 	
 	public void print(DataSet dataSet) {
-		List<Document> ndocs = dataSet.getDocs();
+		List<Document> docs = dataSet.getDocs();
 		String[] words = dataSet.getWords();
-		for (Document doc : ndocs) {
-			System.out.println(doc.getName());
+		Set<String> names = new HashSet<String>();
+		for (Document doc : docs) {
+			String name = doc.getName();
+			if (names.contains(name)) {
+				continue;
+			}
+			names.add(name);
+			System.out.println(name + " : " + doc.getCategory());
+			int sum = 0;
 			double[] wordsVec = doc.getWordsVec();
 			for (int i = 0, len = wordsVec.length; i < len; i++) {
 				if (wordsVec[i] == 1) {
 					System.out.print(words[i] + "\t");
+					sum += 1;
 				}
 			}
 			System.out.println();
+			System.out.println("total word: " + sum);
 		}
 	}
 
 	public void build() {
 		DataSet dataSet = loadDocuments();
 		buildInitialPopulation(dataSet);
-		for (int i = 0; i < ITER; i++) {
-//		while (calculatePT(dataSet) >= PT) {
+//		for (int i = 0; i < ITER; i++) {
+		while (calculatePT(dataSet) >= PT) {
 			calculateFit(dataSet);
 			dataSet = selection(dataSet);
 			crossover(dataSet);
