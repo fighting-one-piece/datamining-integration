@@ -43,6 +43,12 @@ class Doc:
         
     def getCHIWords(self):
         return self._chiWords
+    
+    def getKLWords(self):
+        return self._klWords
+    
+    def setCHIWords(self, klWords):
+        self._klWords = klWords
 
     def setSimilarities(self, similarities):
         self._similarities = similarities
@@ -289,6 +295,18 @@ class DocHelper:
             ig = -pcSum + pt * pctSum + pnt * pcntSum
             wordDict[word] = ig
         return DocHelper.sortWordValueMap(wordDict)
+    
+    #计算文档集中词的交叉期望熵
+    @staticmethod
+    def calculateKL(docs):
+        docTotalCount = len(docs)
+        for doc in docs:
+            wordToCount = {}
+            words = doc.getWords()
+            for word in words:
+                count = wordToCount.get(word)
+                print 1
+        print 1
             
     #计算文档集之间的相似度    
     @staticmethod

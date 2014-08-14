@@ -40,7 +40,7 @@ public class DataLoader {
 	}
 	
 	public static DataSet load(String path) {
-		DataSet data = new DataSet();
+		DataSet dataSet = new DataSet();
 		File[] files = FileUtils.obtainFiles(path);
 		Seg seg = new ComplexSeg(Dictionary.getInstance());
 		for (File file : files) {
@@ -48,9 +48,9 @@ public class DataLoader {
 			document.setCategory(file.getParentFile().getName());
 			document.setName(file.getName());
 			document.setWords(WordUtils.splitFile(file, seg));
-			data.getDocs().add(document);
+			dataSet.getDocs().add(document);
 		}
-		return data;
+		return dataSet;
 	}
 	
 	public static void loadURLToFile() {

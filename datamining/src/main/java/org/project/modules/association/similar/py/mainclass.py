@@ -49,6 +49,10 @@ def testInformationGain():
     wordDict = DocHelper.calculateInformationGain(docs)
     for item in wordDict[0:30]:
         print '%s-%s' %(item[0],item[1])
+    
+def testKL():
+    path = r'D:\resources\chinese'
+    docs = DocHelper.genDocs(path)
 
 if __name__ == '__main__':
     testTF()
