@@ -43,12 +43,6 @@ class Doc:
         
     def getCHIWords(self):
         return self._chiWords
-    
-    def getKLWords(self):
-        return self._klWords
-    
-    def setCHIWords(self, klWords):
-        self._klWords = klWords
 
     def setSimilarities(self, similarities):
         self._similarities = similarities
@@ -169,7 +163,7 @@ class DocHelper:
     
     #根据词所属文档类型获取同类文档集和非同类文档集
     @staticmethod
-    def wordCategorySplit(category, docs):
+    def categorySplit(category, docs):
         belongDocs = []
         nobelongDocs = []
         for doc in docs:
@@ -178,6 +172,25 @@ class DocHelper:
             else:
                 nobelongDocs.append(doc)
         return belongDocs, nobelongDocs
+    
+    #根据词所属文档类型获取同类文档集数量
+    @staticmethod
+    def categoryStatistics(category, docs):
+        sum = 0
+        for doc in docs:
+            if category == doc.getCategory():
+                sum = sum + 1
+        return sum
+
+    #根据词所属文档类型获取文档集中含有词数量
+    @staticmethod
+    def categoryWordStatistics(category, word, docs):
+        sum = 0
+        for doc in docs:
+            if category == doc.getCategory() and \
+                DocHelper.docHasWord(doc, word):
+                sum = sum + 1
+        return sum
     
     #获取包含词文档集和非包含词文档集
     @staticmethod
@@ -212,6 +225,18 @@ class DocHelper:
             if DocHelper.docHasWord(doc, word) == False:
                 sum += 1
         return sum
+    
+    #文档集包含词的文档数所属类型在包含次文档数中的概率
+    @staticmethod
+    def wordCategoryInDocsPercent(word, category, docs):
+        sumWord = 0
+        sumCategory = 0
+        for doc in docs:
+            if DocHelper.docHasWord(doc, word):
+                sumWord += 1
+            if category == doc.getCategory():
+                sumCategory += 1
+        return float(sumCategory) / sumWord
     
     @staticmethod
     def calculateTF(doc):
@@ -250,7 +275,7 @@ class DocHelper:
             chiWords = {}
             words = doc.getWords()
             for word in words:
-                belongDocs,nobelongDocs = DocHelper.wordCategorySplit(\
+                belongDocs,nobelongDocs = DocHelper.categorySplit(\
                     doc.getCategory(), docs)
                 a = DocHelper.wordInDocsStatistics(word, belongDocs)
                 b = DocHelper.wordInDocsStatistics(word, nobelongDocs)
@@ -282,14 +307,15 @@ class DocHelper:
             wordNotInDocsCount = len(nobelongDocs)
             pctSum = 0;pcntSum = 0
             for category in categories:
-                ctCount = len(DocHelper.wordCategorySplit(category, belongDocs)[0])
+                ctCount = len(DocHelper.categorySplit(category, belongDocs)[0])
                 pct = float(ctCount) / wordInDocsCount
                 if pct != 0:
                     pctSum += pct * (math.log(pct) / math.log(2))
-                cntCount = len(DocHelper.wordCategorySplit(category, nobelongDocs)[0])
-                pcnt = float(cntCount) / wordNotInDocsCount
-                if pcnt != 0:
-                    pcntSum += pcnt * (math.log(pcnt) / math.log(2))
+                cntCount = len(DocHelper.categorySplit(category, nobelongDocs)[0])
+                if cntCount != 0:
+                    pcnt = float(cntCount) / wordNotInDocsCount
+                    if pcnt != 0:
+                        pcntSum += pcnt * (math.log(pcnt) / math.log(2))
             pt = float(wordInDocsCount) / docTotalCount
             pnt = float(wordNotInDocsCount) / docTotalCount
             ig = -pcSum + pt * pctSum + pnt * pcntSum
@@ -300,13 +326,45 @@ class DocHelper:
     @staticmethod
     def calculateKL(docs):
         docTotalCount = len(docs)
+        allWords = []
+        categories = []
+        cateToCount = {}
+        wordToCount = {}
         for doc in docs:
-            wordToCount = {}
+            cate = doc.getCategory()
+            categories.append(cate)
+            cateCount = cateToCount.get(cate)
+            if cateCount is None:
+                cateToCount[cate] = 1
+            else:
+                cateToCount[cate] = cateCount + 1 
             words = doc.getWords()
             for word in words:
+                allWords.append(word)
                 count = wordToCount.get(word)
-                print 1
-        print 1
+                if count is None:
+                    wordToCount[word] = 1
+                else :
+                    wordToCount[word] = count + 1
+        allWords = set(allWords)
+        categories = set(categories)
+        wordDict = {}
+        word_len = len(allWords)
+        for word in allWords:
+            pt = float(wordToCount.get(word)) / word_len
+            sum = 0; cd = 0; dd = 0
+            nt = DocHelper.wordInDocsStatistics(word, docs)
+            for category in categories:
+                cateCount = cateToCount.get(category)
+                pc = float(cateCount) / docTotalCount
+                pct = DocHelper.wordCategoryInDocsPercent(word, category, docs)
+                sum += pct * math.log(pct / pc)
+                nct = DocHelper.categoryWordStatistics(category, word, docs)
+                cd += float(nct) / nt
+                dd += float(nct) / cateCount
+            wordDict[word] = cd * dd * pt * sum
+        return DocHelper.sortWordValueMap(wordDict)    
+                
             
     #计算文档集之间的相似度    
     @staticmethod

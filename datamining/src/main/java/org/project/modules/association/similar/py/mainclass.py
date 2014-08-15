@@ -5,15 +5,15 @@ from doc import *
 from word import *
 
 def testSplitWord():
-    path = r'D:\resources\chinese'
+    path = r'D:\resources\test'
     docs = DocHelper.genDocs(path)
     for doc in docs:
         print '----------'
         for word in doc.getWords():
             print word
 
-def testTF():
-    path = r'D:\resources\target'
+def testTFIDF():
+    path = r'D:\resources\test'
     docs = DocHelper.genDocs(path)
     DocHelper.calculateTFIDF(docs)
     for doc in docs:
@@ -24,7 +24,7 @@ def testTF():
             print '%s-%s-%s' %(item[0],item[1],tfidf.get(item[0]))
 
 def testSimilarity(): 
-    path = r'D:\resources\chinese'
+    path = r'D:\resources\test'
     docs = DocHelper.genDocs(path)
     DocHelper.calculateTFIDF(docs)
     DocHelper.calculateSimilar(docs)
@@ -35,7 +35,7 @@ def testSimilarity():
                     similarity.getName2(), similarity.getCosine())
             
 def testCHI():
-    path = r'D:\resources\chinese'
+    path = r'D:\resources\test'
     docs = DocHelper.genDocs(path)
     DocHelper.calculateCHI(docs)
     for doc in docs:
@@ -44,20 +44,27 @@ def testCHI():
             print '%s-%s' %(item[0],item[1])
                 
 def testInformationGain():
-    path = r'D:\resources\chinese'
+    path = r'D:\resources\test'
     docs = DocHelper.genDocs(path)
     wordDict = DocHelper.calculateInformationGain(docs)
     for item in wordDict[0:30]:
         print '%s-%s' %(item[0],item[1])
     
 def testKL():
-    path = r'D:\resources\chinese'
+    path = r'D:\resources\test'
     docs = DocHelper.genDocs(path)
+    wordDict = DocHelper.calculateKL(docs)
+    for item in wordDict[0:30]:
+        print '%s-%s' %(item[0],item[1])
 
 if __name__ == '__main__':
-    testTF()
-    #testCHI()
-    #print '----------' 
-    #testInformationGain()
-
+    print '-----TFIDF-----' 
+    testTFIDF()
+    print '-----CHI-----' 
+    testCHI()
+    print '-----IG-----' 
+    testInformationGain()
+    print '-----KL-----' 
+    testKL()
+    print '----------' 
     
