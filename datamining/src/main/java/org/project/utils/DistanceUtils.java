@@ -36,6 +36,7 @@ public class DistanceUtils {
 		}
 		b = Math.sqrt(b);
 		c = Math.sqrt(c);
+		if (b == 0 || c ==0) return 0;
 		return a / (b * c);
 	}
 

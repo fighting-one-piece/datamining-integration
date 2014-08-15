@@ -3,14 +3,16 @@ package org.project.modules.algorithm.genetic.builder;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 import org.apache.log4j.Logger;
-import org.project.modules.algorithm.genetic.data.DataLoader;
-import org.project.modules.algorithm.genetic.data.DataSet;
-import org.project.modules.algorithm.genetic.data.Document;
+import org.project.common.document.DocumentLoader;
+import org.project.common.document.DocumentSet;
+import org.project.common.document.Document;
 import org.project.utils.DistanceUtils;
 import org.project.utils.RandomUtils;
 
@@ -31,11 +33,11 @@ public class SimpleBuilder {
 	
 	
 	//加载文本集合
-	private DataSet loadDocuments() {
-		DataSet dataSet = null;
+	private DocumentSet loadDocuments() {
+		DocumentSet dataSet = null;
 		try {
-			String path = DataLoader.class.getClassLoader().getResource("测试").toURI().getPath();
-			dataSet = DataLoader.load(path);
+			String path = DocumentLoader.class.getClassLoader().getResource("测试").toURI().getPath();
+			dataSet = DocumentLoader.loadDocSet(path);
 		} catch (URISyntaxException e) {
 			logger.error(e.getMessage(), e);
 		}
@@ -43,7 +45,25 @@ public class SimpleBuilder {
 	}
 	
 	//建立初始化种群，随机选取总词数的2/3为初始词数
-	private void buildInitialPopulation(DataSet dataSet) {
+	private void buildInitialPopulation(DocumentSet dataSet) {
+		Map<String, Integer> wordToCount = new HashMap<String, Integer>();
+		for(Document doc : dataSet.getDocs()) {
+			for (String word : doc.getWords()) {
+				Integer count = wordToCount.get(word);
+				wordToCount.put(word, null == count ? 1 : count + 1);
+			}
+		}
+		dataSet.setWordToCount(wordToCount);
+		for(Document doc : dataSet.getDocs()) {
+			List<String> words = new ArrayList<String>();
+			for (String word : doc.getWords()) {
+				int count = wordToCount.get(word);
+				if (count > 2) {
+					words.add(word);
+				}
+			}
+			doc.setWords(words.toArray(new String[0]));
+		}
 		Set<String> allWords = new HashSet<String>();
 		for(Document doc : dataSet.getDocs()) {
 			allWords.addAll(doc.getWordSet());
@@ -75,7 +95,7 @@ public class SimpleBuilder {
 	  * p 是降维幅度的考察函数，是个体二进制编码中1的个数与总数的比值
 	  * 0.1 是防止函数无意义，分母不为0
 	 */
-	public void calculateFit(DataSet dataSet) {
+	public void calculateFit(DocumentSet dataSet) {
 		double maxFit = 0;
 		List<Document> docs = dataSet.getDocs();
 		for (Document doc : docs) {
@@ -83,8 +103,9 @@ public class SimpleBuilder {
 			double sum = 0;
 			for (Document odoc : docs) {
 				double[] owordsVec = odoc.getWordsVec();
-				double distance = DistanceUtils.euclidean(wordsVec, owordsVec);
-//				double distance = DistanceUtils.cosine(wordsVec, owordsVec);
+//				double distance = DistanceUtils.euclidean(wordsVec, owordsVec);
+				double distance = DistanceUtils.cosine(wordsVec, owordsVec);
+				System.out.println(distance);
 				sum += distance;
 			}
 			double f = sum / docs.size();
@@ -105,7 +126,7 @@ public class SimpleBuilder {
 	  * 这里主要涉及了几个概念：选择概率、积累概率、轮盘赌选择法
 	  * 从父代群体中选取一些个体遗传到下一代群体，返回新群体
 	 */
-	public DataSet selection(DataSet dataSet) {
+	public DocumentSet selection(DocumentSet dataSet) {
 		List<Document> docs = dataSet.getDocs();
 		double fitSum = 0;
 		for (Document doc : docs) {
@@ -124,10 +145,10 @@ public class SimpleBuilder {
 			rnum[i] = RandomUtils.nextDouble();
 		}
 		Arrays.sort(rnum);
-		DataSet newDataSet = new DataSet();
+		DocumentSet newDataSet = new DocumentSet();
 		int aIndex = 0;
 		int nIndex = 0;
-		while (nIndex < rlen) {
+		while (nIndex < rlen && aIndex < rlen) {
 			if (rnum[nIndex] < docs.get(aIndex).getAccumulationP()) {
 				newDataSet.getDocs().add(docs.get(aIndex));
 				nIndex += 1;
@@ -138,6 +159,7 @@ public class SimpleBuilder {
 		newDataSet.setWords(dataSet.getWords());
 		newDataSet.setPostMaxFit(dataSet.getPostMaxFit());
 		newDataSet.setPreMaxFit(dataSet.getPreMaxFit());
+		newDataSet.setWordToCount(dataSet.getWordToCount());
 		return newDataSet;
 	}
 	
@@ -146,7 +168,7 @@ public class SimpleBuilder {
 	  * 满足交叉概率的情况下，对两个个体之间进行两点交叉
 	  * 即随机两个点，在两点之间的点进行互换
 	 */
-	public void crossover(DataSet dataSet) {
+	public void crossover(DocumentSet dataSet) {
 		List<Document> docs = dataSet.getDocs();
 		for (int i = 0, len = docs.size(); i < len; i = i + 2) {
 			if (RandomUtils.nextDouble() > PC || i >= len) {
@@ -171,7 +193,7 @@ public class SimpleBuilder {
 	  * 变异算子阶段
 	  * 满足变异概率的情况下，对个体随机位数进行变异
 	 */
-	public void mutation(DataSet dataSet) {
+	public void mutation(DocumentSet dataSet) {
 		List<Document> docs = dataSet.getDocs();
 		for (Document doc : docs) {
 			if (RandomUtils.nextDouble() > PM) {
@@ -179,7 +201,7 @@ public class SimpleBuilder {
 			}
 			System.out.println("mutation occur");
 			double[] wordsVec = doc.getWordsVec();
-			for (int i = 0; i < 10; i++) {
+			for (int i = 0; i < 5; i++) {
 				int index = RandomUtils.nextInt(LEN);
 				wordsVec[index] = wordsVec[index] == 1 ? 0 : 1;
 			}
@@ -191,7 +213,7 @@ public class SimpleBuilder {
 	  * 这里是自定义的终止条件函数
 	  * (PostMaxFit - PreMaxFit) / PostMaxFit
 	 */
-	public double calculatePT(DataSet dataSet) {
+	public double calculatePT(DocumentSet dataSet) {
 		double post = dataSet.getPostMaxFit();
 		double pre = dataSet.getPreMaxFit();
 		if (post == 0) return 1;
@@ -203,7 +225,8 @@ public class SimpleBuilder {
 	/**
 	 * 结果统计 
 	 */
-	public void statistics(DataSet dataSet) {
+	public void statistics(DocumentSet dataSet) {
+		Map<String, Integer> wordToCount = dataSet.getWordToCount();
 		List<Document> docs = dataSet.getDocs();
 		String[] words = dataSet.getWords();
 		Set<String> names = new HashSet<String>();
@@ -213,11 +236,11 @@ public class SimpleBuilder {
 				continue;
 			}
 			names.add(name);
-			statisticsWord(doc, words);
+			statisticsWord(doc, words, wordToCount);
 		}
 	}
 	
-	public void statisticsWord(Document doc, String[] words) {
+	public void statisticsWord(Document doc, String[] words, Map<String, Integer> wordToCount) {
 		System.out.print("doc name: " + doc.getName() + " -- ");
 		System.out.print(" category: " + doc.getCategory() + " -- ");
 		System.out.println("fit: " + doc.getFit() + " -- ");
@@ -226,7 +249,8 @@ public class SimpleBuilder {
 		for (int i = 0, len = wordsVec.length; i < len; i++) {
 			if (wordsVec[i] == 1) {
 				wordNum += 1;
-				System.out.print(words[i] + "\t");
+				System.out.print(words[i] + "(" +
+						wordToCount.get(words[i]) + ")\t");
 			}
 		}
 		System.out.println();
@@ -234,7 +258,7 @@ public class SimpleBuilder {
 	}
 
 	public void build() {
-		DataSet dataSet = loadDocuments();
+		DocumentSet dataSet = loadDocuments();
 		buildInitialPopulation(dataSet);
 //		for (int i = 0; i < ITER; i++) {
 		while (calculatePT(dataSet) >= PT) {

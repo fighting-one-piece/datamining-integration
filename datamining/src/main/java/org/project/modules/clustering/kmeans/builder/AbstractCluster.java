@@ -2,8 +2,10 @@ package org.project.modules.clustering.kmeans.builder;
 
 import java.util.List;
 
-import org.project.modules.clustering.kmeans.data.PointCluster;
+import org.project.modules.clustering.kmeans.data.DataPoint;
+import org.project.modules.clustering.kmeans.data.DataPointCluster;
 import org.project.modules.clustering.kmeans.data.Point;
+import org.project.modules.clustering.kmeans.data.PointCluster;
 
 public abstract class AbstractCluster {
 	
@@ -24,6 +26,16 @@ public abstract class AbstractCluster {
 			System.out.println("cluster size: " + cluster.getPoints().size());
 			for (Point point : cluster.getPoints()) {
 				System.out.println(point);
+			}
+		}
+	}
+	
+	protected void printDataPointClusters(List<DataPointCluster> clusters) {
+		for (DataPointCluster cluster : clusters) {
+			System.out.println("center: " + cluster.getCenter());
+			System.out.println("cluster size: " + cluster.getDataPoints().size());
+			for (DataPoint point : cluster.getDataPoints()) {
+				System.out.println(point.getCategory());
 			}
 		}
 	}
