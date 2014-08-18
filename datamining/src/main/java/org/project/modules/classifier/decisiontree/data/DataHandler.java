@@ -303,7 +303,7 @@ public class DataHandler {
 					instances.add(instance);
 				}
 			}
-			String path = FileUtils.obtainRandomTxtPath();
+			String path = FileUtils.obtainTmpTxtPath();
 			writeInstances(path, instances);
 			DataSplitItem item = new DataSplitItem();
 			item.setPath(path);

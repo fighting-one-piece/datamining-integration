@@ -262,12 +262,12 @@ public class WordUtils {
 	public static void main(String[] args) {
 		String path = "d:\\resources\\a.txt";
 		String[] words = splitFile(path, new ComplexSeg(Dictionary.getInstance()));
-		ShowUtils.print(words);
+		ShowUtils.printToConsole(words);
 		words = removeStopWords(words);
-		ShowUtils.print(words);
+		ShowUtils.printToConsole(words);
 		String p = WordUtils.class.getClassLoader().getResource("dic/sougou/sougou.dic").getPath();
 		System.out.println(p);
 		words = splitFile(path, new ComplexSeg(Dictionary.getInstance(p)));
-		ShowUtils.print(words);
+		ShowUtils.printToConsole(words);
 	}
 }

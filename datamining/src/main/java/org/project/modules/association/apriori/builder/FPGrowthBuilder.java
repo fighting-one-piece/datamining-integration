@@ -54,7 +54,7 @@ public class FPGrowthBuilder extends AbstractBuilder {
 		//数据集的过滤重排
 		for (Instance instance : data.getInstances()) {
 			instance.replaceValues(entries);
-			ShowUtils.print(instance.getValues());
+			ShowUtils.printToConsole(instance.getValues());
 		}
 		//建立头表
 		List<FPTreeNode> headerTables = new ArrayList<FPTreeNode>();

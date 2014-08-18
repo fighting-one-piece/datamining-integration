@@ -1,20 +1,22 @@
 package org.project.modules.clustering.dbscan.data;
 
+import java.util.Map;
+
 public class DataPoint {
 	
 	private int clusterId = 0;
 
-	private double[] values = null;
-	
+	private String category = null;
+
 	private boolean isAccessed = false;
 	
-	private String category = null;
+	private Map<String, Double> values = null;
 	
 	public DataPoint() {
 		
 	}
 	
-	public DataPoint(double[] values) {
+	public DataPoint(Map<String, Double> values) {
 		super();
 		this.values = values;
 	}
@@ -27,11 +29,11 @@ public class DataPoint {
 		this.clusterId = clusterId;
 	}
 
-	public double[] getValues() {
+	public Map<String, Double> getValues() {
 		return values;
 	}
 
-	public void setValues(double[] values) {
+	public void setValues(Map<String, Double> values) {
 		this.values = values;
 	}
 
@@ -51,23 +53,4 @@ public class DataPoint {
 		this.category = category;
 	}
 
-	public boolean equals(DataPoint o) {
-		for (int i = 0, len = values.length; i < len; i++) {
-			double[] ovalues = o.getValues();
-			if (values[i] != ovalues[i]) {
-				return false;
-			}
-		}
-		return true;
-	}
-	
-	@Override
-	public String toString() {
-		StringBuilder sb = new StringBuilder();
-		sb.append(category).append(" ");
-		for (double value : values) {
-			sb.append(value).append(" ");
-		}
-		return sb.toString();
-	}
 }

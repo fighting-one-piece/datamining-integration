@@ -149,7 +149,7 @@ public class DecisionTreeMRTest {
 		
 		TreeNode temp = (TreeNode) TreeNodeHelper.json2TreeNode(sb.toString());
 		System.out.println(temp.getName());
-		ShowUtils.print(temp.getChildren());
+		ShowUtils.printToConsole(temp.getChildren());
 	}
 	
 	private void handle(TreeNode treeNode, StringBuilder sb) {
@@ -322,7 +322,7 @@ public class DecisionTreeMRTest {
 			DataHandler.fill(data, 1.0);
 			TreeBuilder builder = new TreeC45Builder();
 			BranchNode treeNode = (BranchNode) builder.build(data);
-			ShowUtils.print(treeNode.getValues());
+			ShowUtils.printToConsole(treeNode.getValues());
 //			TreeNodeHelper.print(treeNode, 0, null);
 			writer.append(key, treeNode);
 		} catch (IOException e) {
@@ -341,7 +341,7 @@ public class DecisionTreeMRTest {
 		try {
 			FileSystem fs = outputPath.getFileSystem(conf);
 			Path[] paths = HDFSUtils.getPathFiles(fs, outputPath);
-			ShowUtils.print(paths);
+			ShowUtils.printToConsole(paths);
 			for(Path path : paths) {
 				System.out.println("split input path: " + path);
 //				FileSystem pfs = path.getFileSystem(conf);
@@ -470,7 +470,7 @@ public class DecisionTreeMRTest {
 		try {
 			FileSystem fs = FileSystem.get(conf);
 			Path path = new Path(DFS_URL + "input");
-			ShowUtils.print(HDFSUtils.getPathFiles(fs, path));
+			ShowUtils.printToConsole(HDFSUtils.getPathFiles(fs, path));
 		} catch (IOException e) {
 			e.printStackTrace();
 		}

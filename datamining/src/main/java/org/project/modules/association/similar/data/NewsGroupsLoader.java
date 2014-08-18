@@ -42,7 +42,7 @@ public class NewsGroupsLoader {
 				String[] words = doc2words.get(doc);
 				if (null == words) {
 					words = WordUtils.splitFile(docFile, seg);
-					ShowUtils.print(words);
+					ShowUtils.printToConsole(words);
 					doc2words.put(doc, words);
 				} else {
 					logger.info(doc + " has existed!");

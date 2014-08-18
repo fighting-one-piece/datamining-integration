@@ -30,35 +30,13 @@ public class DataPointCluster {
 		this.points = points;
 	}
 	
-	public DataPoint computeMeansCenter() {
-		int len = getDataPoints().size();
-		if (len == 0) {
-			throw new RuntimeException("no datapoint");
-		}
-		if (len == 1) {
-			return getDataPoints().get(0);
-		}
-		int vLen = getDataPoints().get(0).getValues().length;
-		double[] temp = new double[vLen];
-		for (DataPoint point : getDataPoints()) {
-			double[] values = point.getValues();
-			for (int i = 0; i < vLen; i++) {
-				temp[i] += values[i];
-			}
-		}
-		for (int i = 0; i < vLen; i++) {
-			temp[i] = temp[i] / len;
-		}
-		return new DataPoint(temp);
-	}
-	
 	public DataPoint computeMediodsCenter() {
 		DataPoint targetDataPoint = null;
 		double distance = Integer.MAX_VALUE;
 		for (DataPoint point : getDataPoints()) {
 			double d = 0.0;
 			for (DataPoint temp : getDataPoints()) {
-				d += DistanceUtils.manhattan(
+				d += DistanceUtils.cosine(
 						point.getValues(), temp.getValues());
 			}
 			if (d < distance) {
@@ -66,13 +44,16 @@ public class DataPointCluster {
 				targetDataPoint = point;
 			}
 		}
+		if (null == targetDataPoint) {
+			targetDataPoint = center;
+		}
 		return targetDataPoint;
 	}
 	
 	public double computeSSE() {
 		double result = 0.0;
 		for (DataPoint point : getDataPoints()) {
-			result += DistanceUtils.euclidean(point.getValues(), center.getValues());
+			result += DistanceUtils.cosine(point.getValues(), center.getValues());
 		}
 		return result;
 	}

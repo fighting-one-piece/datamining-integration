@@ -1,31 +1,31 @@
 package org.project.common.document;
 
 public class DocumentSimilarity {
+	
+	private Document doc1 = null;
+	
+	private Document doc2 = null;
 
-	private String docName1 = null;
-	
-	private String docName2 = null;
-	
 	private double[] vector1 = null;
 	
 	private double[] vector2 = null;
 	
 	private double distance = 0;
 
-	public String getDocName1() {
-		return docName1;
+	public Document getDoc1() {
+		return doc1;
 	}
 
-	public void setDocName1(String docName1) {
-		this.docName1 = docName1;
+	public void setDoc1(Document doc1) {
+		this.doc1 = doc1;
 	}
 
-	public String getDocName2() {
-		return docName2;
+	public Document getDoc2() {
+		return doc2;
 	}
 
-	public void setDocName2(String docName2) {
-		this.docName2 = docName2;
+	public void setDoc2(Document doc2) {
+		this.doc2 = doc2;
 	}
 
 	public double[] getVector1() {
@@ -55,8 +55,10 @@ public class DocumentSimilarity {
 	@Override
 	public String toString() {
 		StringBuilder sb = new StringBuilder();
-		sb.append("doc1:").append(docName1).append("--");
-		sb.append("doc2:").append(docName2).append("--");
+		sb.append("doc1:").append(doc1.getName()).append("[")
+		  .append(doc1.getCategory()).append("]--");
+		sb.append("doc2:").append(doc2.getName()).append("[")
+		  .append(doc2.getCategory()).append("]--");
 		sb.append("distance:").append(distance);
 		return sb.toString();
 	}

@@ -57,7 +57,7 @@ public class DecisionTree {
 		Data testData = DataLoader.load(testFilePath);
 		DataHandler.fill(testData.getInstances(), data.getAttributes() , 0);
 		Object[] results = (Object[]) treeNode.classify(testData);
-		ShowUtils.print(results);
+		ShowUtils.printToConsole(results);
 	}
 
 	public static void main(String[] args) {

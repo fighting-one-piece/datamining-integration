@@ -2,44 +2,36 @@ package org.project.modules.clustering.kmeans.builder;
 
 import java.net.URISyntaxException;
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Random;
-import java.util.Set;
 
 import org.project.common.document.DocumentLoader;
 import org.project.common.document.Document;
-import org.project.common.document.DocumentHelper;
+import org.project.common.document.DocumentUtils;
 import org.project.modules.clustering.kmeans.data.DataPoint;
 import org.project.modules.clustering.kmeans.data.DataPointCluster;
 import org.project.utils.DistanceUtils;
 
 public class DocKMediodsCluster extends AbstractCluster {
 	
-	public static final double THRESHOLD = 2.0;
+	public static final double THRESHOLD = 0.02;
 	
 	public List<DataPoint> initData() {
-		List<DataPoint> points = new ArrayList<DataPoint>();
+		List<DataPoint> dataPoints = new ArrayList<DataPoint>();
 		try {
 			String path = DocKMediodsCluster.class.getClassLoader().getResource("测试").toURI().getPath();
 			List<Document> docs = DocumentLoader.loadDocList(path);
-			Set<String> allWords = new HashSet<String>();
+			DocumentUtils.calculateTFIDF(docs);
 			for(Document doc : docs) {
-				allWords.addAll(doc.getWordSet());
-			}
-			String[] words = allWords.toArray(new String[0]);
-			for(Document doc : docs) {
-				double[] values = DocumentHelper.docWordsVector(doc, words);
-				doc.setWordsVec(values);
 				DataPoint dataPoint = new DataPoint();
-				dataPoint.setValues(values);
+				dataPoint.setValues(doc.getTfidfWords());
 				dataPoint.setCategory(doc.getCategory());
-				points.add(dataPoint);
+				dataPoints.add(dataPoint);
 			}
 		} catch (URISyntaxException e) {
 			e.printStackTrace();
 		}
-		return points;
+		return dataPoints;
 	}
 	
 	//随机生成中心点，并生成初始的K个聚类
@@ -63,7 +55,7 @@ public class DocKMediodsCluster extends AbstractCluster {
 			double minDistance = Integer.MAX_VALUE;
 			for (DataPointCluster cluster : clusters) {
 				DataPoint center = cluster.getCenter();
-				double distance = DistanceUtils.euclidean(
+				double distance = DistanceUtils.cosine(
 						point.getValues(), center.getValues());
 				if (distance < minDistance) {
 					minDistance = distance;
@@ -83,10 +75,10 @@ public class DocKMediodsCluster extends AbstractCluster {
 			DataPoint newCenter = cluster.computeMediodsCenter();
 			System.out.println("new center: " + newCenter);
 //			if (!center.equals(newCenter)) {
-			double distance = DistanceUtils.euclidean(
+			double distance = DistanceUtils.cosine(
 					newCenter.getValues(), center.getValues());
 			System.out.println("distaince: " + distance);
-			if (distance > THRESHOLD) {
+			if (distance > THRESHOLD || center.equals(newCenter)) {
 				flag = false;
 				cluster.setCenter(newCenter);
 			}

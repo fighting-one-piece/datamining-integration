@@ -46,7 +46,7 @@ public class RandomForestSprintJob extends AbstractJob {
 	
 	private String prepareRandom(int attributeNum) {
 		Data randomData = DataLoader.loadRandom(data, attributeNum);
-		String path = FileUtils.obtainRandomTxtPath();
+		String path = FileUtils.obtainTmpTxtPath();
 		DataHandler.writeData(path, randomData);
 		System.out.println(path);
 		String name = path.substring(path.lastIndexOf(File.separator) + 1);
@@ -60,7 +60,7 @@ public class RandomForestSprintJob extends AbstractJob {
 			Path path = new Path(output);
 			FileSystem fs = path.getFileSystem(conf);
 			Path[] paths = HDFSUtils.getPathFiles(fs, path);
-			ShowUtils.print(paths);
+			ShowUtils.printToConsole(paths);
 			Map<String, Map<String, Integer>> map = 
 					new HashMap<String, Map<String, Integer>>();
 			for (Path outPath : paths) {
@@ -82,7 +82,7 @@ public class RandomForestSprintJob extends AbstractJob {
 				}
 				IOUtils.closeQuietly(fsInputStream);
 			}
-			String fOut = FileUtils.obtainRandomTxtPath();
+			String fOut = FileUtils.obtainTmpTxtPath();
 			OutputStream out = new FileOutputStream(new File(fOut));
 			BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(out));
 			StringBuilder sb = null;

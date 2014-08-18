@@ -1,23 +1,25 @@
 package org.project.modules.clustering.kmeans.data;
 
+import java.util.Map;
+
 public class DataPoint {
 
-	private double[] values = null;
-	
 	private String category = null;
+
+	private Map<String, Double> values = null;
 	
 	public DataPoint() {
 	}
 	
-	public DataPoint(double[] values) {
+	public DataPoint(Map<String, Double> values) {
 		this.values = values;
 	}
 
-	public double[] getValues() {
+	public Map<String, Double> getValues() {
 		return values;
 	}
 
-	public void setValues(double[] values) {
+	public void setValues(Map<String, Double> values) {
 		this.values = values;
 	}
 

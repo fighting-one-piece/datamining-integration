@@ -190,7 +190,7 @@ public class DecisionTreeSprintJob extends AbstractJob {
 				Path outputPath = new Path(output);
 				FileSystem fs = outputPath.getFileSystem(conf);
 				Path[] paths = HDFSUtils.getPathFiles(fs, outputPath);
-				ShowUtils.print(paths);
+				ShowUtils.printToConsole(paths);
 				SequenceFile.Reader reader = null;
 				for (Path path : paths) {
 					reader = new SequenceFile.Reader(fs, path, conf);
@@ -267,7 +267,7 @@ public class DecisionTreeSprintJob extends AbstractJob {
         					DataHandler.attributeValueStatistics(data.getInstances());
         			Set<String> attributeValues = attrName2Values.get(attribute);
         			System.out.println("attributeValues:");
-        			ShowUtils.print(attributeValues);
+        			ShowUtils.printToConsole(attributeValues);
         			if (attrName2Values.size() == 0 || null == attributeValues) {
         				continue;
         			}

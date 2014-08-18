@@ -15,9 +15,9 @@ import org.project.modules.clustering.dbscan.data.Point;
 public class DBScanBuilder {
 	
 	//半径
-	public static double Epislon = 2;
+	public static double Epislon = 1;
 	//密度、最小点个数
-	public static int MinPts = 5;
+	public static int MinPoints = 5;
 	
 	public List<Point> initData() {
 		List<Point> points = new ArrayList<Point>();
@@ -70,7 +70,7 @@ public class DBScanBuilder {
 			if (!neighbor.isAccessed()) {
 				neighbor.setAccessed(true);
 				List<Point> nneighbors = obtainNeighbors(neighbor, points);
-				if (nneighbors.size() > MinPts) {
+				if (nneighbors.size() > MinPoints) {
 					for (Point nneighbor : nneighbors) {
 						if (nneighbor.getClusterId() <= 0) {
 							nneighbor.setClusterId(clusterId);
@@ -98,9 +98,11 @@ public class DBScanBuilder {
 				point.setAccessed(true);
 				flag = true;
 				List<Point> neighbors = obtainNeighbors(point, points);
-				if (neighbors.size() >= MinPts) {
+				System.out.println("neighbors: " + neighbors.size());
+				if (neighbors.size() >= MinPoints) {
 					//满足核心对象条件的点创建一个新簇
-					clusterId = point.getClusterId() <= 0 ? (clusterId++) : point.getClusterId();
+					clusterId = point.getClusterId() <= 0 ? (++clusterId) : point.getClusterId();
+					System.out.println("--clusterId: " + clusterId);
 					mergeCluster(point, neighbors, clusterId, points);
 				} else {
 					//未满足核心对象条件的点暂时当作噪声处理

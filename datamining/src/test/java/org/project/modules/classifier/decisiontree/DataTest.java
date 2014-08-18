@@ -285,7 +285,7 @@ public class DataTest {
 				takeValues.put(entry.getKey(), temp);
 			}
 		}
-		ShowUtils.print(takeValues);
+		ShowUtils.printToConsole(takeValues);
 	}
 	
 	@Test
@@ -505,9 +505,9 @@ public class DataTest {
 			System.out.println(blockLocations.length);
 			for (BlockLocation blockLocation : blockLocations) {
 				System.out.println(blockLocation.getOffset());
-				ShowUtils.print(blockLocation.getNames());
-				ShowUtils.print(blockLocation.getHosts());
-				ShowUtils.print(blockLocation.getTopologyPaths());
+				ShowUtils.printToConsole(blockLocation.getNames());
+				ShowUtils.printToConsole(blockLocation.getHosts());
+				ShowUtils.printToConsole(blockLocation.getTopologyPaths());
 				System.out.println(blockLocation.getLength());
 			}
 		} catch (Exception e) {
@@ -610,7 +610,7 @@ public class DataTest {
 				map.put(key, value);
 				line = reader.readLine();
 			}
-			ShowUtils.print(map);
+			ShowUtils.printToConsole(map);
 		} catch (Exception e) {
 			e.printStackTrace();
 		} finally {

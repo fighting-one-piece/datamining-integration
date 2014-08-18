@@ -52,7 +52,7 @@ public class DocBuilder {
 					words[i] = words[i - 1] + word;
 				}
 			}
- 			ShowUtils.print(words);
+ 			ShowUtils.printToConsole(words);
  			int take_len = words_len * 2 / 3;
  			for (int i = 0; i < 50; i++) {
  				Document doc = new Document();

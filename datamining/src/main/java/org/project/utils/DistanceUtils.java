@@ -1,5 +1,7 @@
 package org.project.utils;
 
+import java.util.Map;
+
 public class DistanceUtils {
 
 	/*
@@ -38,6 +40,26 @@ public class DistanceUtils {
 		c = Math.sqrt(c);
 		if (b == 0 || c ==0) return 0;
 		return a / (b * c);
+	}
+	
+	/*
+	 * 余弦距离
+	 */
+	public static double cosine(Map<String, Double> p1, Map<String, Double> p2) {
+		double x = 0, y = 0, z = 0;
+		for (Map.Entry<String, Double> entry : p1.entrySet()) {
+			String k1 = entry.getKey();
+			double v1 = entry.getValue();
+			if (p2.containsKey(k1)) {
+				x += v1 * p2.get(k1);
+			}
+			y += Math.pow(v1, 2);
+		}
+		for (Map.Entry<String, Double> entry : p2.entrySet()) {
+			z += Math.pow(entry.getValue(), 2);
+		}
+		if (y == 0 || z ==0) return 0;
+		return x / (Math.pow(y, 0.5) * Math.pow(z, 0.5));
 	}
 
 	/*

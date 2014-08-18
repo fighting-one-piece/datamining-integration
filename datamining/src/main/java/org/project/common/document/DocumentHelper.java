@@ -67,7 +67,7 @@ public class DocumentHelper {
 				break;
 			}
 			topWords[index++] = entry.getKey();
-			System.out.print(document.getName() + " : " + entry.getKey() + " : ");
+//			System.out.print(document.getName() + " : " + entry.getKey() + " : ");
 			DecimalFormat df4  = new DecimalFormat("##.0000");
 			System.out.println(df4.format(entry.getValue()));
 		}

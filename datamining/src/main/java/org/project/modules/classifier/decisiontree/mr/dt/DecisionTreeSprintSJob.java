@@ -45,7 +45,7 @@ public class DecisionTreeSprintSJob extends AbstractJob {
 	 * @return
 	 */
 	public String prepare(Data trainData) {
-		String path = FileUtils.obtainRandomTxtPath();
+		String path = FileUtils.obtainTmpTxtPath();
 		DataHandler.writeData(path, trainData);
 		System.out.println(path);
 		String name = path.substring(path.lastIndexOf(File.separator) + 1);
@@ -78,7 +78,7 @@ public class DecisionTreeSprintSJob extends AbstractJob {
 		try {
 			FileSystem fs = path.getFileSystem(conf);
 			Path[] paths = HDFSUtils.getPathFiles(fs, path);
-			ShowUtils.print(paths);
+			ShowUtils.printToConsole(paths);
 			double minSplitPointGini = 1.0;
 			SequenceFile.Reader reader = null;
 			for (Path p : paths) {
@@ -174,10 +174,10 @@ public class DecisionTreeSprintSJob extends AbstractJob {
 //			DataHandler.fill(testData.getInstances(), data.getAttributes(), 1.0);
 			DataHandler.computeFill(testData, trainData, 1.0);
 			Object[] results = (Object[]) treeNode.classifySprint(testData);
-			ShowUtils.print(results);
+			ShowUtils.printToConsole(results);
 			DataError dataError = new DataError(testData.getCategories(), results);
 			dataError.report();
-			String path = FileUtils.obtainRandomTxtPath();
+			String path = FileUtils.obtainTmpTxtPath();
 			out = new FileOutputStream(new File(path));
 			writer = new BufferedWriter(new OutputStreamWriter(out));
 			StringBuilder sb = null;

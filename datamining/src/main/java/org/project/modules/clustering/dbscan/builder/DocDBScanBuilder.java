@@ -4,13 +4,11 @@ import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 import org.project.common.document.Document;
-import org.project.common.document.DocumentHelper;
 import org.project.common.document.DocumentLoader;
+import org.project.common.document.DocumentUtils;
 import org.project.modules.clustering.dbscan.data.DataPoint;
 import org.project.modules.clustering.kmeans.builder.DocKMediodsCluster;
 import org.project.utils.DistanceUtils;
@@ -18,29 +16,22 @@ import org.project.utils.DistanceUtils;
 public class DocDBScanBuilder {
 	
 	//半径
-	public static double Epislon = 0.04;
+	public static double Epislon = 0.05;
 	//密度、最小点个数
-	public static int MinPts = 5;
+	public static int MinPoints = 8;
 	
 	public List<DataPoint> initData() {
 		List<DataPoint> dataPoints = new ArrayList<DataPoint>();
 		try {
 			String path = DocKMediodsCluster.class.getClassLoader().getResource("测试").toURI().getPath();
 			List<Document> docs = DocumentLoader.loadDocList(path);
-			Set<String> allWords = new HashSet<String>();
+			DocumentUtils.calculateTFIDF(docs);
 			for(Document doc : docs) {
-				allWords.addAll(doc.getWordSet());
-			}
-			String[] words = allWords.toArray(new String[0]);
-			for(Document doc : docs) {
-				double[] values = DocumentHelper.docWordsVector(doc, words);
-				doc.setWordsVec(values);
 				DataPoint dataPoint = new DataPoint();
-				dataPoint.setValues(values);
+				dataPoint.setValues(doc.getTfidfWords());
 				dataPoint.setCategory(doc.getCategory());
 				dataPoints.add(dataPoint);
 			}
-			System.out.println("datapoint size: " + dataPoints.size());
 		} catch (URISyntaxException e) {
 			e.printStackTrace();
 		}
@@ -52,8 +43,8 @@ public class DocDBScanBuilder {
 		List<DataPoint> neighbors = new ArrayList<DataPoint>();
 		for (DataPoint point : points) {
 			double distance = DistanceUtils.cosine(current.getValues(), point.getValues());
-			System.out.println(distance);
-			if (distance < Epislon) {
+			System.out.println("distance: " + distance);
+			if (distance > Epislon) {
 				neighbors.add(point);
 			}
 		}
@@ -69,7 +60,7 @@ public class DocDBScanBuilder {
 			if (!neighbor.isAccessed()) {
 				neighbor.setAccessed(true);
 				List<DataPoint> nneighbors = obtainNeighbors(neighbor, points);
-				if (nneighbors.size() > MinPts) {
+				if (nneighbors.size() > MinPoints) {
 					for (DataPoint nneighbor : nneighbors) {
 						if (nneighbor.getClusterId() <= 0) {
 							nneighbor.setClusterId(clusterId);
@@ -97,9 +88,11 @@ public class DocDBScanBuilder {
 				point.setAccessed(true);
 				flag = true;
 				List<DataPoint> neighbors = obtainNeighbors(point, points);
-				if (neighbors.size() >= MinPts) {
+				System.out.println("neighbors: " + neighbors.size());
+				if (neighbors.size() >= MinPoints) {
 					//满足核心对象条件的点创建一个新簇
-					clusterId = point.getClusterId() <= 0 ? (clusterId++) : point.getClusterId();
+					clusterId = point.getClusterId() <= 0 ? (++clusterId) : point.getClusterId();
+					System.out.println("--clusterId: " + clusterId);
 					mergeCluster(point, neighbors, clusterId, points);
 				} else {
 					//未满足核心对象条件的点暂时当作噪声处理

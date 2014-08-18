@@ -71,7 +71,7 @@ public class FileUtils {
 		return tmpPath;
 	}
 	
-	public static String obtainRandomTxtPath() {
+	public static String obtainTmpTxtPath() {
 		return obtainOSTmpPath() + IdentityUtils.generateUUID() + ".txt";
 	}
 	
@@ -104,5 +104,23 @@ public class FileUtils {
 			IOUtils.closeQuietly(out);
 			IOUtils.closeQuietly(writer);
 		}
+	}
+	
+	public static String writeToTmpFile(String content) {
+		String tmpPath = obtainTmpTxtPath();
+		OutputStream out = null;
+		BufferedWriter bw = null;
+		try {
+			out = new FileOutputStream(new File(tmpPath));
+			bw = new BufferedWriter(new OutputStreamWriter(out));
+			bw.write(content);
+			bw.flush();
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			IOUtils.closeQuietly(out);
+			IOUtils.closeQuietly(bw);
+		}
+		return tmpPath;
 	}
 }

@@ -81,7 +81,7 @@ public class RandomForest {
 		DataHandler.fill(testData.getInstances(), data.getAttributes() , 0);
 		ForestNode forestNode = new ForestNode(treeNodes);
 		Object[] results = (Object[]) forestNode.classify(testData);
-		ShowUtils.print(results);
+		ShowUtils.printToConsole(results);
 	}
 
 	public static void main(String[] args) {

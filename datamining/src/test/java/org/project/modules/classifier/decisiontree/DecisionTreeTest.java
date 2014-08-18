@@ -52,10 +52,10 @@ public class DecisionTreeTest {
 		DataHandler.fill(testData.getInstances(), data.getAttributes(), 0);
 		for (TreeNode node : treeNodes) {
 			Object[] result = (Object[]) node.classify(testData);
-			ShowUtils.print(result);
+			ShowUtils.printToConsole(result);
 			results.add(result);
 		}
-		ShowUtils.print(DataHandler.vote(results));
+		ShowUtils.printToConsole(DataHandler.vote(results));
 		System.out.println("tree attrs: " + attributes.size());
 	}
 	
@@ -75,7 +75,7 @@ public class DecisionTreeTest {
 		DataHandler.fill(testData.getInstances(), data.getAttributes(), 0);
 //		DataHandler.computeFill(testData, data, 1.0);
 		Object[] results = (Object[]) treeNode.classify(testData);
-		ShowUtils.print(results);
+		ShowUtils.printToConsole(results);
 	}
 	
 	@Test
@@ -84,7 +84,7 @@ public class DecisionTreeTest {
 		Data data = DataLoader.loadWithId(path);
 		TreeBuilder builder = new TreeC45Builder();
 		BranchNode treeNode = (BranchNode) builder.build(data);
-		ShowUtils.print(treeNode.getValues());
+		ShowUtils.printToConsole(treeNode.getValues());
 		TreeNodeHelper.print(treeNode, 0, null);
 	}
 	
@@ -111,7 +111,7 @@ public class DecisionTreeTest {
 		Data testData = DataLoader.loadWithId(p);
 		DataHandler.fill(testData.getInstances(), data.getAttributes(), 0);
 		Object[] results = (Object[]) node.classify(testData);
-		ShowUtils.print(results);
+		ShowUtils.printToConsole(results);
 	}
 	
 	@Test
@@ -148,7 +148,7 @@ public class DecisionTreeTest {
 		System.out.println("testdata attributes:　" + testData.getAttributes().length);
 		DataHandler.fill(testData.getInstances(), data.getAttributes(), 1.0);
 		Object[] results = (Object[]) treeNode.classifySprint(testData);
-		ShowUtils.print(results);
+		ShowUtils.printToConsole(results);
 		DataError dataError = new DataError(testData.getCategories(), results);
 		dataError.report();
 	}
@@ -175,7 +175,7 @@ public class DecisionTreeTest {
 //		DataHandler.fill(testData.getInstances(), data.getAttributes(), 1.0);
 		DataHandler.computeFill(testData, data, 1.0);
 		Object[] results = (Object[]) treeNode.classifySprint(testData);
-		ShowUtils.print(results);
+		ShowUtils.printToConsole(results);
 		DataError dataError = new DataError(testData.getCategories(), results);
 		dataError.report();
 	}
@@ -191,7 +191,7 @@ public class DecisionTreeTest {
 		TreeNode treeNode = (TreeNode) builder.build(data);
 		TreeNodeHelper.print(treeNode, 0, null);
 		Object[] results = (Object[]) treeNode.classifySprint(data);
-		ShowUtils.print(results);
+		ShowUtils.printToConsole(results);
 		DataError dataError = new DataError(data.getCategories(), results);
 		dataError.report();
 	}
@@ -225,7 +225,7 @@ public class DecisionTreeTest {
 //		DataHandler.fill(testData.getInstances(), trainData.getAttributes(), 1.0);
 		DataHandler.computeFill(testData, trainData, 1.0);
 		Object[] results = (Object[]) treeNode.classifySprint(testData);
-		ShowUtils.print(results);
+		ShowUtils.printToConsole(results);
 		DataError dataError = new DataError(testData.getCategories(), results);
 		dataError.report();
 		return dataError;

@@ -130,7 +130,7 @@ class RandomForestClassifyMapper extends Mapper<LongWritable, Text, IntWritable,
 				results.add(result);
 			}
 			Object[] finalResult = DataHandler.vote(results);
-			ShowUtils.print(finalResult);
+			ShowUtils.printToConsole(finalResult);
 			finalResults.add(finalResult);
 		}
 		Object[] result = DataHandler.vote(finalResults);

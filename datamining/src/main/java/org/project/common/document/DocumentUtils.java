@@ -82,8 +82,8 @@ public class DocumentUtils {
 				double[] v2 = DocumentHelper.docWordsVector(odocument, allWords);
 				double cosine = DistanceUtils.cosine(v1, v2);
 				DocumentSimilarity docSimilarity = new DocumentSimilarity();
-				docSimilarity.setDocName1(document.getName());
-				docSimilarity.setDocName2(odocument.getName());
+				docSimilarity.setDoc1(document);
+				docSimilarity.setDoc2(odocument);
 				docSimilarity.setVector1(v1);
 				docSimilarity.setVector2(v2);
 				docSimilarity.setDistance(cosine);
@@ -95,8 +95,8 @@ public class DocumentUtils {
 		}
 	}
 
-	public static void main(String[] args) {
-		String path = "D:\\resources\\01-news-18828";
+	public static void main(String[] args) throws Exception {
+		String path = DocumentUtils.class.getClassLoader().getResource("测试").toURI().getPath();
 		DocumentSet dataSet = DocumentLoader.loadDocSet(path);
 		calculateTFIDF(dataSet.getDocs());
 		calculateSimilarity(dataSet.getDocs());

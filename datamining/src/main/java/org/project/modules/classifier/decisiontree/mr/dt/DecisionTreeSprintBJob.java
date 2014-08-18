@@ -224,7 +224,7 @@ public class DecisionTreeSprintBJob extends AbstractJob {
 				Path outputPath = new Path(output);
 				FileSystem fs = outputPath.getFileSystem(conf);
 				Path[] paths = HDFSUtils.getPathFiles(fs, outputPath);
-				ShowUtils.print(paths);
+				ShowUtils.printToConsole(paths);
 				SequenceFile.Reader reader = null;
 				for (Path path : paths) {
 					reader = new SequenceFile.Reader(fs, path, conf);
@@ -306,7 +306,7 @@ public class DecisionTreeSprintBJob extends AbstractJob {
 //        					DataHandler.attributeValueStatistics(data.getInstances());
         			Set<String> attributeValues = attributeNameToValues.get(attribute);
         			System.out.println("attributeValues:");
-        			ShowUtils.print(attributeValues);
+        			ShowUtils.printToConsole(attributeValues);
         			if (attributeNameToValues.size() == 0 || null == attributeValues) {
         				continue;
         			}
@@ -362,10 +362,10 @@ public class DecisionTreeSprintBJob extends AbstractJob {
 					allAttributes.toArray(new String[0]), 
 					attributeValueStatistics, 1.0);
 			Object[] results = (Object[]) treeNode.classifySprint(testData);
-			ShowUtils.print(results);
+			ShowUtils.printToConsole(results);
 			DataError dataError = new DataError(testData.getCategories(), results);
 			dataError.report();
-			String path = FileUtils.obtainRandomTxtPath();
+			String path = FileUtils.obtainTmpTxtPath();
 			out = new FileOutputStream(new File(path));
 			writer = new BufferedWriter(new OutputStreamWriter(out));
 			StringBuilder sb = null;

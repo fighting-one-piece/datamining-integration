@@ -34,7 +34,7 @@ public class DecisionTreeC45Job extends AbstractJob {
 	
 	/** 对数据集做准备工作，主要就是将填充好默认值的数据集再次传到HDFS上*/
 	public String prepare(Data trainData) {
-		String path = FileUtils.obtainRandomTxtPath();
+		String path = FileUtils.obtainTmpTxtPath();
 		DataHandler.writeData(path, trainData);
 		System.out.println(path);
 		String name = path.substring(path.lastIndexOf(File.separator) + 1);
@@ -50,7 +50,7 @@ public class DecisionTreeC45Job extends AbstractJob {
 		try {
 			FileSystem fs = path.getFileSystem(conf);
 			Path[] paths = HDFSUtils.getPathFiles(fs, path);
-			ShowUtils.print(paths);
+			ShowUtils.printToConsole(paths);
 			double maxGainRatio = 0.0;
 			SequenceFile.Reader reader = null;
 			for (Path p : paths) {
@@ -97,7 +97,7 @@ public class DecisionTreeC45Job extends AbstractJob {
 		}
 		String[] splitPoints = bestAttr.obtainSplitPoints();
 		System.out.print("splitPoints: ");
-		ShowUtils.print(splitPoints);
+		ShowUtils.printToConsole(splitPoints);
 		TreeNode treeNode = new TreeNode(attribute);
 		String[] attributes = data.getAttributesExcept(attribute);
 		
@@ -134,10 +134,10 @@ public class DecisionTreeC45Job extends AbstractJob {
 			
 			DataHandler.fill(testData.getInstances(), trainData.getAttributes(), 0);
 			Object[] results = (Object[]) treeNode.classify(testData);
-			ShowUtils.print(results);
+			ShowUtils.printToConsole(results);
 			DataError dataError = new DataError(testData.getCategories(), results);
 			dataError.report();
-			String path = FileUtils.obtainRandomTxtPath();
+			String path = FileUtils.obtainTmpTxtPath();
 			out = new FileOutputStream(new File(path));
 			writer = new BufferedWriter(new OutputStreamWriter(out));
 			StringBuilder sb = null;

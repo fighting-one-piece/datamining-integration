@@ -38,7 +38,7 @@ public class AprioriBuilder extends AbstractBuilder {
 				map.put(value, null == mValue ? 1 : mValue + 1);
 			}
 		}
-		ShowUtils.print(map);
+		ShowUtils.printToConsole(map);
 		for (Map.Entry<String, Integer> entry : map.entrySet()) {
 			candidate.add(new ItemSet(entry.getKey(), entry.getValue()));
 			if (entry.getValue() >= minSupport) {

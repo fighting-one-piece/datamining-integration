@@ -96,7 +96,7 @@ public class CanopyBuilder {
 			System.out.println("old center: " + c.getCenter());
 			c.computeCenter();
 			System.out.println("new center: " + c.getCenter());
-			ShowUtils.print(c.getPoints());
+			ShowUtils.printToConsole(c.getPoints());
 		}
 	}
 
