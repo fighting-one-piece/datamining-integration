@@ -44,9 +44,9 @@ public class DocumentLoader {
 	}
 	
 	public static DocumentSet loadDocSet(String path) {
-		DocumentSet dataSet = new DocumentSet();
-		dataSet.setDocs(loadDocList(path));
-		return dataSet;
+		DocumentSet documentSet = new DocumentSet();
+		documentSet.setDocs(loadDocList(path));
+		return documentSet;
 	}
 	
 	public static List<Document> loadDocList(String path) {
