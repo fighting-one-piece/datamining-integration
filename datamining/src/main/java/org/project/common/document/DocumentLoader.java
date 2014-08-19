@@ -64,7 +64,7 @@ public class DocumentLoader {
 	}
 	
 	public static void loadURLToFile() {
-		String sql = "select url from doc where channel = 'tech' and source = '163' limit 0,200";
+		String sql = "select url from doc where channel = 'tech' and source = '163' limit 0,1";
 		Connection conn = null;
 		PreparedStatement pstmt = null;
 		ResultSet result = null;
@@ -73,7 +73,8 @@ public class DocumentLoader {
 			pstmt = conn.prepareStatement(sql);
 			result = pstmt.executeQuery();
 			while(result.next()) {
-				String url = result.getString(1);
+//				String url = result.getString(1);
+				String url = "http://ent.163.com/14/0819/10/A40NM42F000300B1.html";
 				String content = HttpClientUtils.get(url, HttpUtils.ENCODE_GB2312);
 				org.jsoup.nodes.Document document = Jsoup.parse(content);
 				Elements divs = document.select("div");
@@ -98,6 +99,7 @@ public class DocumentLoader {
 						}
 					}
 				}
+				System.out.println(sb.toString());
 				writeFile("教育", sb.toString());
 			}
 		} catch (Exception e) {

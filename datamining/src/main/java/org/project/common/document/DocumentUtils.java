@@ -22,7 +22,7 @@ public class DocumentUtils {
 		for (Document document : documents) {
 			Map<String, Double> tfidfWords = document.getTfidfWords();
 			int wordTotalCount = document.getWords().length;
-			Map<String, Integer> docWords = DocumentHelper.docWordsStatistics(document);
+			Map<String, Integer> docWords = DocumentHelper.wordsInDocStatistics(document);
 			for (String word : docWords.keySet()) {
 				double wordCount = docWords.get(word);
 				double tf = wordCount / wordTotalCount;
@@ -55,7 +55,7 @@ public class DocumentUtils {
 			});
 			if (list.size() == 0) continue; 
 			double wordTotalCount = list.get(0).getValue();
-			Map<String, Integer> docWords = DocumentHelper.docWordsStatistics(document);
+			Map<String, Integer> docWords = DocumentHelper.wordsInDocStatistics(document);
 			for (String word : docWords.keySet()) {
 				double wordCount = docWords.get(word);
 				double tf = wordCount / wordTotalCount;
@@ -74,9 +74,9 @@ public class DocumentUtils {
 	 */
 	public static void calculateSimilarity(List<Document> documents) {
 		for (Document document : documents) {
-			String[] topWords = DocumentHelper.docTopNWords(document, 20);
+			String[] topWords = DocumentHelper.topNWordsInDoc(document, 20);
 			for (Document odocument : documents) {
-				String[] otopWords = DocumentHelper.docTopNWords(odocument, 20);
+				String[] otopWords = DocumentHelper.topNWordsInDoc(odocument, 20);
 				String[] allWords = WordUtils.mergeAndRemoveRepeat(topWords, otopWords);
 				double[] v1 = DocumentHelper.docWordsVector(document, allWords);
 				double[] v2 = DocumentHelper.docWordsVector(odocument, allWords);
