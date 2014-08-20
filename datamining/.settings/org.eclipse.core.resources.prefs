@@ -1,11 +1,7 @@
 eclipse.preferences.version=1
+encoding//src/main/java/org/project/modules/algorithm/featureselect/py/doc.py=utf-8
+encoding//src/main/java/org/project/modules/algorithm/featureselect/py/featureselect.py=utf-8
 encoding//src/main/java/org/project/modules/algorithm/genetic/py/genericalgorithm.py=utf-8
-encoding//src/main/java/org/project/modules/association/similar/py/SVDRecommend.py=utf-8
-encoding//src/main/java/org/project/modules/association/similar/py/distance.py=utf-8
-encoding//src/main/java/org/project/modules/association/similar/py/doc.py=utf-8
-encoding//src/main/java/org/project/modules/association/similar/py/mainclass.py=utf-8
-encoding//src/main/java/org/project/modules/association/similar/py/pca.py=utf-8
-encoding//src/main/java/org/project/modules/association/similar/py/word.py=utf-8
 encoding//src/main/java/org/project/modules/classifier/decisiontree/py/DataHandler.py=utf-8
 encoding//src/main/resources/dic/sougou/sougou.dic=UTF-16
 encoding/<project>=UTF-8

@@ -21,7 +21,7 @@ public abstract class AbstractBuilder implements Builder {
 	
 	protected void initData() {
 		try {
-			String path = MultinomialBuilder.class.getClassLoader().getResource("测试").toURI().getPath();
+			String path = AbstractBuilder.class.getClassLoader().getResource("测试").toURI().getPath();
 			documents = DocumentLoader.loadDocList(path);
 		} catch (URISyntaxException e) {
 			e.printStackTrace();

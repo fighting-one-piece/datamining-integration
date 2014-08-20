@@ -7,7 +7,9 @@ import java.util.Map;
 
 public class DocumentSet {
 
-	private List<Document> docs = null;
+	private List<Document> documents = null;
+	
+	private Map<String, Double> selectedFeatures = null;
 	
 	private String[] words = null;
 	
@@ -17,19 +19,19 @@ public class DocumentSet {
 	
 	private Map<String, Integer> wordToCount = null;
 
-	public List<Document> getDocs() {
-		if (null == docs) {
-			docs = new ArrayList<Document>();
+	public List<Document> getDocuments() {
+		if (null == documents) {
+			documents = new ArrayList<Document>();
 		}
-		return docs;
+		return documents;
 	}
 
-	public void setDocs(List<Document> docs) {
-		this.docs = docs;
+	public void setDocuments(List<Document> documents) {
+		this.documents = documents;
 	}
 	
 	public int docLength() {
-		return docs.size();
+		return documents.size();
 	}
 	
 	public String[] getWords() {
@@ -70,6 +72,17 @@ public class DocumentSet {
 
 	public void setWordToCount(Map<String, Integer> wordToCount) {
 		this.wordToCount = wordToCount;
+	}
+
+	public Map<String, Double> getSelectedFeatures() {
+		if (null == selectedFeatures) {
+			selectedFeatures = new HashMap<String, Double>();
+		}
+		return selectedFeatures;
+	}
+
+	public void setSelectedFeatures(Map<String, Double> selectedFeatures) {
+		this.selectedFeatures = selectedFeatures;
 	}
 	
 	

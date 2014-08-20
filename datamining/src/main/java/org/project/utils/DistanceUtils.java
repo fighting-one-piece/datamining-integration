@@ -9,8 +9,22 @@ public class DistanceUtils {
 	 */
 	public static double euclidean(double[] p1, double[] p2) {
 		double result = 0.0;
-		for (int i = 0; i < p1.length; i++) {
-			result += Math.pow((p2[i] - p1[i]), 2);
+		for (int i = 0, len = p1.length; i < len; i++) {
+			result += Math.pow(p1[i] - p2[i], 2);
+		}
+		return Math.sqrt(result);
+	}
+	
+	/*
+	 * 欧氏距离
+	 */
+	public static double euclidean(Map<String, Double> p1, Map<String, Double> p2) {
+		double result = 0.0;
+		for (Map.Entry<String, Double> entry : p1.entrySet()) {
+			double v1 = entry.getValue();
+			String k1 = entry.getKey();
+			double v2 = null == p2.get(k1) ? 0 : p2.get(k1);
+			result += Math.pow(v1 - v2, 2);
 		}
 		return Math.sqrt(result);
 	}
@@ -20,8 +34,22 @@ public class DistanceUtils {
 	 */
 	public static double manhattan(double[] p1, double[] p2) {
 		double result = 0.0;
-		for (int i = 0; i < p1.length; i++) {
-			result += Math.abs(p2[i] - p1[i]);
+		for (int i = 0, len = p1.length; i < len; i++) {
+			result += Math.abs(p1[i] - p2[i]);
+		}
+		return result;
+	}
+	
+	/*
+	 * 曼哈顿距离
+	 */
+	public static double manhattan(Map<String, Double> p1, Map<String, Double> p2) {
+		double result = 0.0;
+		for (Map.Entry<String, Double> entry : p1.entrySet()) {
+			double v1 = entry.getValue();
+			String k1 = entry.getKey();
+			double v2 = null == p2.get(k1) ? 0 : p2.get(k1);
+			result += Math.abs(v1 - v2);
 		}
 		return result;
 	}

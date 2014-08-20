@@ -2,7 +2,6 @@
 '''
 
 '''
-
 import math
 
 class DistanceUtils:
@@ -13,7 +12,7 @@ class DistanceUtils:
             print 'v1 len %s not equal v2 len %s' %(len(v1), len(v2))
         a = 0;b = 0;c = 0;
         for i in range(len(v1)):
-            a += v1[i]*v2[i]
+            a += v1[i] * v2[i]
             b += v1[i]**2;
             c += v2[i]**2;
         return a / (math.sqrt(b) * math.sqrt(c))

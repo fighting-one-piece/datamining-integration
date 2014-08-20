@@ -9,7 +9,7 @@ public class Similar {
 	public static void main(String[] args) throws Exception {
 		String path = Similar.class.getClassLoader().getResource("测试").toURI().getPath();
 		DocumentSet dataSet = DocumentLoader.loadDocSet(path);
-		DocumentUtils.calculateTFIDF(dataSet.getDocs());
-		DocumentUtils.calculateSimilarity(dataSet.getDocs());
+		DocumentUtils.calculateTFIDF(dataSet.getDocuments());
+		DocumentUtils.calculateSimilarity(dataSet.getDocuments());
 	}
 }

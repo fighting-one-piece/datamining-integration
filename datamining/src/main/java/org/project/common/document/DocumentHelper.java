@@ -1,6 +1,7 @@
 package org.project.common.document;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
@@ -91,7 +92,7 @@ public class DocumentHelper {
 	/**
 	 * 文档集中词统计
 	 * @param documents
-	 * @return
+	 * @return 
 	 */
 	public static Map<String, Integer> wordsInDocsStatistics(List<Document> documents) {
 		Map<String, Integer> map = new HashMap<String, Integer>();
@@ -114,6 +115,22 @@ public class DocumentHelper {
 		List<Document> docs = new ArrayList<Document>();
 		for (Document document : documents) {
 			if (category.equalsIgnoreCase(document.getCategory())) {
+				docs.add(document);
+			}
+		}
+		return docs;
+	}
+	
+	/**
+	 * 文档集中不包含指定类型的文档集
+	 * @param category
+	 * @param documents
+	 * @return
+	 */
+	public static List<Document> categoryNotInDocs(String category, List<Document> documents) {
+		List<Document> docs = new ArrayList<Document>();
+		for (Document document : documents) {
+			if (!category.equalsIgnoreCase(document.getCategory())) {
 				docs.add(document);
 			}
 		}
@@ -162,6 +179,25 @@ public class DocumentHelper {
 			map.put(category, null == count ? 1 : count + 1);
 		}
 		return map;
+	}
+	
+	/**
+	 * 取文档集中所有词
+	 * @param documents
+	 * @param removeRepeat 是否去重
+	 * @return
+	 */
+	public static Collection<String> wordsInDocs(List<Document> documents, boolean removeRepeat) {
+		List<String> words = new ArrayList<String>();
+		for (Document document : documents) {
+			for (String word : document.getWords()) {
+				words.add(word);
+			}
+		}
+		if (removeRepeat) {
+			return new HashSet<String>(words);
+		}
+		return words;
 	}
 	
 	/**

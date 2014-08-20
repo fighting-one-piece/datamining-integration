@@ -14,7 +14,8 @@ import org.project.utils.DistanceUtils;
 
 public class DocKMediodsCluster extends AbstractCluster {
 	
-	public static final double THRESHOLD = 0.02;
+//	public static final double THRESHOLD = 0.02;
+	public static final double THRESHOLD = 0.4;
 	
 	public List<DataPoint> initData() {
 		List<DataPoint> dataPoints = new ArrayList<DataPoint>();
@@ -55,7 +56,7 @@ public class DocKMediodsCluster extends AbstractCluster {
 			double minDistance = Integer.MAX_VALUE;
 			for (DataPointCluster cluster : clusters) {
 				DataPoint center = cluster.getCenter();
-				double distance = DistanceUtils.cosine(
+				double distance = DistanceUtils.euclidean(
 						point.getValues(), center.getValues());
 				if (distance < minDistance) {
 					minDistance = distance;
@@ -74,8 +75,7 @@ public class DocKMediodsCluster extends AbstractCluster {
 			System.out.println("center: " + center);
 			DataPoint newCenter = cluster.computeMediodsCenter();
 			System.out.println("new center: " + newCenter);
-//			if (!center.equals(newCenter)) {
-			double distance = DistanceUtils.cosine(
+			double distance = DistanceUtils.euclidean(
 					newCenter.getValues(), center.getValues());
 			System.out.println("distaince: " + distance);
 			if (distance > THRESHOLD || center.equals(newCenter)) {
@@ -83,6 +83,7 @@ public class DocKMediodsCluster extends AbstractCluster {
 				cluster.setCenter(newCenter);
 			}
 		}
+		System.out.println("--------------");
 		if (!flag) {
 			for (DataPointCluster cluster : clusters) {
 				cluster.getDataPoints().clear();
@@ -93,6 +94,7 @@ public class DocKMediodsCluster extends AbstractCluster {
 	
 	public List<DataPointCluster> cluster(List<DataPoint> points, int k) {
 		List<DataPointCluster> clusters = genInitCluster(points, k);
+		printDataPointClusters(clusters);
 		handleCluster(points, clusters);
 		return clusters;
 	}

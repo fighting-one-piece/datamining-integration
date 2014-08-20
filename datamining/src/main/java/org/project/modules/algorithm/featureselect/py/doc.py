@@ -274,14 +274,14 @@ class DocHelper:
         for doc in docs:
             chiWords = {}
             words = doc.getWords()
+            belongDocs,nobelongDocs = DocHelper.categorySplit(\
+                doc.getCategory(), docs)
             for word in words:
-                belongDocs,nobelongDocs = DocHelper.categorySplit(\
-                    doc.getCategory(), docs)
                 a = DocHelper.wordInDocsStatistics(word, belongDocs)
                 b = DocHelper.wordInDocsStatistics(word, nobelongDocs)
                 c = DocHelper.wordNotInDocsStatistics(word, belongDocs)
                 d = DocHelper.wordNotInDocsStatistics(word, nobelongDocs)
-                x = float((a*d-b*c)**2)/(a+b)*(c+d)
+                x = float((a*d-b*c)**2)/ ((a+b)*(c+d))
                 chiWords[word] = x
             doc.setCHIWords(chiWords)
             

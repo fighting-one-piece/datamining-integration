@@ -33,19 +33,12 @@ public class DocumentLoader {
 	protected static Logger logger = Logger.getLogger(DocumentLoader.class);
 	
 	public static void main(String[] args) throws Exception {
-//		String path = DataLoader.class.getClassLoader().getResource("新闻").toURI().getPath();
-//		System.out.println(path);
-//		File[] files = FileUtils.obtainFiles(path);
-//		for (File file : files) {
-//			System.out.println(file.getName());
-//		}
 		loadURLToFile();
-//		load("D:\\resources\\20-news-18828");
 	}
 	
 	public static DocumentSet loadDocSet(String path) {
 		DocumentSet documentSet = new DocumentSet();
-		documentSet.setDocs(loadDocList(path));
+		documentSet.setDocuments(loadDocList(path));
 		return documentSet;
 	}
 	

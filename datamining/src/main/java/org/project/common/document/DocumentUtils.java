@@ -98,8 +98,8 @@ public class DocumentUtils {
 	public static void main(String[] args) throws Exception {
 		String path = DocumentUtils.class.getClassLoader().getResource("测试").toURI().getPath();
 		DocumentSet dataSet = DocumentLoader.loadDocSet(path);
-		calculateTFIDF(dataSet.getDocs());
-		calculateSimilarity(dataSet.getDocs());
+		calculateTFIDF(dataSet.getDocuments());
+		calculateSimilarity(dataSet.getDocuments());
 	}
 	
 }

@@ -16,7 +16,7 @@ import org.project.utils.DistanceUtils;
 public class DocDBScanBuilder {
 	
 	//半径
-	public static double Epislon = 0.05;
+	public static double Epislon = 0.2;
 	//密度、最小点个数
 	public static int MinPoints = 8;
 	
@@ -42,9 +42,9 @@ public class DocDBScanBuilder {
 	public List<DataPoint> obtainNeighbors(DataPoint current, List<DataPoint> points) {
 		List<DataPoint> neighbors = new ArrayList<DataPoint>();
 		for (DataPoint point : points) {
-			double distance = DistanceUtils.cosine(current.getValues(), point.getValues());
+			double distance = DistanceUtils.euclidean(current.getValues(), point.getValues());
 			System.out.println("distance: " + distance);
-			if (distance > Epislon) {
+			if (distance < Epislon) {
 				neighbors.add(point);
 			}
 		}

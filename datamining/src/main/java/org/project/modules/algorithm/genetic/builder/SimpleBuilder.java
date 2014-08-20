@@ -47,14 +47,14 @@ public class SimpleBuilder {
 	//建立初始化种群，随机选取总词数的2/3为初始词数
 	private void buildInitialPopulation(DocumentSet dataSet) {
 		Map<String, Integer> wordToCount = new HashMap<String, Integer>();
-		for(Document doc : dataSet.getDocs()) {
+		for(Document doc : dataSet.getDocuments()) {
 			for (String word : doc.getWords()) {
 				Integer count = wordToCount.get(word);
 				wordToCount.put(word, null == count ? 1 : count + 1);
 			}
 		}
 		dataSet.setWordToCount(wordToCount);
-		for(Document doc : dataSet.getDocs()) {
+		for(Document doc : dataSet.getDocuments()) {
 			List<String> words = new ArrayList<String>();
 			for (String word : doc.getWords()) {
 				int count = wordToCount.get(word);
@@ -65,7 +65,7 @@ public class SimpleBuilder {
 			doc.setWords(words.toArray(new String[0]));
 		}
 		Set<String> allWords = new HashSet<String>();
-		for(Document doc : dataSet.getDocs()) {
+		for(Document doc : dataSet.getDocuments()) {
 			allWords.addAll(doc.getWordSet());
 		}
 		List<String> words = new ArrayList<String>(allWords);
@@ -78,7 +78,7 @@ public class SimpleBuilder {
 			rWords[i] = words.get(RandomUtils.nextInt(all_words_len));
 		}
 		dataSet.setWords(rWords);
-		for(Document doc : dataSet.getDocs()) {
+		for(Document doc : dataSet.getDocuments()) {
 			double[] wordsVec = new double[LEN];
 			Set<String> wordSet = doc.getWordSet();
 			for (int i = 0, len = rWords.length; i < len; i++) {
@@ -97,7 +97,7 @@ public class SimpleBuilder {
 	 */
 	public void calculateFit(DocumentSet dataSet) {
 		double maxFit = 0;
-		List<Document> docs = dataSet.getDocs();
+		List<Document> docs = dataSet.getDocuments();
 		for (Document doc : docs) {
 			double[] wordsVec = doc.getWordsVec();
 			double sum = 0;
@@ -127,7 +127,7 @@ public class SimpleBuilder {
 	  * 从父代群体中选取一些个体遗传到下一代群体，返回新群体
 	 */
 	public DocumentSet selection(DocumentSet dataSet) {
-		List<Document> docs = dataSet.getDocs();
+		List<Document> docs = dataSet.getDocuments();
 		double fitSum = 0;
 		for (Document doc : docs) {
 			fitSum += doc.getFit();
@@ -150,7 +150,7 @@ public class SimpleBuilder {
 		int nIndex = 0;
 		while (nIndex < rlen && aIndex < rlen) {
 			if (rnum[nIndex] < docs.get(aIndex).getAccumulationP()) {
-				newDataSet.getDocs().add(docs.get(aIndex));
+				newDataSet.getDocuments().add(docs.get(aIndex));
 				nIndex += 1;
 			} else {
 				aIndex += 1;
@@ -169,7 +169,7 @@ public class SimpleBuilder {
 	  * 即随机两个点，在两点之间的点进行互换
 	 */
 	public void crossover(DocumentSet dataSet) {
-		List<Document> docs = dataSet.getDocs();
+		List<Document> docs = dataSet.getDocuments();
 		for (int i = 0, len = docs.size(); i < len; i = i + 2) {
 			if (RandomUtils.nextDouble() > PC || i >= len) {
 				continue;
@@ -194,7 +194,7 @@ public class SimpleBuilder {
 	  * 满足变异概率的情况下，对个体随机位数进行变异
 	 */
 	public void mutation(DocumentSet dataSet) {
-		List<Document> docs = dataSet.getDocs();
+		List<Document> docs = dataSet.getDocuments();
 		for (Document doc : docs) {
 			if (RandomUtils.nextDouble() > PM) {
 				continue; 
@@ -227,7 +227,7 @@ public class SimpleBuilder {
 	 */
 	public void statistics(DocumentSet dataSet) {
 		Map<String, Integer> wordToCount = dataSet.getWordToCount();
-		List<Document> docs = dataSet.getDocs();
+		List<Document> docs = dataSet.getDocuments();
 		String[] words = dataSet.getWords();
 		Set<String> names = new HashSet<String>();
 		for (Document doc : docs) {

@@ -20,6 +20,8 @@ public class Document {
 	private double[] wordsVec = null;
 	/** 词语计算TFIDF*/
 	private Map<String, Double> tfidfWords = null;
+	/** 词语计算CHI*/
+	private Map<String, Double> chiWords = null;
 	/** 文章相似度*/
 	private List<DocumentSimilarity> similarities = null;
 	/** 适应度*/
@@ -78,6 +80,17 @@ public class Document {
 		this.tfidfWords = tfidfWords;
 	}
 	
+	public Map<String, Double> getChiWords() {
+		if (null == chiWords) {
+			chiWords = new HashMap<String, Double>();
+		}
+		return chiWords;
+	}
+
+	public void setChiWords(Map<String, Double> chiWords) {
+		this.chiWords = chiWords;
+	}
+
 	public List<DocumentSimilarity> getSimilarities() {
 		if (null == similarities) {
 			similarities = new ArrayList<DocumentSimilarity>();
