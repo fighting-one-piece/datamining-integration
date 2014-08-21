@@ -17,6 +17,8 @@ import java.util.List;
 import java.util.Set;
 import java.util.StringTokenizer;
 import java.util.Vector;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import org.apache.commons.io.IOUtils;
 import org.apache.log4j.Logger;
@@ -33,7 +35,7 @@ public class WordUtils {
 	public static Logger logger = Logger.getLogger(WordUtils.class);
 	
 	/* 分隔符的集合 */
-	public static final String delimiters = " \t\n\r\f~!@#$%^&*()_+|`-=\\{}[]:\";'<>?,./'";
+	public static final String DELIMITERS = " \t\n\r\f~!@#$%^&*()_+|`-=\\{}[]:\";'<>?,./'";
 	
 	public static Set<String> stopWords = null;
 	
@@ -78,7 +80,7 @@ public class WordUtils {
 		} catch (IOException e) {
 			logger.error(e.getMessage());
 		}
-		return removeStopWords(words.toArray(new String[0]));
+		return removeWords(words.toArray(new String[0]));
 	}
 	
 	/**
@@ -90,7 +92,7 @@ public class WordUtils {
 	@SuppressWarnings({ "rawtypes", "unchecked" })
 	public static String[] split(String input, String language) {
 		/* 根据分隔符分词 */
-		StringTokenizer stringTokenizer = new StringTokenizer(input, delimiters);
+		StringTokenizer stringTokenizer = new StringTokenizer(input, DELIMITERS);
 		/* 所有的词 */
 		Vector vector = new Vector();
 		/* 全大写的词 -- 不用提词干所以单独处理 */
@@ -156,7 +158,7 @@ public class WordUtils {
 		for (int i = 0; i < array.length; i++) {
 			System.out.print(array[i] + " ");
 		}
-		return removeStopWords(array);
+		return removeWords(array);
 	}
 	
 	/**
@@ -202,7 +204,7 @@ public class WordUtils {
 			IOUtils.closeQuietly(in);
 			IOUtils.closeQuietly(reader);
 		}
-		return removeStopWords(words);
+		return removeWords(words);
 	}
 	
 	/**
@@ -231,11 +233,27 @@ public class WordUtils {
 		return all_words;
 	}
 	
+	public static String[] removeWords(String[] words) {
+		return removeNumericalWords(removeStopWords(words));
+	}
 	
 	public static String[] removeStopWords(String[] words) {
 		List<String> filterWords = new ArrayList<String>();
 		for (String word : words) {
 			if (!stopWords.contains(word)) {
+				filterWords.add(word);
+			}
+		}
+		return filterWords.toArray(new String[0]);
+	}
+	
+	public static String[] removeNumericalWords(String[] words) {
+		List<String> filterWords = new ArrayList<String>();
+		String regEx = "[0-9]";
+		Pattern pattern = Pattern.compile(regEx);
+		for (String word : words) {
+			Matcher matcher = pattern.matcher(word);
+			if (!matcher.find()) {
 				filterWords.add(word);
 			}
 		}
@@ -259,15 +277,20 @@ public class WordUtils {
 		return words.toArray(new String[0]);
 	}
 	
-	public static void main(String[] args) {
-		String path = "d:\\resources\\a.txt";
+	public static void main(String[] args) throws Exception {
+		String path = "D:\\resources\\data\\enter\\1.txt";
 		String[] words = splitFile(path, new ComplexSeg(Dictionary.getInstance()));
 		ShowUtils.printToConsole(words);
-		words = removeStopWords(words);
+		ShowUtils.printToConsole(removeNumericalWords(words));
+		String dicPath = WordUtils.class.getClassLoader().getResource("dic/chinese/word.dic").toURI().getPath();
+		System.out.println(dicPath);
+		words = splitFile(path, new ComplexSeg(Dictionary.getInstance(dicPath)));
 		ShowUtils.printToConsole(words);
-		String p = WordUtils.class.getClassLoader().getResource("dic/sougou/sougou.dic").getPath();
-		System.out.println(p);
-		words = splitFile(path, new ComplexSeg(Dictionary.getInstance(p)));
-		ShowUtils.printToConsole(words);
+		String str = "sssss";
+		String regEx = "[0-9]";
+		Pattern p = Pattern.compile(regEx);
+		Matcher m = p.matcher(str);
+		System.out.println(m.find());
+		System.out.println(m.matches());
 	}
 }

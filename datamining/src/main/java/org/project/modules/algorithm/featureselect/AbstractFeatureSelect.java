@@ -35,6 +35,12 @@ public abstract class AbstractFeatureSelect implements IFeatureSelect {
 			@Override
 			public int compare(Entry<String, Double> o1,
 					Entry<String, Double> o2) {
+				if (o1.getValue().isNaN()) {
+					o1.setValue(0.0);
+				}
+				if (o2.getValue().isNaN()) {
+					o2.setValue(0.0);
+				}
 				return -o1.getValue().compareTo(o2.getValue());
 			}
 		});

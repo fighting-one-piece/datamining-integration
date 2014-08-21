@@ -56,7 +56,7 @@ public class FSExpectedCrossEntropy extends AbstractFeatureSelect {
 			double ece = cd * dd * pt * sum;
 			wordsEce.put(word, ece);
 		}
-		printTopN(sortMap(wordsEce), 500);
+//		printTopN(sortMap(wordsEce), 500);
 		documentSet.setSelectedFeatures(wordsEce);
 	}
 	

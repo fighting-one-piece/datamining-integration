@@ -29,9 +29,10 @@ public class FSChiSquare extends AbstractFeatureSelect {
 				double c = DocumentHelper.wordNotInDocsStatistics(word, categoryInDocs);
 				double d = DocumentHelper.wordNotInDocsStatistics(word, categoryNotInDocs);
  				double chi = MathUtils.pow2((a*d - b*c)) / ((a+b) * (c+d));
+ 				if (Double.isNaN(chi)) continue;
 				document.getChiWords().put(word, chi);
 			}
-			printTopN(sortMap(document.getChiWords()), 20);
+//			printTopN(sortMap(document.getChiWords()), 20);
 		}
 	}
 	
