@@ -36,11 +36,11 @@ public class DocKMediodsCluster extends AbstractCluster {
 		List<DataPoint> dataPoints = new ArrayList<DataPoint>();
 		try {
 			String path = DocKMediodsCluster.class.getClassLoader().getResource("测试").toURI().getPath();
-			DocumentSet documentSet = DocumentLoader.loadDocSet(path);
+			DocumentSet documentSet = DocumentLoader.loadDocumentSet(path);
 			reduceDimensionsByCHI(documentSet);
 			//计算TFIDF
 			List<Document> documents = documentSet.getDocuments();
-			DocumentUtils.calculateTFIDF(documents);
+			DocumentUtils.calculateTFIDF_0(documents);
 			for(Document document : documents) {
 				DataPoint dataPoint = new DataPoint();
 				dataPoint.setValues(document.getTfidfWords());

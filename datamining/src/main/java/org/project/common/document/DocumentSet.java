@@ -7,8 +7,13 @@ import java.util.Map;
 
 public class DocumentSet {
 
+	/** 数据集*/
 	private List<Document> documents = null;
-	
+	/** 训练数据集*/
+	private List<Document> trainDocuments = null;
+	/** 测试数据集*/
+	private List<Document> testDocuments = null;
+	/** 全局特征选择*/
 	private Map<String, Double> selectedFeatures = null;
 	
 	private String[] words = null;
@@ -30,6 +35,28 @@ public class DocumentSet {
 		this.documents = documents;
 	}
 	
+	public List<Document> getTrainDocuments() {
+		if (null == trainDocuments) {
+			trainDocuments = new ArrayList<Document>();
+		}
+		return trainDocuments;
+	}
+
+	public void setTrainDocuments(List<Document> trainDocuments) {
+		this.trainDocuments = trainDocuments;
+	}
+
+	public List<Document> getTestDocuments() {
+		if (null == testDocuments) {
+			testDocuments = new ArrayList<Document>();
+		}
+		return testDocuments;
+	}
+
+	public void setTestDocuments(List<Document> testDocuments) {
+		this.testDocuments = testDocuments;
+	}
+
 	public int docLength() {
 		return documents.size();
 	}

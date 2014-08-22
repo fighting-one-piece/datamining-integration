@@ -18,6 +18,8 @@ public class Document {
 	private String[] words = null;
 	/** 文章分词向量*/
 	private double[] wordsVec = null;
+	/** 词语计算TF*/
+	private Map<String, Double> tfWords = null;
 	/** 词语计算TFIDF*/
 	private Map<String, Double> tfidfWords = null;
 	/** 词语计算CHI*/
@@ -69,6 +71,17 @@ public class Document {
 		this.wordsVec = wordsVec;
 	}
 	
+	public Map<String, Double> getTfWords() {
+		if (null == tfWords) {
+			tfWords = new HashMap<String, Double>();
+		}
+		return tfWords;
+	}
+
+	public void setTfWords(Map<String, Double> tfWords) {
+		this.tfWords = tfWords;
+	}
+
 	public Map<String, Double> getTfidfWords() {
 		if (null == tfidfWords) {
 			tfidfWords = new HashMap<String, Double>();
@@ -100,6 +113,22 @@ public class Document {
 
 	public void setSimilarities(List<DocumentSimilarity> similarities) {
 		this.similarities = similarities;
+	}
+	
+	/**
+	 * 计算文档相似度均值
+	 * @return
+	 */
+	public double calculateSimilarityMean() {
+		List<DocumentSimilarity> list = getSimilarities();
+		if (list.size() == 0) {
+			return 0;
+		}
+		double sum = 0;
+		for (DocumentSimilarity similarity : list) {
+			sum += similarity.getDistance();
+		}
+		return sum / list.size();
 	}
 
 	public double getFit() {

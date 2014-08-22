@@ -1,9 +1,9 @@
 package org.project.common.vector;
 
 import org.junit.Test;
-import org.project.common.distance.DistanceMeasure;
-import org.project.common.distance.EuclideanDistanceMeasure;
-import org.project.common.distance.ManhattanDistanceMeasure;
+import org.project.common.distance.IDistance;
+import org.project.common.distance.EuclideanDistance;
+import org.project.common.distance.ManhattanDistance;
 import org.project.common.function.Functions;
 
 public class VectorTest {
@@ -23,13 +23,13 @@ public class VectorTest {
 	public void test1() {
 		double[] v1 = new double[]{4.0, 4.0};
 		double[] v2 = new double[]{5.0, 5.0};
-		System.out.println(ManhattanDistanceMeasure.distance(v1, v2));
-		System.out.println(EuclideanDistanceMeasure.distance(v1, v2));
+		System.out.println(new ManhattanDistance().distance(v1, v2));
+		System.out.println(new EuclideanDistance().distance(v1, v2));
 		Vector<Double> dv1 = new DoubleVector(new Double[]{4.0, 4.0});
 		Vector<Double> dv2 = new DoubleVector(new Double[]{5.0, 5.0});
-		DistanceMeasure dm = new ManhattanDistanceMeasure();
+		IDistance dm = new ManhattanDistance();
 		System.out.println(dm.distance(dv1, dv2));
-		dm = new EuclideanDistanceMeasure();
+		dm = new EuclideanDistance();
 		System.out.println(dm.distance(dv1, dv2));
 		System.out.println(DoubleVector.aggregate(
 				dv1, dv2, Functions.plus(), Functions.minusAbsPow(2)));

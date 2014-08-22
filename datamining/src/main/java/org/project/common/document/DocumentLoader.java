@@ -9,7 +9,9 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.apache.log4j.Logger;
 import org.apache.solr.util.IOUtils;
@@ -19,6 +21,7 @@ import org.jsoup.safety.Whitelist;
 import org.jsoup.select.Elements;
 import org.project.utils.FileUtils;
 import org.project.utils.IdentityUtils;
+import org.project.utils.RandomUtils;
 import org.project.utils.WordUtils;
 import org.project.utils.http.HttpClientUtils;
 import org.project.utils.http.HttpUtils;
@@ -36,13 +39,13 @@ public class DocumentLoader {
 		loadURLToFile();
 	}
 	
-	public static DocumentSet loadDocSet(String path) {
+	public static DocumentSet loadDocumentSet(String path) {
 		DocumentSet documentSet = new DocumentSet();
-		documentSet.setDocuments(loadDocList(path));
+		documentSet.setDocuments(loadDocumentList(path));
 		return documentSet;
 	}
 	
-	public static List<Document> loadDocList(String path) {
+	public static List<Document> loadDocumentList(String path) {
 		List<Document> docs = new ArrayList<Document>();
 		File[] files = FileUtils.obtainFiles(path);
 		Seg seg = new ComplexSeg(Dictionary.getInstance());
@@ -55,6 +58,30 @@ public class DocumentLoader {
 		}
 		return docs;
 	}
+	
+	public static DocumentSet loadCrossDocumentList(String path) {
+		DocumentSet documentSet = new DocumentSet();
+		List<Document> documents = loadDocumentList(path);
+		Map<String, List<Document>> cateToDocs = new HashMap<String, List<Document>>();
+		for (Document document : documents) {
+			String category = document.getCategory();
+			List<Document> docs = cateToDocs.get(category);
+			if (null == docs) {
+				docs = new ArrayList<Document>();
+				cateToDocs.put(category, docs);
+			}
+			docs.add(document);
+		}
+		for (Map.Entry<String, List<Document>> entry : cateToDocs.entrySet()) {
+			List<Document> docs = entry.getValue();
+			for (int i = 0, len = docs.size(), limit = len / 5; i < limit; i++, len--) {
+				documentSet.getTestDocuments().add(docs.remove(RandomUtils.nextInt(len)));
+			}
+			documentSet.getTrainDocuments().addAll(docs);
+		}
+		return documentSet;
+	}
+	
 	
 	public static void loadURLToFile() {
 		String sql = "select url from doc where channel = 'tech' and source = '163' limit 0,1";

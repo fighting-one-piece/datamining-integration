@@ -2,92 +2,52 @@ package org.project.utils;
 
 import java.util.Map;
 
+import org.project.common.distance.CosineDistance;
+import org.project.common.distance.EuclideanDistance;
+import org.project.common.distance.ManhattanDistance;
+
 public class DistanceUtils {
 
 	/*
 	 * 欧氏距离
 	 */
 	public static double euclidean(double[] p1, double[] p2) {
-		double result = 0.0;
-		for (int i = 0, len = p1.length; i < len; i++) {
-			result += Math.pow(p1[i] - p2[i], 2);
-		}
-		return Math.sqrt(result);
+		return new EuclideanDistance().distance(p1, p2);
 	}
 	
 	/*
 	 * 欧氏距离
 	 */
 	public static double euclidean(Map<String, Double> p1, Map<String, Double> p2) {
-		double result = 0.0;
-		for (Map.Entry<String, Double> entry : p1.entrySet()) {
-			double v1 = entry.getValue();
-			String k1 = entry.getKey();
-			double v2 = null == p2.get(k1) ? 0 : p2.get(k1);
-			result += Math.pow(v1 - v2, 2);
-		}
-		return Math.sqrt(result);
+		return new EuclideanDistance().distance(p1, p2);
 	}
 
 	/*
 	 * 曼哈顿距离
 	 */
 	public static double manhattan(double[] p1, double[] p2) {
-		double result = 0.0;
-		for (int i = 0, len = p1.length; i < len; i++) {
-			result += Math.abs(p1[i] - p2[i]);
-		}
-		return result;
+		return new ManhattanDistance().distance(p1, p2);
 	}
 	
 	/*
 	 * 曼哈顿距离
 	 */
 	public static double manhattan(Map<String, Double> p1, Map<String, Double> p2) {
-		double result = 0.0;
-		for (Map.Entry<String, Double> entry : p1.entrySet()) {
-			double v1 = entry.getValue();
-			String k1 = entry.getKey();
-			double v2 = null == p2.get(k1) ? 0 : p2.get(k1);
-			result += Math.abs(v1 - v2);
-		}
-		return result;
+		return new ManhattanDistance().distance(p1, p2);
 	}
 
 	/*
 	 * 余弦距离
 	 */
 	public static double cosine(double[] p1, double[] p2) {
-		double a = 0, b = 0, c = 0;
-		for (int i = 0; i < p1.length; i++) {
-			a += p1[i] * p2[i];
-			b += Math.pow(p1[i], 2);
-			c += Math.pow(p2[i], 2);
-		}
-		b = Math.sqrt(b);
-		c = Math.sqrt(c);
-		if (b == 0 || c ==0) return 0;
-		return a / (b * c);
+		return new CosineDistance().distance(p1, p2);
 	}
 	
 	/*
 	 * 余弦距离
 	 */
 	public static double cosine(Map<String, Double> p1, Map<String, Double> p2) {
-		double x = 0, y = 0, z = 0;
-		for (Map.Entry<String, Double> entry : p1.entrySet()) {
-			String k1 = entry.getKey();
-			double v1 = entry.getValue();
-			if (p2.containsKey(k1)) {
-				x += v1 * p2.get(k1);
-			}
-			y += Math.pow(v1, 2);
-		}
-		for (Map.Entry<String, Double> entry : p2.entrySet()) {
-			z += Math.pow(entry.getValue(), 2);
-		}
-		if (y == 0 || z ==0) return 0;
-		return x / (Math.pow(y, 0.5) * Math.pow(z, 0.5));
+		return new CosineDistance().distance(p1, p2);
 	}
 
 	/*

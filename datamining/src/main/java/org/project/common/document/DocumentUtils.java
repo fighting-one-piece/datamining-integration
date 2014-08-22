@@ -7,17 +7,32 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
-import org.project.utils.DistanceUtils;
-import org.project.utils.WordUtils;
+import org.project.common.distance.CosineDistance;
+import org.project.common.distance.IDistance;
 
 public class DocumentUtils {
+	
+	/**
+	 * 计算TF
+	 * @param documents
+	 */
+	public static void calculateTF(List<Document> documents) {
+		for (Document document : documents) {
+			Map<String, Double> tfWords = document.getTfWords();
+			for (String word : document.getWords()) {
+				Double count = tfWords.get(word);
+				tfWords.put(word, null == count ? 1 : count + 1);
+			}
+			System.out.println("doc " + document.getName() + " calculate tf finish");
+		}
+	}
 	
 	/**
 	 * 计算TFIDF
 	 * TF计算是词频除以总词数
 	 * @param documents
 	 */
-	public static void calculateTFIDF(List<Document> documents) {
+	public static void calculateTFIDF_0(List<Document> documents) {
 		int docTotalCount = documents.size();
 		for (Document document : documents) {
 			Map<String, Double> tfidfWords = document.getTfidfWords();
@@ -31,7 +46,7 @@ public class DocumentUtils {
 				double tfidf = tf * idf;
 				tfidfWords.put(word, tfidf);
 			}
-			System.out.println("doc " + document.getName() + " finish");
+			System.out.println("doc " + document.getName() + " calculate tfidf finish");
 		}
 	}
 	
@@ -64,7 +79,7 @@ public class DocumentUtils {
 				double tfidf = tf * idf;
 				tfidfWords.put(word, tfidf);
 			}
-			System.out.println("doc " + document.getName() + " finish");
+			System.out.println("doc " + document.getName() + " calculate tfidf finish");
 		}
 	}
 	
@@ -72,34 +87,25 @@ public class DocumentUtils {
 	 * 计算相似度
 	 * @param documents
 	 */
-	public static void calculateSimilarity(List<Document> documents) {
+	public static void calculateSimilarity(List<Document> documents, IDistance idistance) {
 		for (Document document : documents) {
-			String[] topWords = DocumentHelper.topNWordsInDoc(document, 20);
 			for (Document odocument : documents) {
-				String[] otopWords = DocumentHelper.topNWordsInDoc(odocument, 20);
-				String[] allWords = WordUtils.mergeAndRemoveRepeat(topWords, otopWords);
-				double[] v1 = DocumentHelper.docWordsVector(document, allWords);
-				double[] v2 = DocumentHelper.docWordsVector(odocument, allWords);
-				double cosine = DistanceUtils.cosine(v1, v2);
+				double distance = idistance.distance(document.getTfidfWords(), odocument.getTfidfWords());
 				DocumentSimilarity docSimilarity = new DocumentSimilarity();
 				docSimilarity.setDoc1(document);
 				docSimilarity.setDoc2(odocument);
-				docSimilarity.setVector1(v1);
-				docSimilarity.setVector2(v2);
-				docSimilarity.setDistance(cosine);
+				docSimilarity.setDistance(distance);
 				document.getSimilarities().add(docSimilarity);
 			}
-			for (DocumentSimilarity similarity : document.getSimilarities()) {
-				System.out.println(similarity);
-			}
+			System.out.println("doc " + document.getName() + " calculate similar finish");
 		}
 	}
 
 	public static void main(String[] args) throws Exception {
 		String path = DocumentUtils.class.getClassLoader().getResource("测试").toURI().getPath();
-		DocumentSet dataSet = DocumentLoader.loadDocSet(path);
-		calculateTFIDF(dataSet.getDocuments());
-		calculateSimilarity(dataSet.getDocuments());
+		DocumentSet dataSet = DocumentLoader.loadDocumentSet(path);
+		calculateTFIDF_0(dataSet.getDocuments());
+		calculateSimilarity(dataSet.getDocuments(), new CosineDistance());
 	}
 	
 }

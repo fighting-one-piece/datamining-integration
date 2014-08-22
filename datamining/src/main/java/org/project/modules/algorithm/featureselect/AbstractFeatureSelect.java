@@ -17,7 +17,7 @@ public abstract class AbstractFeatureSelect implements IFeatureSelect {
 		DocumentSet documentSet = new DocumentSet();
 		try {
 			String path = AbstractFeatureSelect.class.getClassLoader().getResource("测试").toURI().getPath();
-			documentSet.setDocuments(DocumentLoader.loadDocList(path));
+			documentSet.setDocuments(DocumentLoader.loadDocumentList(path));
 		} catch (URISyntaxException e) {
 			e.printStackTrace();
 		}

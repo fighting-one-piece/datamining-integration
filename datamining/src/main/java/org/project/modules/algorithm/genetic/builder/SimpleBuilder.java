@@ -37,7 +37,7 @@ public class SimpleBuilder {
 		DocumentSet dataSet = null;
 		try {
 			String path = DocumentLoader.class.getClassLoader().getResource("测试").toURI().getPath();
-			dataSet = DocumentLoader.loadDocSet(path);
+			dataSet = DocumentLoader.loadDocumentSet(path);
 		} catch (URISyntaxException e) {
 			logger.error(e.getMessage(), e);
 		}

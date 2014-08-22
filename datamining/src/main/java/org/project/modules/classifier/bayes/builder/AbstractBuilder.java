@@ -22,7 +22,7 @@ public abstract class AbstractBuilder implements Builder {
 	protected void initData() {
 		try {
 			String path = AbstractBuilder.class.getClassLoader().getResource("测试").toURI().getPath();
-			documents = DocumentLoader.loadDocList(path);
+			documents = DocumentLoader.loadDocumentList(path);
 		} catch (URISyntaxException e) {
 			e.printStackTrace();
 		}
