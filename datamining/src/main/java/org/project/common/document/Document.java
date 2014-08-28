@@ -103,6 +103,14 @@ public class Document {
 	public void setChiWords(Map<String, Double> chiWords) {
 		this.chiWords = chiWords;
 	}
+	
+	public Map<String, Double> getSimilaritiesMap() {
+		Map<String, Double> similaritiesMap = new HashMap<String, Double>();
+		for (DocumentSimilarity similarity : getSimilarities()) {
+			similaritiesMap.put(similarity.getDoc2().getName(), similarity.getDistance());
+		}
+		return similaritiesMap;
+	}
 
 	public List<DocumentSimilarity> getSimilarities() {
 		if (null == similarities) {

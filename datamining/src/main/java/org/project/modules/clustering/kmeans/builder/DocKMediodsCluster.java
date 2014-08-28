@@ -4,9 +4,12 @@ import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.HashSet;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Random;
+import java.util.Set;
 import java.util.Map.Entry;
 
 import org.project.common.document.DocumentLoader;
@@ -14,6 +17,8 @@ import org.project.common.document.Document;
 import org.project.common.document.DocumentSet;
 import org.project.common.document.DocumentUtils;
 import org.project.modules.algorithm.featureselect.FSChiSquare;
+import org.project.modules.algorithm.featureselect.FSExpectedCrossEntropy;
+import org.project.modules.algorithm.featureselect.FSInformationGain;
 import org.project.modules.algorithm.featureselect.IFeatureSelect;
 import org.project.modules.clustering.kmeans.data.DataPoint;
 import org.project.modules.clustering.kmeans.data.DataPointCluster;
@@ -21,23 +26,33 @@ import org.project.utils.DistanceUtils;
 
 public class DocKMediodsCluster extends AbstractCluster {
 	
-	//阀值
-	public static final double THRESHOLD = 0.01;
+	//阀值 CHI
+	public static final double THRESHOLD = 0.028;
+	//阀值 ECE
+//	public static final double THRESHOLD = 0.12;
+	//阀值 IG
+//	public static final double THRESHOLD = 0.12;
 	//迭代次数
 	public static final int ITER_NUM = 10;
 	//开方检验词限制
 	public static int CHI_WORD_LIMIT = 100;
 	//期望交叉熵词限制
-	public static int ECE_WORD_LIMIT = 600;
+	public static int ECE_WORD_LIMIT = 700;
 	//信息增益词限制
-	public static int IG_WORD_LIMIT = 500;
+	public static int IG_WORD_LIMIT = 600;
 	
+	/*
+	 * 初始化数据
+	 * 先通过开方检验进行降维
+	 */
 	public List<DataPoint> initData() {
 		List<DataPoint> dataPoints = new ArrayList<DataPoint>();
 		try {
 			String path = DocKMediodsCluster.class.getClassLoader().getResource("测试").toURI().getPath();
 			DocumentSet documentSet = DocumentLoader.loadDocumentSet(path);
 			reduceDimensionsByCHI(documentSet);
+//			reduceDimensionsByECE(documentSet);
+//			reduceDimensionsByIG(documentSet);
 			//计算TFIDF
 			List<Document> documents = documentSet.getDocuments();
 			DocumentUtils.calculateTFIDF_0(documents);
@@ -70,13 +85,67 @@ public class DocKMediodsCluster extends AbstractCluster {
 		}
 	}
 	
+	//期望交叉熵特征选择降维
+	public void reduceDimensionsByECE(DocumentSet documentSet) {
+		IFeatureSelect featureSelect = new FSExpectedCrossEntropy();
+		featureSelect.handle(documentSet);
+		Map<String, Double> eceWords = documentSet.getSelectedFeatures();
+		List<Map.Entry<String, Double>> list = sortMap(eceWords);
+		int len = list.size() < ECE_WORD_LIMIT ? list.size() : ECE_WORD_LIMIT;
+		List<String> wordList = new ArrayList<String>();
+		for (int i = 0; i < len; i++) {
+			wordList.add(list.get(i).getKey());
+		}
+		List<Document> documents = documentSet.getDocuments();
+		for (Document document : documents) {
+			Set<String> wordSet = document.getWordSet();
+			Iterator<String> iter = wordSet.iterator();
+			while (iter.hasNext()) {
+				String word = iter.next();
+				if (!wordList.contains(word)) {
+					iter.remove();
+				}
+			}
+			document.setWords(wordSet.toArray(new String[0]));
+		}
+	}
+	
+	//信息增益特征选择降维
+	public void reduceDimensionsByIG(DocumentSet documentSet) {
+		IFeatureSelect featureSelect = new FSInformationGain();
+		featureSelect.handle(documentSet);
+		Map<String, Double> eceWords = documentSet.getSelectedFeatures();
+		List<Map.Entry<String, Double>> list = sortMap(eceWords);
+		int len = list.size() < IG_WORD_LIMIT ? list.size() : IG_WORD_LIMIT;
+		List<String> wordList = new ArrayList<String>();
+		for (int i = 0; i < len; i++) {
+			wordList.add(list.get(i).getKey());
+		}
+		List<Document> documents = documentSet.getDocuments();
+		for (Document document : documents) {
+			Set<String> wordSet = document.getWordSet();
+			Iterator<String> iter = wordSet.iterator();
+			while (iter.hasNext()) {
+				String word = iter.next();
+				if (!wordList.contains(word)) {
+					iter.remove();
+				}
+			}
+			document.setWords(wordSet.toArray(new String[0]));
+		}
+	}
+	
 	//随机生成中心点，并生成初始的K个聚类
 	public List<DataPointCluster> genInitCluster(List<DataPoint> points, int k) {
 		List<DataPointCluster> clusters = new ArrayList<DataPointCluster>();
 		Random random = new Random();
-		for (int i = 0, len = points.size(); i < k; i++) {
+		Set<String> categories = new HashSet<String>();
+		while (clusters.size() < k) {
+			DataPoint center = points.get(random.nextInt(points.size()));
+			String category = center.getCategory();
+			if (categories.contains(category)) continue;
+			categories.add(category);
 			DataPointCluster cluster = new DataPointCluster();
-			DataPoint center = points.get(random.nextInt(len));
 			cluster.setCenter(center);
 			cluster.getDataPoints().add(center);
 			clusters.add(cluster);
@@ -117,19 +186,12 @@ public class DocKMediodsCluster extends AbstractCluster {
 			}
 		}
 		System.out.println("--------------");
-		if (!flag) {
+		if (!flag && iterNum < ITER_NUM) {
 			for (DataPointCluster cluster : clusters) {
 				cluster.getDataPoints().clear();
 			}
 			handleCluster(points, clusters, ++iterNum);
 		}
-	}
-	
-	public List<DataPointCluster> cluster(List<DataPoint> points, int k) {
-		List<DataPointCluster> clusters = genInitCluster(points, k);
-		printDataPointClusters(clusters);
-		handleCluster(points, clusters, 0);
-		return clusters;
 	}
 	
 	public List<Map.Entry<String, Double>> sortMap(Map<String, Double> map) {
@@ -153,8 +215,27 @@ public class DocKMediodsCluster extends AbstractCluster {
 	
 	public void build() {
 		List<DataPoint> points = initData();
-		List<DataPointCluster> clusters = cluster(points, 4);
-		printDataPointClusters(clusters);
+		List<DataPointCluster> clusters = genInitCluster(points, 4);
+		for (DataPointCluster cluster : clusters) {
+			System.out.println("center: " + cluster.getCenter().getCategory());
+		}
+		handleCluster(points, clusters, 0);
+		int success = 0, failure = 0;
+		for (DataPointCluster cluster : clusters) {
+			String category = cluster.getCenter().getCategory();
+			System.out.println("center: " + category + "--" + cluster.getDataPoints().size());
+			for (DataPoint dataPoint : cluster.getDataPoints()) {
+				String dpCategory = dataPoint.getCategory();
+				System.out.println(dpCategory);
+				if (category.equals(dpCategory)) {
+					success++;
+				} else {
+					failure++;
+				}
+			}
+			System.out.println("----------");
+		}
+		System.out.println("total: " + (success + failure) + " success: " + success + " failure: " + failure);
 	}
 	
 	public static void main(String[] args) {

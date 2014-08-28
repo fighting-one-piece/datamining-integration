@@ -33,7 +33,7 @@ public class DocDBScanBuilder {
 	//期望交叉熵词限制
 	public static int ECE_WORD_LIMIT = 600;
 	//信息增益词限制
-	public static int IG_WORD_LIMIT = 500;
+	public static int IG_WORD_LIMIT = 600;
 	
 	//初始化数据
 	public List<DataPoint> initData() {
@@ -41,8 +41,9 @@ public class DocDBScanBuilder {
 		try {
 			String path = DocKMediodsCluster.class.getClassLoader().getResource("测试").toURI().getPath();
 			DocumentSet documentSet = DocumentLoader.loadDocumentSet(path);
-//			reduceDimensionsByCHI(documentSet);
-			reduceDimensionsByECE(documentSet);
+			reduceDimensionsByCHI(documentSet);
+//			reduceDimensionsByECE(documentSet);
+//			reduceDimensionsByIG(documentSet);
 			//计算TFIDF
 			List<Document> documents = documentSet.getDocuments();
 			DocumentUtils.calculateTFIDF_0(documents);
@@ -96,7 +97,6 @@ public class DocDBScanBuilder {
 					iter.remove();
 				}
 			}
-			System.out.println("wordSet: " + wordSet.size());
 			document.setWords(wordSet.toArray(new String[0]));
 		}
 	}
@@ -193,19 +193,6 @@ public class DocDBScanBuilder {
 		}
 	}
 	
-	//打印结果
-	public void print(List<DataPoint> points) {
-		Collections.sort(points, new Comparator<DataPoint>() {
-			@Override
-			public int compare(DataPoint o1, DataPoint o2) {
-				return Integer.valueOf(o1.getClusterId()).compareTo(o2.getClusterId());
-			}
-		});
-		for (DataPoint point : points) {
-			System.out.println(point.getClusterId() + " - " + point.getCategory());
-		}
-	}
-	
 	public List<Map.Entry<String, Double>> sortMap(Map<String, Double> map) {
 		List<Map.Entry<String, Double>> list = 
 				new ArrayList<Map.Entry<String, Double>>(map.entrySet());
@@ -223,6 +210,19 @@ public class DocDBScanBuilder {
 			}
 		});
 		return list;
+	}
+	
+	//打印结果
+	public void print(List<DataPoint> points) {
+		Collections.sort(points, new Comparator<DataPoint>() {
+			@Override
+			public int compare(DataPoint o1, DataPoint o2) {
+				return Integer.valueOf(o1.getClusterId()).compareTo(o2.getClusterId());
+			}
+		});
+		for (DataPoint point : points) {
+			System.out.println(point.getClusterId() + " - " + point.getCategory());
+		}
 	}
 
 	public void build() {

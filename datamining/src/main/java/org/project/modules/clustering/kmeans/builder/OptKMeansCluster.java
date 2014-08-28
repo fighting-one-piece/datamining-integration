@@ -4,10 +4,12 @@ import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
-import java.util.Random;
 import java.util.Map.Entry;
+import java.util.Random;
+import java.util.Set;
 
 import org.project.common.distance.EuclideanDistance;
 import org.project.common.document.Document;
@@ -152,6 +154,23 @@ public class OptKMeansCluster {
 		return clusters;
 	}
 	
+	public List<DataPointCluster> genInitCluster2(List<DataPoint> dataPoints, int k) {
+		List<DataPointCluster> clusters = new ArrayList<DataPointCluster>();
+		Set<String> categories = new HashSet<String>();
+		while (clusters.size() < k) {
+			for (DataPoint dataPoint : dataPoints) {
+				String category = dataPoint.getCategory();
+				if (categories.contains(category)) continue;
+				categories.add(category);
+				DataPointCluster cluster = new DataPointCluster();
+				cluster.setCenter(dataPoint);
+				cluster.getDataPoints().add(dataPoint);
+				clusters.add(cluster);
+			}
+		}
+		return clusters;
+	}
+	
 	public DataPoint computeMediodsCenter(List<DataPoint> dataPoints) {
 		DataPoint centerPoint = null;
 		double distance = Integer.MAX_VALUE;
@@ -194,7 +213,7 @@ public class OptKMeansCluster {
 			DataPoint newCenter = cluster.computeMediodsCenter();
 			double distance = new EuclideanDistance().distance(center.getValues(), newCenter.getValues());
 			System.out.println("distaince: " + distance);
-			if (distance > 0.25) {
+			if (distance > 0.26) {
 				flag = false;
 				cluster.setCenter(newCenter);
 			}
@@ -216,7 +235,7 @@ public class OptKMeansCluster {
 	
 	public void build() {
 		splitDataPoints();
-		List<DataPointCluster> clusters = genInitCluster1(dataPoints, 4);
+		List<DataPointCluster> clusters = genInitCluster2(dataPoints, 4);
 		for (DataPointCluster cluster : clusters) {
 			System.out.println(cluster.getCenter().getCategory());
 		}

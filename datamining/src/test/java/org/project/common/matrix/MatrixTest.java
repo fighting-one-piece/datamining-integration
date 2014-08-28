@@ -33,5 +33,6 @@ public class MatrixTest {
 		System.out.print("singular values = ");
 		Matrix svalues = new Matrix(s.getSingularValues(), 1);
 		svalues.print(9, 6);
+		
 	}
 }

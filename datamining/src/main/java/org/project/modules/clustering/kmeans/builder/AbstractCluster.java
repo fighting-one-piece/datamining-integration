@@ -31,12 +31,21 @@ public abstract class AbstractCluster {
 	}
 	
 	protected void printDataPointClusters(List<DataPointCluster> clusters) {
+		int success = 0, failure = 0;
 		for (DataPointCluster cluster : clusters) {
-			System.out.println("center: " + cluster.getCenter());
-			System.out.println("cluster size: " + cluster.getDataPoints().size());
-			for (DataPoint point : cluster.getDataPoints()) {
-				System.out.println(point.getCategory());
+			String category = cluster.getCenter().getCategory();
+			System.out.println("center: " + category + "--" + cluster.getDataPoints().size());
+			for (DataPoint dataPoint : cluster.getDataPoints()) {
+				String dpCategory = dataPoint.getCategory();
+				System.out.println(dpCategory);
+				if (category.equals(dpCategory)) {
+					success++;
+				} else {
+					failure++;
+				}
 			}
+			System.out.println("----------");
 		}
+		System.out.println("total: " + (success + failure) + " success: " + success + " failure: " + failure);
 	}
 }
