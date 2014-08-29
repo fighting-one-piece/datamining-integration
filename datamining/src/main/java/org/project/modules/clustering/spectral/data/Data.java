@@ -7,6 +7,8 @@ public class Data {
 	private String[] column = null;
 	
 	private double[][] values = null;
+	
+	private double[][] original = null;
 
 	public String[] getRow() {
 		return row;
@@ -33,6 +35,14 @@ public class Data {
 	}
 	
 	
+	public double[][] getOriginal() {
+		return original;
+	}
+
+	public void setOriginal(double[][] original) {
+		this.original = original;
+	}
+
 	@Override
 	public String toString() {
 		StringBuilder sb = new StringBuilder();
