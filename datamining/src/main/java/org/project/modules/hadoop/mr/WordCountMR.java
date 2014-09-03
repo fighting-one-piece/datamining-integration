@@ -13,7 +13,7 @@ import org.apache.hadoop.mapreduce.Reducer;
 import org.apache.hadoop.mapreduce.lib.input.FileInputFormat;
 import org.apache.hadoop.mapreduce.lib.input.TextInputFormat;
 import org.apache.hadoop.mapreduce.lib.output.FileOutputFormat;
-import org.apache.hadoop.mapreduce.lib.output.SequenceFileOutputFormat;
+import org.apache.hadoop.mapreduce.lib.output.TextOutputFormat;
 import org.apache.hadoop.util.GenericOptionsParser;
 
 public class WordCountMR {
@@ -30,7 +30,7 @@ public class WordCountMR {
 		job.setOutputValueClass(IntWritable.class);
 		
 		job.setInputFormatClass(TextInputFormat.class);
-		job.setOutputFormatClass(SequenceFileOutputFormat.class);
+		job.setOutputFormatClass(TextOutputFormat.class);
 	}
 
 	public static void main(String[] args) {

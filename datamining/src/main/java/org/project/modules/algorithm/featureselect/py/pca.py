@@ -1,9 +1,7 @@
 #-*- coding: utf-8 -*-
 
 '''
-Created on Jun 1, 2011
 
-@author: Peter Harrington
 '''
 from numpy import *
 
@@ -14,6 +12,7 @@ def loadDataSet(fileName, delim='\t'):
     return mat(datArr)
 
 def pca(dataMat, topNfeat=9999999):
+    print shape(dataMat)
     #计算平均值
     meanVals = mean(dataMat, axis=0)
     #数据去除平均值
@@ -22,9 +21,11 @@ def pca(dataMat, topNfeat=9999999):
     covMat = cov(meanRemoved, rowvar=0)
     #获取特征值和特征向量
     eigVals,eigVects = linalg.eig(mat(covMat))
+    print 'eigVects:%s' %eigVects
     #排序特征值
     eigValInd = argsort(eigVals)            #sort, sort goes smallest to largest
     #截取特征值，最大值开始
+    print 'before eigValInd:%s' %eigValInd
     eigValInd = eigValInd[:-(topNfeat+1):-1]  #cut off unwanted dimensions
     print 'eigValInd:%s' %eigValInd
     #截取与特征值大小相同的列的特征向量
@@ -32,7 +33,7 @@ def pca(dataMat, topNfeat=9999999):
     print 'redEigVects:%s' %redEigVects
     print shape(meanRemoved)
     print shape(redEigVects)
-    lowDDataMat = meanRemoved * redEigVects#transform data into new dimensions
+    lowDDataMat = meanRemoved * redEigVects #transform data into new dimensions
     reconMat = (lowDDataMat * redEigVects.T) + meanVals
     return lowDDataMat, reconMat
 

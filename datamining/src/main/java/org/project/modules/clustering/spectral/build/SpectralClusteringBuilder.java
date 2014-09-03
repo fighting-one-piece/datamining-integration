@@ -1,4 +1,4 @@
-package org.project.modules.clustering.spectral;
+package org.project.modules.clustering.spectral.build;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -17,6 +17,7 @@ import org.project.common.document.DocumentLoader;
 import org.project.common.document.DocumentSet;
 import org.project.common.document.DocumentSimilarity;
 import org.project.common.document.DocumentUtils;
+import org.project.modules.clustering.spectral.SpectralClustering;
 import org.project.modules.clustering.spectral.data.Data;
 import org.project.modules.clustering.spectral.data.DataPoint;
 import org.project.modules.clustering.spectral.data.DataPointCluster;
@@ -25,8 +26,8 @@ import org.project.utils.DistanceUtils;
 import Jama.EigenvalueDecomposition;
 import Jama.Matrix;
 
-public class SpectralClustering {
-	
+public class SpectralClusteringBuilder {
+
 	public static int DIMENSION = 30;
 	
 	public static double THRESHOLD = 0.01;
@@ -80,6 +81,11 @@ public class SpectralClustering {
 		return data;
 	}
 
+	/**
+	 * 获取距离阀值在一定范围内的点
+	 * @param data
+	 * @return
+	 */
 	public double[][] getWByDistance(Data data) {
 		Map<String, Map<String, Double>> nmap = data.getNmap();
 		String[] docnames = data.getDocnames();
@@ -95,6 +101,11 @@ public class SpectralClustering {
 		return w;
 	}
 	
+	/**
+	 * 获取距离最近的K个点
+	 * @param data
+	 * @return
+	 */
 	public double[][] getWByKNearestNeighbors(Data data) {
 		Map<String, Map<String, Double>> nmap = data.getNmap();
 		String[] docnames = data.getDocnames();
@@ -119,6 +130,11 @@ public class SpectralClustering {
 		return w;
 	}
 
+	/**
+	 * 垂直求和
+	 * @param W
+	 * @return
+	 */
 	public double[][] getVerticalD(double[][] W) {
 		int row = W.length;
 		int column = W[0].length;
@@ -133,6 +149,11 @@ public class SpectralClustering {
 		return d;
 	}
 
+	/**
+	 * 水平求和
+	 * @param W
+	 * @return
+	 */
 	public double[][] getHorizontalD(double[][] W) {
 		int row = W.length;
 		int column = W[0].length;
@@ -147,6 +168,11 @@ public class SpectralClustering {
 		return d;
 	}
 	
+	/**
+	 * 相似度排序，并取前K个，倒叙
+	 * @param similarities
+	 * @param k
+	 */
 	public void sortSimilarities(List<Map.Entry<String, Double>> similarities, int k) {
 		Collections.sort(similarities, new Comparator<Map.Entry<String, Double>>() {
 			@Override
@@ -158,10 +184,6 @@ public class SpectralClustering {
 		while (similarities.size() > k) {
 			similarities.remove(similarities.size() - 1);
 		}
-//		for (Map.Entry<String, Double> entry : similarities) {
-//			System.out.println(entry.getKey() + "-" + entry.getValue());
-//		}
-//		System.out.println("------------------entry size: " + similarities.size());
 	}
 
 	public void print(double[][] values) {
@@ -195,7 +217,6 @@ public class SpectralClustering {
 	// 将点归入到聚类中
 	public void handleCluster(List<DataPoint> points,
 			List<DataPointCluster> clusters, int iterNum) {
-		System.out.println("iterNum: " + iterNum);
 		for (DataPoint point : points) {
 			DataPointCluster maxCluster = null;
 			double maxDistance = Integer.MIN_VALUE;
@@ -220,13 +241,11 @@ public class SpectralClustering {
 			DataPoint newCenter = cluster.computeMediodsCenter();
 			double distance = DistanceUtils.cosine(newCenter.getValues(),
 					center.getValues());
-			System.out.println("distaince: " + distance);
 			if (distance > 0.5) {
 				flag = false;
 				cluster.setCenter(newCenter);
 			}
 		}
-		System.out.println("--------------");
 		if (!flag && iterNum < 25) {
 			for (DataPointCluster cluster : clusters) {
 				cluster.getDataPoints().clear();
@@ -235,138 +254,33 @@ public class SpectralClustering {
 		}
 	}
 
+	/**
+	 * KMeans方法
+	 * @param dataPoints
+	 */
 	public void kmeans(List<DataPoint> dataPoints) {
 		List<DataPointCluster> clusters = genInitCluster(dataPoints, 4);
-//		for (DataPointCluster cluster : clusters) {
-//			System.out.println("center: " + cluster.getCenter().getCategory());
-//		}
 		handleCluster(dataPoints, clusters, 0);
 		int success = 0, failure = 0;
 		for (DataPointCluster cluster : clusters) {
 			String category = cluster.getCenter().getCategory();
-//			System.out.println("center: " + category + "--"
-//					+ cluster.getDataPoints().size());
 			for (DataPoint dataPoint : cluster.getDataPoints()) {
 				String dpCategory = dataPoint.getCategory();
-//				System.out.println(dpCategory);
 				if (category.equals(dpCategory)) {
 					success++;
 				} else {
 					failure++;
 				}
 			}
-//			System.out.println("----------");
 		}
 		System.out.println("total: " + (success + failure) + " success: "
 				+ success + " failure: " + failure);
 	}
 
-	public void buildOri() {
-		Data data = getInitData();
-		double[][] w = getWByDistance(data);
-		System.out.println("-----w-----");
-		print(w);
-//		double[][] d = getVerticalD(w);
-		double[][] d = getHorizontalD(w);
-		System.out.println("-----d-----");
-		print(d);
-		Matrix W = new Matrix(w);
-		Matrix D = new Matrix(d);
-		Matrix L = D.minus(W);
-		double[][] l = L.getArray();
-		System.out.println("-----l-----");
-		print(l);
-//		SingularValueDecomposition svd = L.svd();
-		// Matrix S = svd.getS();
-		// double[][] s = S.getArray();
-		// System.out.println("-----s-----");
-		// print(s);
-		EigenvalueDecomposition eig = L.eig();
-//		 System.out.println("-----e-----");
-//		 print(eig.getD().getArray());
-//		 System.out.println("-----ev-----");
-//		 print(eig.getV().getArray());
-//		double[] singularValues = svd.getSingularValues();
-//		int len = singularValues.length;
-//		for (int i = 0; i < len; i++) {
-//			singularValues[i] = singularValues[i] + singularValues[len - 1];
-//			singularValues[len - 1] = singularValues[i]
-//					- singularValues[len - 1];
-//			singularValues[i] = singularValues[i] - singularValues[len - 1];
-//		}
-//		double[][] k = new double[len][len];
-//		for (int i = 0; i < len; i++) {
-//			for (int j = 0; j < len; j++) {
-//				k[i][j] = (i < 50 && i == j) ? singularValues[i] : 0;
-//			}
-//		}
-//		System.out.println("-----sv-----");
-//		print(svd.getS().getArray());
-//		Matrix K = new Matrix(k);
-//		Matrix N = new Matrix(data.getOriginal());
-//		Matrix NK = N.times(K);
-//		System.out.println("-----nk-----");
-//		double[][] nk = NK.getArray();
-		double[][] nk = eig.getV().getArray();
-		for (int i = 0, li = nk.length; i < li; i++) {
-			for (int j = 0, lj = nk[0].length; j < lj; j++) {
-				if (j == 0 || j > 51) {
-					nk[i][j] = 0;
-				}
-			}
-		}
-		System.out.println("-----nk-----");
-		print(nk);
-		List<DataPoint> dataPoints = new ArrayList<DataPoint>();
-		for (int i = 0; i < nk.length; i++) {
-			DataPoint dataPoint = new DataPoint();
-			dataPoint.setCategory(data.getCmap().get(data.getColumn()[i]));
-			dataPoint.setValues(nk[i]);
-			dataPoints.add(dataPoint);
-		}
-		kmeans(dataPoints);
-	}
-	
-	public void buildPrint() {
-		Data data = getInitData();
-		double[][] w = getWByKNearestNeighbors(data);
-		System.out.println("-----w-----");
-		print(w);
-		double[][] d = getHorizontalD(w);
-		System.out.println("-----d-----");
-		print(d);
-		Matrix W = new Matrix(w);
-		Matrix D = new Matrix(d);
-		Matrix L = D.minus(W);
-		double[][] l = L.getArray();
-		System.out.println("-----l-----");
-		print(l);
-		EigenvalueDecomposition eig = L.eig();
-		double[][] nk = eig.getV().getArray();
-		for (int i = 0, li = nk.length; i < li; i++) {
-			for (int j = 0, lj = nk[0].length; j < lj; j++) {
-				if (j == 0 || j > 51) {
-					nk[i][j] = 0;
-				}
-			}
-		}
-		System.out.println("-----nk-----");
-		print(nk);
-		List<DataPoint> dataPoints = new ArrayList<DataPoint>();
-		for (int i = 0; i < nk.length; i++) {
-			DataPoint dataPoint = new DataPoint();
-			dataPoint.setCategory(data.getCmap().get(data.getColumn()[i]));
-			dataPoint.setValues(nk[i]);
-			dataPoints.add(dataPoint);
-		}
-		kmeans(dataPoints);
-	}
-	
 	public void build() {
 		Data data = getInitData();
 		double[][] w = getWByKNearestNeighbors(data);
 		double[][] d = getHorizontalD(w);
-//		double[][] d = getVerticalD(w);
 		Matrix W = new Matrix(w);
 		Matrix D = new Matrix(d);
 		Matrix L = D.minus(W);
@@ -375,16 +289,12 @@ public class SpectralClustering {
 		double[][] vs = new double[v.length][DIMENSION];
 		for (int i = 0, li = v.length; i < li; i++) {
 			for (int j = 1, lj = DIMENSION; j <= lj; j++) {
-//				if (j == 0 || j > 41) {
-					vs[i][j-1] = v[i][j];
-//				}
+				vs[i][j-1] = v[i][j];
 			}
 		}
 		Matrix V = new Matrix(vs);
 		Matrix O = new Matrix(data.getOriginal());
 	    double[][] t = O.times(V).getArray();
-		print(t);
-		System.out.println("t: " + t.length + "-" + t[0].length);
 	    List<DataPoint> dataPoints = new ArrayList<DataPoint>();
 		for (int i = 0; i < t.length; i++) {
 			DataPoint dataPoint = new DataPoint();
@@ -398,6 +308,6 @@ public class SpectralClustering {
 	}
 
 	public static void main(String[] args) {
-		new SpectralClustering().build();
+		new SpectralClusteringBuilder().build();
 	}
 }
