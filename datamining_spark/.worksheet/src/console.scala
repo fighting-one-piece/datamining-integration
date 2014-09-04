@@ -55,7 +55,12 @@ object console {;import org.scalaide.worksheet.runtime.library.WorksheetSupport.
 	println(romanNumeral(4));$skip(27); 
 	
 	def a(x:Int)=println(x);System.out.println("""a: (x: Int)Unit""");$skip(7); 
-	a(10)}
+	a(10);$skip(34); 
   
-  
+  val map = Map[String, Int]();System.out.println("""map  : scala.collection.mutable.Map[String,Int] = """ + $show(map ));$skip(22); val res$3 = 
+  map += ("one" -> 1);System.out.println("""res3: console.map.type = """ + $show(res$3));$skip(22); val res$4 = 
+  map += ("two" -> 2);System.out.println("""res4: console.map.type = """ + $show(res$4));$skip(26); 
+  println(map.get("one"));$skip(28); 
+  println(map.get("three"));$skip(37); 
+  println(map.getOrElse("three", 3))}
 }

@@ -50,6 +50,7 @@ public class KNNClassifier {
 	}
 	
 	public static void main(String[] args) {
+		long start = System.currentTimeMillis();
 		Configuration configuration = new Configuration();
 		try {
 			String[] inputArgs = new GenericOptionsParser(
@@ -73,6 +74,8 @@ public class KNNClassifier {
 			configureJob(job);
 			
 			System.out.println(job.waitForCompletion(true) ? 0 : 1);
+			long end = System.currentTimeMillis();
+			System.out.println("spend time: " + (end - start) / 1000);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -119,7 +122,6 @@ class KNNMapper extends Mapper<LongWritable, Text, Text, PointWritable> {
 			double distance = distance(testPoint, trainPoint);
 			context.write(new Text(outputKey), new PointWritable(trainPoint, distance));
 		}
-		
 	}
 	
 	public double distance(Point point1, Point point2) {
@@ -151,6 +153,7 @@ class KNNReducer extends Reducer<Text, PointWritable, Text, Text> {
 		Map<String, Integer> map = new HashMap<String, Integer>();
 		int index = 0;
 		for (PointWritable point : values) {
+			System.out.println("p: " + point.getX() + "-" + point.getY() + "-" + point.getDistance());
 			String category = point.getCategory().toString();
 			Integer count = map.get(category);
 			map.put(category, null == count ? 1 : count + 1);
@@ -165,6 +168,7 @@ class KNNReducer extends Reducer<Text, PointWritable, Text, Text> {
 				return o2.getValue().compareTo(o1.getValue());
 			}
 		});
+		System.out.println("lv: " + list.get(0).getValue());
 		context.write(key, new Text(list.get(0).getKey()));
 	}
 

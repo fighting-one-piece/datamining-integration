@@ -104,7 +104,7 @@ public class PointWritable implements WritableComparable<PointWritable> {
 
 	@Override
 	public int compareTo(PointWritable o) {
-		return distance.compareTo(o.getDistance());
+		return -distance.compareTo(o.getDistance());
 	}
 	
 	

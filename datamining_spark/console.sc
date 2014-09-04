@@ -74,5 +74,10 @@ object console {
 	def a(x:Int)=println(x)                   //> a: (x: Int)Unit
 	a(10)                                     //> 10
   
-  
+  val map = Map[String, Int]()                    //> map  : scala.collection.mutable.Map[String,Int] = Map()
+  map += ("one" -> 1)                             //> res3: console.map.type = Map(one -> 1)
+  map += ("two" -> 2)                             //> res4: console.map.type = Map(one -> 1, two -> 2)
+  println(map.get("one"))                         //> Some(1)
+  println(map.get("three"))                       //> None
+  println(map.getOrElse("three", 3))              //> 3
 }
