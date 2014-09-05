@@ -150,14 +150,23 @@ class KNNReducer extends Reducer<Text, PointWritable, Text, Text> {
 	protected void reduce(Text key, Iterable<PointWritable> values,
 			Context context) throws IOException, InterruptedException {
 		System.out.println(key);
-		Map<String, Integer> map = new HashMap<String, Integer>();
-		int index = 0;
+		List<PointWritable> points = new ArrayList<PointWritable>();
 		for (PointWritable point : values) {
-			System.out.println("p: " + point.getX() + "-" + point.getY() + "-" + point.getDistance());
+			points.add(new PointWritable(point));
+		}
+		Collections.sort(points, new Comparator<PointWritable>() {
+			@Override
+			public int compare(PointWritable o1, PointWritable o2) {
+				return o1.getDistance().compareTo(o2.getDistance());
+			}
+		});
+		Map<String, Integer> map = new HashMap<String, Integer>();
+		k = points.size() < k ? points.size() : k;
+		for (int i = 0; i < k; i++) {
+			PointWritable point = points.get(i);
 			String category = point.getCategory().toString();
 			Integer count = map.get(category);
 			map.put(category, null == count ? 1 : count + 1);
-			if ((++index) == k) break;
 		}
 		List<Map.Entry<String, Integer>> list = 
 				new ArrayList<Map.Entry<String, Integer>>(map.entrySet());
@@ -168,7 +177,6 @@ class KNNReducer extends Reducer<Text, PointWritable, Text, Text> {
 				return o2.getValue().compareTo(o1.getValue());
 			}
 		});
-		System.out.println("lv: " + list.get(0).getValue());
 		context.write(key, new Text(list.get(0).getKey()));
 	}
 

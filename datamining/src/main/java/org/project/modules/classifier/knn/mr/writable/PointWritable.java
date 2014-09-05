@@ -6,10 +6,10 @@ import java.io.IOException;
 
 import org.apache.hadoop.io.DoubleWritable;
 import org.apache.hadoop.io.Text;
-import org.apache.hadoop.io.WritableComparable;
+import org.apache.hadoop.io.Writable;
 import org.project.modules.classifier.knn.data.Point;
 
-public class PointWritable implements WritableComparable<PointWritable> {
+public class PointWritable implements Writable {
 
 	private DoubleWritable x = null;
 	
@@ -24,6 +24,13 @@ public class PointWritable implements WritableComparable<PointWritable> {
 		this.y = new DoubleWritable();
 		this.category = new Text();
 		this.distance = new DoubleWritable();
+	}
+	
+	public PointWritable(PointWritable point) {
+		this.x = new DoubleWritable(point.getX().get());
+		this.y = new DoubleWritable(point.getY().get());
+		this.category = new Text(point.getCategory().toString());
+		this.distance = new DoubleWritable(point.getDistance().get());
 	}
 	
 	public PointWritable(Point point, double distance) {
@@ -102,12 +109,5 @@ public class PointWritable implements WritableComparable<PointWritable> {
 		distance.write(out);
 	}
 
-	@Override
-	public int compareTo(PointWritable o) {
-		return -distance.compareTo(o.getDistance());
-	}
-	
-	
-	
 	
 }
