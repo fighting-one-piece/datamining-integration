@@ -3,13 +3,15 @@ package org.project.modules.hadoop.mr.a;
 import java.io.DataInput;
 import java.io.DataOutput;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.fs.Path;
 import org.apache.hadoop.io.DoubleWritable;
 import org.apache.hadoop.io.LongWritable;
 import org.apache.hadoop.io.Text;
-import org.apache.hadoop.io.WritableComparable;
+import org.apache.hadoop.io.Writable;
 import org.apache.hadoop.mapreduce.Job;
 import org.apache.hadoop.mapreduce.Mapper;
 import org.apache.hadoop.mapreduce.Reducer;
@@ -78,13 +80,18 @@ class TestReducer extends Reducer<Text, PWritable, Text, Text> {
 	protected void reduce(Text key, Iterable<PWritable> values, Context context)
 			throws IOException, InterruptedException {
 		System.out.println(key);
+		List<PWritable> ps = new ArrayList<PWritable>();
 		for (PWritable value : values) {
-			System.out.println(value.getX()+"-"+value.getY()+"-"+value.getCategory());
+			System.out.println("v: " + value.getX()+"-"+value.getY()+"-"+value.getCategory());
+			ps.add(value);
+		}
+		for (PWritable value : ps) {
+			System.out.println("p: " + value.getX()+"-"+value.getY()+"-"+value.getCategory());
 		}
 	}
 }
 
-class PWritable implements WritableComparable<PWritable> {
+class PWritable implements Writable {
 	
 	private DoubleWritable x = null;
 	
@@ -142,8 +149,4 @@ class PWritable implements WritableComparable<PWritable> {
 		category.write(out);
 	}
 
-	@Override
-	public int compareTo(PWritable o) {
-		return x.compareTo(o.getX());
-	}
 }
