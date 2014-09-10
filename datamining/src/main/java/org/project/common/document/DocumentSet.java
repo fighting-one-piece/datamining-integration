@@ -13,17 +13,9 @@ public class DocumentSet {
 	private List<Document> trainDocuments = null;
 	/** 测试数据集*/
 	private List<Document> testDocuments = null;
-	/** 全局特征选择*/
-	private Map<String, Double> selectedFeatures = null;
+	/** 属性*/
+	private Map<String, Object> properties = null;
 	
-	private String[] words = null;
-	
-	private double preMaxFit = 0;
-	
-	private double postMaxFit = 0;
-	
-	private Map<String, Integer> wordToCount = null;
-
 	public List<Document> getDocuments() {
 		if (null == documents) {
 			documents = new ArrayList<Document>();
@@ -56,62 +48,116 @@ public class DocumentSet {
 	public void setTestDocuments(List<Document> testDocuments) {
 		this.testDocuments = testDocuments;
 	}
+	
+	public Map<String, Object> getProperties() {
+		if (null == properties) {
+			properties = new HashMap<String, Object>();
+		}
+		return properties;
+	}
+
+	public void setProperties(Map<String, Object> properties) {
+		this.properties = properties;
+	}
+	
+	public void setProperty(String key, Object value) {
+		getProperties().put(key, value);
+	}
 
 	public int docLength() {
 		return documents.size();
 	}
 	
+	/** 词集*/
+	public static final String WORDS = "words";
+	
 	public String[] getWords() {
-		return words;
+		return (String[]) getProperties().get(WORDS);
 	}
 
 	public void setWords(String[] words) {
-		this.words = words;
+		getProperties().put(WORDS, words);
 	}
+	
+	/** 前后适应度*/
+	public static final String MAX_FIT_PRE = "max_fit_pre";
+	public static final String MAX_FIT_POST = "max_fit_post";
 
-	public void setMaxFit(double maxFit) {
-		preMaxFit = postMaxFit;
-		postMaxFit = maxFit;
+	public void setMaxFit(double value) {
+		getProperties().put(MAX_FIT_PRE, getProperties().get(MAX_FIT_POST));
+		getProperties().put(MAX_FIT_POST, value);
 	}
 	
 	public double getPreMaxFit() {
-		return preMaxFit;
+		return (Double) getProperties().get(MAX_FIT_PRE);
 	}
 	
+	public void setPreMaxFit(double value) {
+		getProperties().put(MAX_FIT_PRE, value);
+	}
+
 	public double getPostMaxFit() {
-		return postMaxFit;
+		return (Double) getProperties().get(MAX_FIT_POST);
 	}
 
-	public void setPreMaxFit(double preMaxFit) {
-		this.preMaxFit = preMaxFit;
+	public void setPostMaxFit(double value) {
+		getProperties().put(MAX_FIT_POST, value);
+	}
+	
+	/** 全局特征选择*/
+	public static final String FEATURE_SELECT = "feature_select";
+	
+	@SuppressWarnings("unchecked")
+	public Map<String, Double> getFeatureSelect() {
+		Map<String, Double> featureSelect = (Map<String, Double>) 
+				getProperties().get(FEATURE_SELECT);
+		if (null == featureSelect) {
+			featureSelect = new HashMap<String, Double>();
+			setFeatureSelect(featureSelect);		
+		}
+		return featureSelect;
 	}
 
-	public void setPostMaxFit(double postMaxFit) {
-		this.postMaxFit = postMaxFit;
+	public void setFeatureSelect(Map<String, Double> featureSelect) {
+		getProperties().put(FEATURE_SELECT, featureSelect);
 	}
+	
+	/** 词数量映射*/
+	public static final String WORD_TO_COUNT = "word_to_count"; 
 
+	@SuppressWarnings("unchecked")
 	public Map<String, Integer> getWordToCount() {
+		Map<String, Integer> wordToCount = (Map<String, Integer>) 
+				getProperties().get(WORD_TO_COUNT);
 		if (null == wordToCount) {
-			 wordToCount = new HashMap<String, Integer>();
+			wordToCount = new HashMap<String, Integer>();
+			setWordToCount(wordToCount);
 		}
 		return wordToCount;
 	}
 
 	public void setWordToCount(Map<String, Integer> wordToCount) {
-		this.wordToCount = wordToCount;
+		getProperties().put(WORD_TO_COUNT, wordToCount);
 	}
 
-	public Map<String, Double> getSelectedFeatures() {
-		if (null == selectedFeatures) {
-			selectedFeatures = new HashMap<String, Double>();
-		}
-		return selectedFeatures;
-	}
-
-	public void setSelectedFeatures(Map<String, Double> selectedFeatures) {
-		this.selectedFeatures = selectedFeatures;
-	}
+	/** 词索引映射*/
+	public static final String WORD_TO_INDEX = "word_2_index"; 
 	
+	@SuppressWarnings("unchecked")
+	public Map<String, Integer> getWordToIndex() {
+		Map<String, Integer> wordToIndex = (Map<String, Integer>) 
+				getProperties().get(WORD_TO_INDEX);
+		if (null == wordToIndex) {
+			wordToIndex = new HashMap<String, Integer>();
+			setWordToIndex(wordToIndex);
+		}
+		return wordToIndex;
+	}
+
+	public void setWordToIndex(Map<String, Integer> wordToIndex) {
+		getProperties().put(WORD_TO_INDEX, wordToIndex);
+	}
+
 	
 
 }

@@ -62,6 +62,7 @@ public class MatrixVectorMultiplyMR {
 			configureJob(job);
 
 			System.out.println(job.waitForCompletion(true) ? 0 : 1);
+			
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

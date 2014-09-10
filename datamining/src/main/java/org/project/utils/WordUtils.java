@@ -75,7 +75,8 @@ public class WordUtils {
 		Word word = null;
 		try {
 			while ((word = mmSeg.next()) != null) {
-				words.add(word.getString());
+				String w = word.getString();
+				if (w.length() >=2 ) words.add(w);
 			}
 		} catch (IOException e) {
 			logger.error(e.getMessage());

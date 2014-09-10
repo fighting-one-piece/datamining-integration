@@ -80,7 +80,7 @@ public class DocDBScanBuilder {
 	public void reduceDimensionsByECE(DocumentSet documentSet) {
 		IFeatureSelect featureSelect = new FSExpectedCrossEntropy();
 		featureSelect.handle(documentSet);
-		Map<String, Double> eceWords = documentSet.getSelectedFeatures();
+		Map<String, Double> eceWords = documentSet.getFeatureSelect();
 		List<Map.Entry<String, Double>> list = sortMap(eceWords);
 		int len = list.size() < ECE_WORD_LIMIT ? list.size() : ECE_WORD_LIMIT;
 		List<String> wordList = new ArrayList<String>();
@@ -105,7 +105,7 @@ public class DocDBScanBuilder {
 	public void reduceDimensionsByIG(DocumentSet documentSet) {
 		IFeatureSelect featureSelect = new FSInformationGain();
 		featureSelect.handle(documentSet);
-		Map<String, Double> eceWords = documentSet.getSelectedFeatures();
+		Map<String, Double> eceWords = documentSet.getFeatureSelect();
 		List<Map.Entry<String, Double>> list = sortMap(eceWords);
 		int len = list.size() < IG_WORD_LIMIT ? list.size() : IG_WORD_LIMIT;
 		List<String> wordList = new ArrayList<String>();

@@ -106,6 +106,27 @@ public class FileUtils {
 		}
 	}
 	
+	public static List<String> readLines(String path) {
+		List<String> lines = new ArrayList<String>();
+		InputStream in = null;
+		BufferedReader br = null;
+		try {
+			in = new FileInputStream(new File(path));
+			br = new BufferedReader(new InputStreamReader(in));
+			String line = br.readLine();
+			while (null != line) {
+				lines.add(line);
+				line = br.readLine();
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			IOUtils.closeQuietly(in);
+			IOUtils.closeQuietly(br);
+		}
+		return lines;
+	}
+	
 	public static String writeToTmpFile(String content) {
 		String tmpPath = obtainTmpTxtPath();
 		OutputStream out = null;
@@ -123,4 +144,5 @@ public class FileUtils {
 		}
 		return tmpPath;
 	}
+	
 }

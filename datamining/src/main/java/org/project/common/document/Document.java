@@ -18,6 +18,8 @@ public class Document {
 	private String[] words = null;
 	/** 文章分词向量*/
 	private double[] wordsVec = null;
+	/** 文章分词定位*/
+	private int[] wordsIndex = null;
 	/** 词语计算TF*/
 	private Map<String, Double> tfWords = null;
 	/** 词语计算TFIDF*/
@@ -71,6 +73,14 @@ public class Document {
 		this.wordsVec = wordsVec;
 	}
 	
+	public int[] getWordsIndex() {
+		return wordsIndex;
+	}
+
+	public void setWordsIndex(int[] wordsIndex) {
+		this.wordsIndex = wordsIndex;
+	}
+
 	public Map<String, Double> getTfWords() {
 		if (null == tfWords) {
 			tfWords = new HashMap<String, Double>();

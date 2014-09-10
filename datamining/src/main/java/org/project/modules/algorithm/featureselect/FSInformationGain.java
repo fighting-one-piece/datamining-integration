@@ -56,7 +56,7 @@ public class FSInformationGain extends AbstractFeatureSelect {
 			wordsGain.put(word, gain);
 		}
 		printTopN(sortMap(wordsGain), 500);
-		documentSet.setSelectedFeatures(wordsGain);
+		documentSet.setFeatureSelect(wordsGain);
 	}
 	
 	public static void main(String[] args) {
