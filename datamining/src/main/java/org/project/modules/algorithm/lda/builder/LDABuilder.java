@@ -14,11 +14,16 @@ public class LDABuilder {
 
 	private int[][] docWordIndex = null;
 	
+	/** document number - topic number - word number*/
 	private int D = 0, T = 0, W = 0;
 	
-	private int[][] wordTopic = null;
-	
+	/** 
+	 * Dirichlet parameter alpha (document--topic associations) 
+	 * Dirichlet parameter beta (topic--word associations) 
+     */  
 	private float alpha = 0.5f, beta = 0.1f;
+
+	private int[][] wordTopic = null;
 	
 	private int[][] NDT = null;
 	
@@ -28,12 +33,17 @@ public class LDABuilder {
 	
 	private int[] NTWSum = null;
 	
-	private double[][] theta = null;
+	private double[][] thetaSum = null;
 
-	private double[][] phi = null;
+	private double[][] phiSum = null;
 	
-	private int ITER_NUMBER = 10;
+	private int ITER_NUMBER = 1000;
 	
+	private int SAMPLE_LAG = 10;
+	
+	private int THRESHOLD = 200;
+	
+	private int STATISTICS = 0;
 
 	public DocumentSet initDocuments() {
 		DocumentSet documentSet = null;
@@ -72,36 +82,36 @@ public class LDABuilder {
 	public void initParameters(DocumentSet documentSet) {
 		D = documentSet.getDocuments().size();
 		W = documentSet.getWordToCount().size();
-		T = 10;
+		T = 4;
 		NDT = new int[D][T];
 		NTW = new int[T][W];
 		NDTSum = new int[D];
 		NTWSum = new int[T];
-		theta = new double[D][T];
-		phi = new double[T][W];
+		thetaSum = new double[D][T];
+		phiSum = new double[T][W];
 		
 		List<Document> documents = documentSet.getDocuments();
 		docWordIndex = new int[D][];
-		for (int i = 0; i < D; i++) {
-			int len = documents.get(i).getWordsIndex().length;
-			docWordIndex[i] = new int[len];
-			for (int j = 0; j < len; j++) {
-				docWordIndex[i][j] = documents.get(i).getWordsIndex()[j];
+		for (int d = 0; d < D; d++) {
+			int len = documents.get(d).getWordsIndex().length;
+			docWordIndex[d] = new int[len];
+			for (int w = 0; w < len; w++) {
+				docWordIndex[d][w] = documents.get(d).getWordsIndex()[w];
 			}
 		}
 		
 		wordTopic = new int[D][];
-		for (int i = 0; i < D; i++) {
-			int len = documents.get(i).getWordsIndex().length;
-			wordTopic[i] = new int[len];
-			for (int j = 0; j < len; j++) {
+		for (int d = 0; d < D; d++) {
+			int len = documents.get(d).getWordsIndex().length;
+			wordTopic[d] = new int[len];
+			for (int w = 0; w < len; w++) {
 				int initTopic = (int) (Math.random() * T);
-				wordTopic[i][j] = initTopic;
-				NDT[i][initTopic] += 1;
-				NTW[initTopic][docWordIndex[i][j]] += 1;
+				wordTopic[d][w] = initTopic;
+				NDT[d][initTopic] += 1;
+				NTW[initTopic][docWordIndex[d][w]] += 1;
 				NTWSum[initTopic] += 1;
 			}
-			NDTSum[i] += len;
+			NDTSum[d] = len;
 		}
 		
 	}
@@ -109,7 +119,6 @@ public class LDABuilder {
 	public void inference(DocumentSet documentSet) {
 		List<Document> documents = documentSet.getDocuments();
 		for (int n = 0; n < ITER_NUMBER; n++) {
-			updateEstimatedParameters();
 			
 			for (int i = 0; i < D; i++) {
 				int len = documents.get(i).getWordsIndex().length;
@@ -118,20 +127,11 @@ public class LDABuilder {
 					wordTopic[i][j] = newTopic;
 				}
 			}
-		}
-	}
-	
-	private void updateEstimatedParameters() {
-		for (int t = 0; t < T; t++) {
-			for (int w = 0; w < W; w++) {
-				phi[t][w] = (NTW[t][w] + beta) / (NTWSum[t] + W * beta);
-			}
-		}
-
-		for (int d = 0; d < D; d++) {
-			for (int t = 0; t < T; t++) {
-				theta[d][t] = (NDT[d][t] + alpha) / (NDTSum[d] + T * alpha);
-			}
+            //如果当前迭代轮数已经超过 THRESHOLD的限制，并且正好达到SAMPLE_LAG间隔  
+            //则当前的这个状态是要计入总的输出参数的，否则的话忽略当前状态，继续sample  
+            if ((n > THRESHOLD) && (SAMPLE_LAG > 0) && (n % SAMPLE_LAG == 0)) {  
+            	updateEstimatedParameters();
+            }  
 		}
 	}
 	
@@ -145,15 +145,15 @@ public class LDABuilder {
 		double[] p = new double[T];
 		for (int t = 0; t < T; t++) {
 			p[t] = (NTW[t][docWordIndex[d][w]] + beta) / (NTWSum[t] + W * beta)
-					* (NDT[d][t] + alpha) / (NDTSum[d] + T * alpha);
+					* ((NDT[d][t] + alpha) / (NDTSum[d] + T * alpha));
 		}
 		for (int t = 1; t < T; t++) {
 			p[t] += p[t - 1];
 		}
-		double u = Math.random() * p[T - 1];
+		double rp = Math.random() * p[T - 1];
 		int newTopic;
 		for (newTopic = 0; newTopic < T; newTopic++) {
-			if (u < p[newTopic]) {
+			if (rp < p[newTopic]) {
 				break;
 			}
 		}
@@ -164,17 +164,67 @@ public class LDABuilder {
 		return newTopic;
 	}
 	
+	private void updateEstimatedParameters() {
+		for (int d = 0; d < D; d++) {
+			for (int t = 0; t < T; t++) {
+				thetaSum[d][t] += (NDT[d][t] + alpha) / (NDTSum[d] + T * alpha);
+			}
+		}
+		for (int t = 0; t < T; t++) {
+			for (int w = 0; w < W; w++) {
+				phiSum[t][w] += (NTW[t][w] + beta) / (NTWSum[t] + W * beta);
+			}
+		}
+		STATISTICS++;
+	}
+	
+	public double[][] getTheta() {  
+        double[][] theta = new double[D][T];  
+        if (SAMPLE_LAG > 0) {  
+            for (int d = 0; d < D; d++) {  
+                for (int t = 0; t < T; t++) {  
+                    theta[d][t] = thetaSum[d][t] / STATISTICS;  
+                }  
+            }  
+        } else {  
+        	for (int d = 0; d < D; d++) {  
+                for (int t = 0; t < T; t++) {  
+                    theta[d][t] = (NDT[d][t] + alpha) / (NDTSum[d] + T * alpha);  
+                }  
+            }  
+        }  
+        return theta;  
+    }  
+	
+	public double[][] getPhi() {  
+        double[][] phi = new double[T][W];  
+        if (SAMPLE_LAG > 0) {  
+            for (int t = 0; t < T; t++) {  
+                for (int w = 0; w < W; w++) {  
+                    phi[t][w] = phiSum[t][w] / STATISTICS;  
+                }  
+            }  
+        } else {  
+        	for (int t = 0; t < T; t++) {  
+                for (int w = 0; w < W; w++) {  
+                    phi[t][w] = (NTW[t][w] + beta) / (NTWSum[t] + W * beta);  
+                }  
+            }  
+        }  
+        return phi;  
+    }  
+	
 	private void print(DocumentSet documentSet) {
 		for (int t = 0; t < T; t++) {
 			List<Integer> indexs = new ArrayList<Integer>();
 			for (int w = 0; w < W; w++) {
 				indexs.add(w);
 			}
-			Collections.sort(indexs, new WordComparator(phi[t]));
+			Collections.sort(indexs, new WordComparator(getPhi()[t]));
 			System.out.println("topic: " + t);
 			for (int i = 0; i < 40; i++) {
 				String word = documentSet.getWords()[indexs.get(i)];
-				double p = phi[t][indexs.get(i)];
+				double p = getPhi()[t][indexs.get(i)];
 				System.out.print(word + ":" + p + ",");
 			}
 			System.out.println();
@@ -195,17 +245,17 @@ public class LDABuilder {
 
 class WordComparator implements Comparator<Integer> {
 	
-	public double[] sortProb;
+	public double[] probabilities;
 	
-	public WordComparator(double[] sortProb) {
-		this.sortProb = sortProb;
+	public WordComparator(double[] probabilities) {
+		this.probabilities = probabilities;
 	}
 
 	@Override
 	public int compare(Integer o1, Integer o2) {
-		if (sortProb[o1] > sortProb[o2])
+		if (probabilities[o1] > probabilities[o2])
 			return -1;
-		else if (sortProb[o1] < sortProb[o2])
+		else if (probabilities[o1] < probabilities[o2])
 			return 1;
 		else
 			return 0;

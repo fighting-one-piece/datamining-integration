@@ -1,5 +1,7 @@
 package org.project.modules.classifier.regression.builder;
 
+import java.net.URISyntaxException;
+
 import org.project.modules.classifier.regression.data.DataSet;
 import org.project.modules.classifier.regression.data.DataSetHandler;
 
@@ -8,8 +10,15 @@ public class GradientAscentBuilder extends AbstractBuilder {
 	
 	private int iteratorNum = 500;
 	
-	public DataSet initialize() {
-		return DataSetHandler.load("d:\\regression.txt");
+	public DataSet initDataSet() {
+		DataSet dataSet = null;
+		try {
+			String path = GradientAscentBuilder.class.getClassLoader().getResource("trainset/regression.txt").toURI().getPath();
+			dataSet = DataSetHandler.load(path);
+		} catch (URISyntaxException e) {
+			e.printStackTrace();
+		}
+		return dataSet;
 	}
 	
 	public double[] genWeights(DataSet dataSet) {
@@ -34,7 +43,6 @@ public class GradientAscentBuilder extends AbstractBuilder {
 	}
 	
 	public static void main(String[] args) {
-		GradientAscentBuilder builder = new GradientAscentBuilder();
-		builder.build();
+		new GradientAscentBuilder().build();
 	}
 }

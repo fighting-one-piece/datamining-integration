@@ -17,7 +17,7 @@ public class AloneGradientAscentBuilder extends AbstractBuilder {
 	private double[] errors = null;
 	
 	@Override
-	public DataSet initialize() {
+	public DataSet initDataSet() {
 		return null;
 	}
 	
@@ -66,7 +66,7 @@ public class AloneGradientAscentBuilder extends AbstractBuilder {
 	
 	@Override
 	public void build() {
-		initialize();
+		initDataSet();
 		genWeights();
 		for (double[] tdata : tdatas) {
 			System.out.println(classify(tdata, weights));
@@ -74,8 +74,7 @@ public class AloneGradientAscentBuilder extends AbstractBuilder {
 	}
 	
 	public static void main(String[] args) {
-		AloneGradientAscentBuilder builder = new AloneGradientAscentBuilder();
-		builder.build();
+		new AloneGradientAscentBuilder().build();
 	}
 
 	@Override

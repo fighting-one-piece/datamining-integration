@@ -1,13 +1,22 @@
 package org.project.modules.classifier.regression.builder;
 
+import java.net.URISyntaxException;
+
 import org.project.modules.classifier.regression.data.DataSet;
 import org.project.modules.classifier.regression.data.DataSetHandler;
 
 //随机梯度上升算法
 public class RandomGradientAscentBuilder extends AbstractBuilder {
 	
-	public DataSet initialize() {
-		return DataSetHandler.load("d:\\regression.txt");
+	public DataSet initDataSet() {
+		DataSet dataSet = null;
+		try {
+			String path = GradientAscentBuilder.class.getClassLoader().getResource("trainset/regression.txt").toURI().getPath();
+			dataSet = DataSetHandler.load(path);
+		} catch (URISyntaxException e) {
+			e.printStackTrace();
+		}
+		return dataSet;
 	}
 	
 	public double[] genWeights(DataSet dataSet) {
@@ -27,8 +36,7 @@ public class RandomGradientAscentBuilder extends AbstractBuilder {
 	}
 	
 	public static void main(String[] args) {
-		RandomGradientAscentBuilder builder = new RandomGradientAscentBuilder();
-		builder.build();
+		new RandomGradientAscentBuilder().build();
 	}
 
 }

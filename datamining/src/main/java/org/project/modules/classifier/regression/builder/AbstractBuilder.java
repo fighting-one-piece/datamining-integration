@@ -31,13 +31,13 @@ public abstract class AbstractBuilder {
 	}
 	
 	//初始化数据集
-	public abstract DataSet initialize();
+	public abstract DataSet initDataSet();
 	
 	//生成回归系数
 	public abstract double[] genWeights(DataSet dataSet);
 	
 	public void build() {
-		DataSet dataSet = initialize();
+		DataSet dataSet = initDataSet();
 		double[] weights = genWeights(dataSet);
 		double[] categories = dataSet.obtainCategories();
 		int index = 0, error = 0, right = 0;
