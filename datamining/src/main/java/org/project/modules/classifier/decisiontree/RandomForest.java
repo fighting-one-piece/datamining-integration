@@ -14,13 +14,13 @@ import org.project.utils.ShowUtils;
 
 public class RandomForest {
 	
-	private int treeNum = 0;
-	
 	private String trainFilePath = null;
 	
 	private String testFilePath = null;
 	
 	private Builder treeBuilder = null;
+
+	private int treeNum = 0;
 	
 	private int attributeNum = 0;
 	
@@ -28,12 +28,12 @@ public class RandomForest {
 		
 	}
 	
-	public RandomForest(int treeNum, String trainFilePath, 
-			String testFilePath, Builder treeBuilder, int attributeNum) {
-		this.treeNum = treeNum;
+	public RandomForest(String trainFilePath, String testFilePath, 
+			Builder treeBuilder, int treeNum, int attributeNum) {
 		this.trainFilePath = trainFilePath;
 		this.testFilePath = testFilePath;
 		this.treeBuilder = treeBuilder;
+		this.treeNum = treeNum;
 		this.attributeNum = attributeNum;
 	}
 	
@@ -70,18 +70,19 @@ public class RandomForest {
 	}
 
 	@SuppressWarnings("unchecked")
-	public void run() {
-		Data data = DataLoader.load(trainFilePath);
+	public Object[] run() {
+		Data data = DataLoader.loadNoId(trainFilePath);
 		DataHandler.fill(data, 0);
 		System.out.println("data attributes len: " + data.getAttributes().length);
 		Builder forestBuilder = new ForestBuilder(treeNum, treeBuilder, attributeNum);
 		List<TreeNode> treeNodes = (List<TreeNode>) forestBuilder.build(data);
-		Data testData = DataLoader.load(testFilePath);
+		Data testData = DataLoader.loadNoId(testFilePath);
 		System.out.println("testData attributes len: " + testData.getAttributes().length);
 		DataHandler.fill(testData.getInstances(), data.getAttributes() , 0);
 		ForestNode forestNode = new ForestNode(treeNodes);
 		Object[] results = (Object[]) forestNode.classify(testData);
 		ShowUtils.printToConsole(results);
+		return results;
 	}
 
 	public static void main(String[] args) {
@@ -90,8 +91,8 @@ public class RandomForest {
 		Builder treeBuilder = new DecisionTreeC45Builder();
 		String trainFilePath = "d:\\trainset_extract_10.txt";
 		String testFilePath = "d:\\trainset_extract_1.txt";
-		RandomForest randomForest = new RandomForest(treeNum, 
-				trainFilePath, testFilePath, treeBuilder, attributeNum);
+		RandomForest randomForest = new RandomForest(trainFilePath,
+				testFilePath, treeBuilder, treeNum, attributeNum);
 		randomForest.run();
 	}
 }

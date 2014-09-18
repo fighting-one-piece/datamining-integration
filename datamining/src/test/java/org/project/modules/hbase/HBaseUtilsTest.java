@@ -14,7 +14,7 @@ public class HBaseUtilsTest {
 	
 	@Test
 	public void testCreateTable() {
-		HBaseUtils.creatTable("user", new String[]{"basic","detail"});
+		HBaseUtils.creatTable("user2", new String[]{"basic","detail"});
 	}
 	
 	@Test

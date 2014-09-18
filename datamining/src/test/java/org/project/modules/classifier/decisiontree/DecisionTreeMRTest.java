@@ -116,7 +116,7 @@ public class DecisionTreeMRTest {
 	public void tree2json() {
 		Builder treeBuilder = new DecisionTreeC45Builder();
 		String trainFilePath = "d:\\trainset_extract_10.txt";
-		Data data = DataLoader.load(trainFilePath);
+		Data data = DataLoader.loadNoId(trainFilePath);
 		DataHandler.fill(data, 0);
 		TreeNode treeNode = (TreeNode) treeBuilder.build(data);
 		Set<TreeNode> treeNodes = new HashSet<TreeNode>();
@@ -132,7 +132,7 @@ public class DecisionTreeMRTest {
 	public void json() throws JsonProcessingException, IOException {
 		Builder treeBuilder = new DecisionTreeC45Builder();
 		String trainFilePath = "d:\\trains14.txt";
-		Data data = DataLoader.load(trainFilePath);
+		Data data = DataLoader.loadNoId(trainFilePath);
 		DataHandler.fill(data, 0);
 		TreeNode tree = (TreeNode) treeBuilder.build(data);
 		TreeNodeHelper.print(tree, 0, null);
@@ -185,7 +185,7 @@ public class DecisionTreeMRTest {
 	public void fastJson() throws IOException {
 		Builder treeBuilder = new DecisionTreeC45Builder();
 		String trainFilePath = "d:\\trains14.txt";
-		Data data = DataLoader.load(trainFilePath);
+		Data data = DataLoader.loadNoId(trainFilePath);
 		DataHandler.fill(data, 0);
 		TreeNode tree = (TreeNode) treeBuilder.build(data);
 		TreeNodeHelper.print(tree, 0, null);
@@ -209,7 +209,7 @@ public class DecisionTreeMRTest {
 	public void fastJsonW() throws IOException {
 		Builder treeBuilder = new DecisionTreeC45Builder();
 		String trainFilePath = "d:\\trainset_extract_1.txt";
-		Data data = DataLoader.load(trainFilePath);
+		Data data = DataLoader.loadNoId(trainFilePath);
 		DataHandler.fill(data, 0);
 		TreeNode tree = (TreeNode) treeBuilder.build(data);
 		JSONWriter writer = new JSONWriter(new PrintWriter(System.out));
@@ -224,7 +224,7 @@ public class DecisionTreeMRTest {
 	public void fastJsonR() throws IOException {
 		Builder treeBuilder = new DecisionTreeC45Builder();
 		String trainFilePath = "d:\\trains14.txt";
-		Data data = DataLoader.load(trainFilePath);
+		Data data = DataLoader.loadNoId(trainFilePath);
 		DataHandler.fill(data, 0);
 		TreeNode tree = (TreeNode) treeBuilder.build(data);
 		TreeNodeHelper.print(tree, 0, null);
@@ -250,7 +250,7 @@ public class DecisionTreeMRTest {
 	public void jackson() throws JsonProcessingException, IOException {
 		Builder treeBuilder = new DecisionTreeC45Builder();
 		String trainFilePath = "d:\\trainset_extract_10.txt";
-		Data data = DataLoader.load(trainFilePath);
+		Data data = DataLoader.loadNoId(trainFilePath);
 		DataHandler.fill(data, 0);
 		TreeNode tree = (TreeNode) treeBuilder.build(data);
 		System.out.println("jsonGenerator");
@@ -288,7 +288,7 @@ public class DecisionTreeMRTest {
 			LongWritable key = new LongWritable(1);
 			Builder treeBuilder = new DecisionTreeC45Builder();
 			String trainFilePath = "d:\\trainset_extract_1.txt";
-			Data data = DataLoader.load(trainFilePath);
+			Data data = DataLoader.loadNoId(trainFilePath);
 			DataHandler.fill(data, 0);
 			TreeNode treeNode = (TreeNode) treeBuilder.build(data);
 			Set<TreeNode> treeNodes = new HashSet<TreeNode>();

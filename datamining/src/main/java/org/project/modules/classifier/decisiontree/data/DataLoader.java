@@ -16,20 +16,20 @@ import org.apache.commons.io.IOUtils;
 
 public class DataLoader {
 	
-	public static Data load(String path) {
+	public static Data loadWithId(String path) {
 		Data data = null;
 		try {
-			data = load(new FileInputStream(new File(path)), false);
+			data = load(new FileInputStream(new File(path)), true);
 		} catch (FileNotFoundException e) {
 			e.printStackTrace();
 		}
 		return data;
 	}
 	
-	public static Data loadWithId(String path) {
+	public static Data loadNoId(String path) {
 		Data data = null;
 		try {
-			data = load(new FileInputStream(new File(path)), true);
+			data = load(new FileInputStream(new File(path)), false);
 		} catch (FileNotFoundException e) {
 			e.printStackTrace();
 		}
@@ -60,7 +60,7 @@ public class DataLoader {
 	}
 	
 	public static Data LoadRandom(String path, int attributeNum) {
-		return loadRandom(load(path), attributeNum);
+		return loadRandom(loadNoId(path), attributeNum);
 	}
 	
 	public static Data loadRandom(Data data, int attributeNum) {

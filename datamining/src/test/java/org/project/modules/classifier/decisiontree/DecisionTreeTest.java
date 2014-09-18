@@ -35,7 +35,7 @@ public class DecisionTreeTest {
 	public void splitTreeNode() {
 		Builder treeBuilder = new DecisionTreeC45Builder();
 		String trainFilePath = "d:\\trainset_extract_10.txt";
-		Data data = DataLoader.load(trainFilePath);
+		Data data = DataLoader.loadNoId(trainFilePath);
 		DataHandler.fill(data, 0);
 		System.out.println("data attrs: " + data.getAttributes().length);
 		TreeNode treeNode = (TreeNode) treeBuilder.build(data);
@@ -48,7 +48,7 @@ public class DecisionTreeTest {
 			TreeNodeHelper.obtainAttributes(node, attributes);
 		}
 		String testFilePath = "d:\\trainset_extract_1.txt";
-		Data testData = DataLoader.load(testFilePath);
+		Data testData = DataLoader.loadNoId(testFilePath);
 		DataHandler.fill(testData.getInstances(), data.getAttributes(), 0);
 		for (TreeNode node : treeNodes) {
 			Object[] result = (Object[]) node.classify(testData);
@@ -183,7 +183,7 @@ public class DecisionTreeTest {
 	@Test
 	public void buildWithSprintAndComputeFill1() {
 		String path = "d:\\trainset_extract_10.txt";
-		Data data = DataLoader.load(path);
+		Data data = DataLoader.loadNoId(path);
 		System.out.println("data attributes:　" + data.getAttributes().length);
 //		DataHandler.fill(data, 1.0);
 		DataHandler.computeFill(data, 1.0);
@@ -199,7 +199,7 @@ public class DecisionTreeTest {
 	@Test
 	public void pruningREP() {
 		String path = "d:\\trainset_1000.txt";
-		Data data = DataLoader.load(path);
+		Data data = DataLoader.loadNoId(path);
 		DataSet dataSet = DataHandler.split(data, 3, 2, 1);
 		Data trainData = dataSet.getTrainData();
 		Data testData = dataSet.getTestData();

@@ -291,10 +291,10 @@ public class DataTest {
 	@Test
 	public void compute1() {
 		String path = "d:\\trainset_extract_10.txt";
-		Data data = DataLoader.load(path);
+		Data data = DataLoader.loadNoId(path);
 		System.out.println("data attributes:　" + data.getAttributes().length);
 		String p = "d:\\trainset_extract_1.txt";
-		Data testData = DataLoader.load(p);
+		Data testData = DataLoader.loadNoId(p);
 		System.out.println("testdata attributes:　" + testData.getAttributes().length);
 		DataHandler.computeFill(testData, data, 1.0);
 		DataHandler.writeData("d:\\a.txt", testData);

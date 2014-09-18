@@ -1,5 +1,6 @@
 package org.project.modules.classifier.regression.builder;
 
+import org.project.modules.classifier.regression.data.DataResult;
 import org.project.modules.classifier.regression.data.DataSet;
 
 public class AloneGradientAscentBuilder extends AbstractBuilder {
@@ -64,21 +65,21 @@ public class AloneGradientAscentBuilder extends AbstractBuilder {
 		}
 	}
 	
-	@Override
-	public void build() {
+	public DataResult run() {
 		initDataSet();
 		genWeights();
 		for (double[] tdata : tdatas) {
 			System.out.println(classify(tdata, weights));
 		}
+		return null;
 	}
 	
 	public static void main(String[] args) {
-		new AloneGradientAscentBuilder().build();
+		new AloneGradientAscentBuilder().run();
 	}
 
 	@Override
-	public double[] genWeights(DataSet dataSet) {
+	public double[] calculateWeights(DataSet dataSet) {
 		return null;
 	}
 }

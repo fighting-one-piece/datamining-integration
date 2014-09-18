@@ -3,43 +3,46 @@ package org.project.modules.classifier.decisiontree;
 import org.project.modules.classifier.decisiontree.builder.Builder;
 import org.project.modules.classifier.decisiontree.builder.DecisionTreeC45Builder;
 import org.project.modules.classifier.decisiontree.data.Data;
-import org.project.modules.classifier.decisiontree.data.DataHandler;
 import org.project.modules.classifier.decisiontree.data.DataLoader;
 import org.project.modules.classifier.decisiontree.node.TreeNode;
 import org.project.utils.ShowUtils;
 
 public class DecisionTree {
 	
-	private String trainFilePath = null;
+	private String trainSetPath = null;
 	
-	private String testFilePath = null;
+	private String testSetPath = null;
 	
 	private Builder treeBuilder = null;
+	
+	private String[] attributes = null;
+	
+	private TreeNode treeNode = null;
 	
 	public DecisionTree() {
 		
 	}
 	
-	public DecisionTree(String trainFilePath, String testFilePath, Builder treeBuilder) {
-		this.trainFilePath = trainFilePath;
-		this.testFilePath = testFilePath;
+	public DecisionTree(String trainSetPath, String testSetPath, Builder treeBuilder) {
+		this.trainSetPath = trainSetPath;
+		this.testSetPath = testSetPath;
 		this.treeBuilder = treeBuilder;
 	}
 	
-	public String getTrainFilePath() {
-		return trainFilePath;
+	public String getTrainSetPath() {
+		return trainSetPath;
 	}
 
-	public void setTrainFilePath(String trainFilePath) {
-		this.trainFilePath = trainFilePath;
+	public void setTrainSetPath(String trainSetPath) {
+		this.trainSetPath = trainSetPath;
 	}
 
-	public String getTestFilePath() {
-		return testFilePath;
+	public String getTestSetPath() {
+		return testSetPath;
 	}
 
-	public void setTestFilePath(String testFilePath) {
-		this.testFilePath = testFilePath;
+	public void setTestSetPath(String testFilePath) {
+		this.testSetPath = testFilePath;
 	}
 
 	public Builder getTreeBuilder() {
@@ -49,23 +52,67 @@ public class DecisionTree {
 	public void setTreeBuilder(Builder treeBuilder) {
 		this.treeBuilder = treeBuilder;
 	}
+	
+	public String[] getAttributes() {
+		return attributes;
+	}
 
-	public void run() {
-		Data data = DataLoader.load(trainFilePath);
-		DataHandler.fill(data, 0);
+	public void setAttributes(String[] attributes) {
+		this.attributes = attributes;
+	}
+
+	public TreeNode getTreeNode() {
+		return treeNode;
+	}
+
+	public void setTreeNode(TreeNode treeNode) {
+		this.treeNode = treeNode;
+	}
+
+	public void buildTreeNode() {
+		Data data = DataLoader.loadWithId(trainSetPath);
+		setAttributes(data.getAttributes());
 		TreeNode treeNode = (TreeNode) treeBuilder.build(data);
-		Data testData = DataLoader.load(testFilePath);
-		DataHandler.fill(testData.getInstances(), data.getAttributes() , 0);
-		Object[] results = (Object[]) treeNode.classify(testData);
-		ShowUtils.printToConsole(results);
+		setTreeNode(treeNode);
+	}
+	
+	public void buildTreeNode(Data data) {
+		setAttributes(data.getAttributes());
+		TreeNode treeNode = (TreeNode) treeBuilder.build(data);
+		setTreeNode(treeNode);
+	}
+	
+	public Object[] classify() {
+		Data data = DataLoader.loadNoId(testSetPath);
+		Object[] results = (Object[]) treeNode.classify(data);
+		return results;
+	}
+	
+	public Object[] classify(Data data) {
+		Object[] results = (Object[]) treeNode.classify(data);
+		return results;
 	}
 
-	public static void main(String[] args) {
-		Builder treeBuilder = new DecisionTreeC45Builder();
-		String trainFilePath = "d:\\trainset_extract_10.txt";
-		String testFilePath = "d:\\trainset_extract_1.txt";
-		DecisionTree decisionTree = new DecisionTree(trainFilePath, 
-				testFilePath, treeBuilder);
-		decisionTree.run();
+	public Object[] run() {
+		if (null == trainSetPath) {
+			throw new RuntimeException("训练集路径为空");
+		}
+		if (null == testSetPath) {
+			throw new RuntimeException("测试集路径为空");
+		}
+		if (null == treeBuilder) {
+			throw new RuntimeException("构造器为空");
+		}
+		buildTreeNode();
+		return classify();
 	}
+
+	public static void main(String[] args) throws Exception {
+		String trainSetPath = DecisionTree.class.getClassLoader().getResource("trainset/decisiontree.txt").toURI().getPath();
+		String testSetPath = DecisionTree.class.getClassLoader().getResource("testset/decisiontree.txt").toURI().getPath();
+		Builder treeBuilder = new DecisionTreeC45Builder();
+		DecisionTree decisionTree = new DecisionTree(trainSetPath, testSetPath, treeBuilder);
+		ShowUtils.printToConsole(decisionTree.run());
+	}
+	
 }

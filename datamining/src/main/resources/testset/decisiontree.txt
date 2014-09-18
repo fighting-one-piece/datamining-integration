@@ -1,0 +1,15 @@
+no age:youth income:high student:no credit:fair  
+no age:youth income:high student:no credit:excellent  
+yes age:middle_aged income:high student:no credit:fair  
+yes age:senior income:medium student:no credit:fair  
+yes age:senior income:low student:yes credit:fair  
+no age:senior income:low student:yes credit:excellent  
+yes age:middle_aged income:low student:yes credit:excellent
+no age:youth income:medium student:no credit:fair  
+yes age:youth income:low student:yes credit:fair  
+yes age:senior income:medium student:yes credit:fair  
+yes age:youth income:medium student:yes credit:excellent  
+yes age:middle_aged income:medium student:no credit:excellent  
+yes age:middle_aged income:high student:yes credit:fair  
+no age:senior income:medium student:no credit:excellent 
+no age:senior income:high student:no credit:fair 

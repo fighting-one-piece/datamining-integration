@@ -25,19 +25,19 @@ public class DataSetHandler {
 	}
 	
 	public static DataSet load(InputStream inStream) {
-		List<Instance> instances = new ArrayList<Instance>();
+		DataSet dataSet = new DataSet();
+		List<double[]> datas = new ArrayList<double[]>();
 		BufferedReader reader = null;
 		try {
 			reader = new BufferedReader(new InputStreamReader(inStream));
 			String line = reader.readLine();
-			Instance instance = null;
 			while (!("").equals(line) && null != line) {
 				StringTokenizer tokenizer = new StringTokenizer(line);
-				instance = new Instance();
-				instance.setFeature1(Double.parseDouble(tokenizer.nextToken()));
-				instance.setFeature2(Double.parseDouble(tokenizer.nextToken()));
-				instance.setCategory(Double.parseDouble(tokenizer.nextToken()));
-				instances.add(instance);
+				double[] data = new double[2];
+				data[0] = Double.parseDouble(tokenizer.nextToken());
+				data[1] = Double.parseDouble(tokenizer.nextToken());
+				datas.add(data);
+				dataSet.getCategories().add(Integer.parseInt(tokenizer.nextToken()));
 				line = reader.readLine();
 			}
 		} catch (Exception e) {
@@ -46,6 +46,7 @@ public class DataSetHandler {
 			IOUtils.closeQuietly(inStream);
 			IOUtils.closeQuietly(reader);
 		}
-		return new DataSet(instances);
+		dataSet.setDatas(datas.toArray(new double[0][0]));
+		return dataSet;
 	}
 }

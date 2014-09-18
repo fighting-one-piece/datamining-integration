@@ -93,7 +93,7 @@ public class LeastSquaresBuilder {
 	}
 
 	public static void main(String[] args) {
-		LeastSquaresBuilder builder = new LeastSquaresBuilder();
-		builder.build();
+		new LeastSquaresBuilder().build();
 	}
+	
 }
