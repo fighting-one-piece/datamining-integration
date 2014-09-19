@@ -1,38 +1,39 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
-  <modelVersion>4.0.0</modelVersion>
-  <groupId>datamining</groupId>
-  <artifactId>datamining</artifactId>
-  <version>0.0.1-SNAPSHOT</version>
-  <name>datamining</name>
-  
-  <build>
-    <resources>
-      <resource>
-        <directory>src/main/java</directory>
-        <excludes>
-          <exclude>**/*.java</exclude> 
-        </excludes>
-      </resource>
-      <resource>
-        <directory>src/main/resources</directory>
-        <excludes>
-          <exclude>**/*.java</exclude>
-        </excludes>
-      </resource>
-    </resources>
-    <plugins>
-      <plugin>
-        <artifactId>maven-compiler-plugin</artifactId>
-        <version>3.1</version>
-        <configuration>
-          <source>1.6</source>
-          <target>1.6</target>
-        </configuration>
-      </plugin>
-    </plugins>
-  </build>
-  
-  <repositories>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	<groupId>datamining</groupId>
+	<artifactId>datamining</artifactId>
+	<version>0.0.1-SNAPSHOT</version>
+	<name>datamining</name>
+
+	<build>
+		<resources>
+			<resource>
+				<directory>src/main/java</directory>
+				<excludes>
+					<exclude>**/*.java</exclude>
+				</excludes>
+			</resource>
+			<resource>
+				<directory>src/main/resources</directory>
+				<excludes>
+					<exclude>**/*.java</exclude>
+				</excludes>
+			</resource>
+		</resources>
+		<plugins>
+			<plugin>
+				<artifactId>maven-compiler-plugin</artifactId>
+				<version>3.1</version>
+				<configuration>
+					<source>1.6</source>
+					<target>1.6</target>
+				</configuration>
+			</plugin>
+		</plugins>
+	</build>
+
+	<repositories>
 		<repository>
 			<id>mvn</id>
 			<name>mvn repository</name>
@@ -274,7 +275,7 @@
 		</repository>
 
 	</repositories>
-	
+
 	<properties>
 		<junit.version>4.10</junit.version>
 		<json.version>2.4</json.version>
@@ -282,7 +283,14 @@
 		<jackson.version>1.9.9</jackson.version>
 		<fastjson.version>1.1.41</fastjson.version>
 		<mmseg4j.version>1.9.1</mmseg4j.version>
-		<hadoop.version>1.0.4</hadoop.version>
+		<!-- <hadoop.version>1.0.4</hadoop.version> -->
+		<hadoop.core.version>1.0.4</hadoop.core.version>
+		<hadoop.common.version>2.4.1</hadoop.common.version>
+		<hadoop.hdfs.version>2.4.1</hadoop.hdfs.version>
+		<hadoop.client.version>2.4.1</hadoop.client.version>
+		<hadoop.yarn.common.version>2.4.1</hadoop.yarn.common.version>
+		<hadoop.mapred.client.core.version>2.4.1</hadoop.mapred.client.core.version>
+		<hadoop.mapred.client.job.version>2.4.1</hadoop.mapred.client.job.version>
 		<hbase.version>0.92.0</hbase.version>
 		<hive.version>0.12.0</hive.version>
 		<spark.version>1.0.0</spark.version>
@@ -296,7 +304,7 @@
 		<commons.dbcp.version>1.4</commons.dbcp.version>
 		<commons.httpclient.version>4.3.5</commons.httpclient.version>
 	</properties>
-	
+
 	<dependencies>
 		<!--JUnit依赖包 -->
 		<dependency>
@@ -305,35 +313,35 @@
 			<version>${junit.version}</version>
 			<scope>test</scope>
 		</dependency>
-		
+
 		<!--MYSQL驱动依赖包 -->
 		<dependency>
 			<groupId>mysql</groupId>
 			<artifactId>mysql-connector-java</artifactId>
 			<version>${mysql.version}</version>
 		</dependency>
-		
+
 		<!--DBCP依赖包 -->
 		<dependency>
 			<groupId>commons-dbcp</groupId>
 			<artifactId>commons-dbcp</artifactId>
 			<version>${commons.dbcp.version}</version>
 		</dependency>
-		
+
 		<!--JAMA依赖包 -->
 		<dependency>
 			<groupId>gov.nist.math.jama</groupId>
 			<artifactId>gov.nist.math.jama</artifactId>
 			<version>${jama.version}</version>
 		</dependency>
-		
+
 		<!--HttpClient依赖包 -->
 		<dependency>
-		    <groupId>org.apache.httpcomponents</groupId>
-		    <artifactId>httpclient</artifactId>
-		    <version>${commons.httpclient.version}</version>
+			<groupId>org.apache.httpcomponents</groupId>
+			<artifactId>httpclient</artifactId>
+			<version>${commons.httpclient.version}</version>
 		</dependency>
-		
+
 		<!--JSON依赖包 -->
 		<dependency>
 			<groupId>net.sf.json-lib</groupId>
@@ -353,47 +361,95 @@
 			<artifactId>jackson-mapper-asl</artifactId>
 			<version>${jackson.version}</version>
 		</dependency>
-		
+
 		<!--FASTJSON依赖包 -->
 		<dependency>
 			<groupId>com.alibaba</groupId>
 			<artifactId>fastjson</artifactId>
 			<version>${fastjson.version}</version>
 		</dependency>
-	
+
 		<!--MMSEG4j依赖包 -->
 		<dependency>
 			<groupId>com.chenlb.mmseg4j</groupId>
 			<artifactId>mmseg4j-core</artifactId>
 			<version>${mmseg4j.version}</version>
 		</dependency>
-		
+
 		<dependency>
 			<groupId>com.chenlb.mmseg4j</groupId>
 			<artifactId>mmseg4j-analysis</artifactId>
 			<version>${mmseg4j.version}</version>
 		</dependency>
-		
+
 		<!--HADOOP依赖包 -->
+		<!-- <dependency> -->
+		<!-- <groupId>org.apache.hadoop</groupId> -->
+		<!-- <artifactId>hadoop-core</artifactId> -->
+		<!-- <version>${hadoop.version}</version> -->
+		<!-- </dependency> -->
+
 		<dependency>
 			<groupId>org.apache.hadoop</groupId>
-			<artifactId>hadoop-core</artifactId>
-			<version>${hadoop.version}</version>
+			<artifactId>hadoop-common</artifactId>
+			<version>${hadoop.common.version}</version>
+			<exclusions>
+				<exclusion>
+					<groupId>org.slf4j</groupId>
+					<artifactId>slf4j-log4j12</artifactId>
+				</exclusion>
+			</exclusions>
 		</dependency>
-		
+
+		<dependency>
+			<groupId>org.apache.hadoop</groupId>
+			<artifactId>hadoop-hdfs</artifactId>
+			<version>${hadoop.hdfs.version}</version>
+			<exclusions>
+				<exclusion>
+					<groupId>org.slf4j</groupId>
+					<artifactId>slf4j-log4j12</artifactId>
+				</exclusion>
+			</exclusions>
+		</dependency>
+
+		<dependency>
+			<groupId>org.apache.hadoop</groupId>
+			<artifactId>hadoop-client</artifactId>
+			<version>${hadoop.client.version}</version>
+		</dependency>
+
+		<dependency>
+			<groupId>org.apache.hadoop</groupId>
+			<artifactId>hadoop-mapreduce-client-core</artifactId>
+			<version>${hadoop.mapred.client.core.version}</version>
+		</dependency>
+
+		<dependency>
+			<groupId>org.apache.hadoop</groupId>
+			<artifactId>hadoop-mapreduce-client-jobclient</artifactId>
+			<version>${hadoop.mapred.client.job.version}</version>
+		</dependency>
+
+		<dependency>
+			<groupId>org.apache.hadoop</groupId>
+			<artifactId>hadoop-yarn-common</artifactId>
+			<version>${hadoop.yarn.common.version}</version>
+		</dependency>
+
 		<!--SPARK依赖包 -->
 		<dependency>
 			<groupId>org.apache.spark</groupId>
 			<artifactId>spark-core_2.10</artifactId>
 			<version>${spark.version}</version>
 		</dependency>
-		
+
 		<dependency>
 			<groupId>org.apache.spark</groupId>
 			<artifactId>spark-mllib_2.10</artifactId>
 			<version>${spark.version}</version>
 		</dependency>
-		
+
 		<dependency>
 			<groupId>org.apache.spark</groupId>
 			<artifactId>spark-bagel_2.10</artifactId>
@@ -405,32 +461,32 @@
 			<artifactId>spark-repl_2.10</artifactId>
 			<version>${spark.version}</version>
 		</dependency>
-		
+
 		<dependency>
 			<groupId>org.apache.spark</groupId>
 			<artifactId>spark-streaming_2.10</artifactId>
 			<version>${spark.version}</version>
 		</dependency>
-		
+
 		<dependency>
 			<groupId>org.apache.spark</groupId>
 			<artifactId>spark-graphx_2.10</artifactId>
 			<version>${spark.version}</version>
 		</dependency>
-		
+
 		<dependency>
 			<groupId>org.apache.spark</groupId>
 			<artifactId>spark-sql_2.10</artifactId>
 			<version>${spark.version}</version>
 		</dependency>
-		
+
 		<!-- HBASE 依赖 -->
 		<dependency>
 			<groupId>org.apache.hbase</groupId>
 			<artifactId>hbase</artifactId>
 			<version>${hbase.version}</version>
 		</dependency>
-		
+
 		<dependency>
 			<groupId>org.apache.hbase</groupId>
 			<artifactId>hbase-protocol</artifactId>
@@ -466,28 +522,28 @@
 			<groupId>org.apache.hive</groupId>
 			<artifactId>hive-service</artifactId>
 			<version>${hive.version}</version>
-		</dependency> 
-		
+		</dependency>
+
 		<!--SOLR依赖包 -->
-<!-- 		<dependency> -->
-<!-- 			<groupId>org.apache.solr</groupId> -->
-<!-- 			<artifactId>solr</artifactId> -->
-<!-- 			<version>${solr.version}</version> -->
-<!-- 			<exclusions> -->
-<!-- 				<exclusion> -->
-<!-- 					<groupId>org.slf4j</groupId> -->
-<!-- 					<artifactId>slf4j-log4j12</artifactId> -->
-<!-- 				</exclusion> -->
-<!-- 				<exclusion> -->
-<!-- 					<groupId>org.slf4j</groupId> -->
-<!-- 					<artifactId>slf4j-jdk14</artifactId> -->
-<!-- 				</exclusion>  -->
-<!-- 				<exclusion> -->
-<!-- 					<groupId>org.slf4j</groupId> -->
-<!-- 					<artifactId>slf4j-jcl</artifactId> -->
-<!-- 				</exclusion> -->
-<!-- 			</exclusions> -->
-<!-- 		</dependency> -->
+		<!-- <dependency> -->
+		<!-- <groupId>org.apache.solr</groupId> -->
+		<!-- <artifactId>solr</artifactId> -->
+		<!-- <version>${solr.version}</version> -->
+		<!-- <exclusions> -->
+		<!-- <exclusion> -->
+		<!-- <groupId>org.slf4j</groupId> -->
+		<!-- <artifactId>slf4j-log4j12</artifactId> -->
+		<!-- </exclusion> -->
+		<!-- <exclusion> -->
+		<!-- <groupId>org.slf4j</groupId> -->
+		<!-- <artifactId>slf4j-jdk14</artifactId> -->
+		<!-- </exclusion> -->
+		<!-- <exclusion> -->
+		<!-- <groupId>org.slf4j</groupId> -->
+		<!-- <artifactId>slf4j-jcl</artifactId> -->
+		<!-- </exclusion> -->
+		<!-- </exclusions> -->
+		<!-- </dependency> -->
 
 		<dependency>
 			<groupId>org.apache.solr</groupId>
@@ -500,7 +556,7 @@
 			<artifactId>solr-solrj</artifactId>
 			<version>${solr.solrj.version}</version>
 		</dependency>
-		
+
 		<dependency>
 			<groupId>jdk.tools</groupId>
 			<artifactId>jdk.tools</artifactId>
@@ -508,20 +564,20 @@
 			<scope>system</scope>
 			<systemPath>${JAVA_HOME}/lib/tools.jar</systemPath>
 		</dependency>
-		
+
 		<!--JSOUP依赖包 -->
 		<dependency>
 			<groupId>org.jsoup</groupId>
 			<artifactId>jsoup</artifactId>
 			<version>${jsoup.version}</version>
 		</dependency>
-		
+
 		<dependency>
 			<groupId>tw.edu.ntu.csie</groupId>
 			<artifactId>libsvm</artifactId>
 			<version>3.17</version>
 		</dependency>
-		
+
 	</dependencies>
-  
+
 </project>

@@ -1,7 +1,6 @@
-package org.project.modules.a
+package org.project.modules.algorithm
 
 import org.apache.spark.SparkContext
-import java.util.Collections
 
 object SparkKNN extends Serializable {
 

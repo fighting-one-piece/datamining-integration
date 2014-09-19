@@ -1,17 +1,17 @@
-package org.project.modules.a
+package org.project.modules.hbase
 
 import org.apache.spark.SparkContext
 import org.apache.spark._
-import org.apache.spark.rdd.NewHadoopRDD
 import org.apache.hadoop.hbase.HBaseConfiguration
 import org.apache.hadoop.hbase.HTableDescriptor
 import org.apache.hadoop.hbase.client.HBaseAdmin
 import org.apache.hadoop.hbase.mapreduce.TableInputFormat
-import org.apache.hadoop.fs.Path;
 import org.apache.hadoop.hbase.HColumnDescriptor
 import org.apache.hadoop.hbase.util.Bytes
-import org.apache.hadoop.hbase.client.Put;
+import org.apache.hadoop.hbase.client.Put
 import org.apache.hadoop.hbase.client.HTable;
+import org.apache.hadoop.hbase.client.Result
+import org.apache.hadoop.hbase.io.ImmutableBytesWritable
 
 object SparkHBase extends Serializable {
 
