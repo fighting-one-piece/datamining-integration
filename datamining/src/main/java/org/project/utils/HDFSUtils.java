@@ -32,6 +32,7 @@ public class HDFSUtils {
 	}
 	
 	/** 获取HDFS上某路径下所有文件*/
+	@SuppressWarnings("deprecation")
 	public static Path[] getPathFiles(FileSystem fs, Path path) throws IOException {
 		if (!fs.exists(path)) {
 			throw new IOException("path not exists : " + path);

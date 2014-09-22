@@ -81,7 +81,7 @@ object SparkSQL {
 	 hiveContext.sql("use hive")  
 	 hiveContext.sql("show tables").collect().foreach(println)  
 	 
-	 System.exit(0)		 		 
+	 hiveContext.hql("select id,name from a").insertInto("b");
   }
   
   

@@ -12,6 +12,11 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.Callable;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
+import java.util.concurrent.TimeUnit;
 
 import org.apache.log4j.Logger;
 import org.apache.solr.util.IOUtils;
@@ -35,8 +40,15 @@ public class DocumentLoader {
 	
 	protected static Logger logger = Logger.getLogger(DocumentLoader.class);
 	
+	private static ExecutorService executorService = 
+			Executors.newFixedThreadPool(Runtime.getRuntime().availableProcessors());
+	
 	public static void main(String[] args) throws Exception {
-		loadURLToFile();
+//		loadURLToFile();
+		String path = "D:\\resources\\data\\res1\\";
+		DocumentSet documentSet = DocumentLoader.loadDocumentSetByThread(path);
+		List<Document> documents = documentSet.getDocuments();
+		DocumentUtils.calculateTFIDF_0(documents);
 	}
 	
 	public static DocumentSet loadDocumentSet(String path) {
@@ -45,10 +57,16 @@ public class DocumentLoader {
 		return documentSet;
 	}
 	
+	public static DocumentSet loadDocumentSetByThread(String path) {
+		DocumentSet documentSet = new DocumentSet();
+		documentSet.setDocuments(loadDocumentListByThread(path));
+		return documentSet;
+	}
+	
 	public static List<Document> loadDocumentList(String path) {
 		List<Document> docs = new ArrayList<Document>();
-		File[] files = FileUtils.obtainFiles(path);
 		Seg seg = new ComplexSeg(Dictionary.getInstance());
+		File[] files = FileUtils.obtainFiles(path);
 		for (File file : files) {
 			Document document = new Document();
 			document.setCategory(file.getParentFile().getName());
@@ -57,6 +75,26 @@ public class DocumentLoader {
 			docs.add(document);
 		}
 		return docs;
+	}
+	
+	public static List<Document> loadDocumentListByThread(String path) {
+		List<Future<Document>> futures = new ArrayList<Future<Document>>();
+//		Seg seg = new ComplexSeg(Dictionary.getInstance());
+		String[] filePaths = FileUtils.obtainFilePaths(path);
+		for (String filePath : filePaths) {
+			futures.add(executorService.submit(new FileToDocumentThread(filePath)));
+		}
+		List<Document> documents = new ArrayList<Document>();
+		for (Future<Document> future : futures) {
+			try {
+				Document document = future.get(30, TimeUnit.SECONDS);
+				System.out.println("document: " + document.getName() + " finish!");
+				documents.add(document);
+			} catch (Exception e) {
+				e.printStackTrace();
+			} 
+		}
+		return documents;
 	}
 	
 	public static DocumentSet loadCrossDocumentList(String path) {
@@ -152,6 +190,37 @@ public class DocumentLoader {
 			IOUtils.closeQuietly(out);
 			IOUtils.closeQuietly(bw);
 		}
+	}
+	
+}
+
+class FileToDocumentThread implements Callable<Document> {
+
+	private Seg seg = null;
+	
+	private String filePath = null;
+	
+	public FileToDocumentThread(String filePath) {
+		super();
+//		this.seg = new ComplexSeg(Dictionary.getInstance());
+		this.filePath = filePath;
+	}
+	
+	public FileToDocumentThread(Seg seg, String filePath) {
+		super();
+		this.seg = seg;
+		this.filePath = filePath;
+	}
+
+
+	@Override
+	public Document call() throws Exception {
+		File file = new File(filePath);
+		Document document = new Document();
+		document.setCategory(file.getParentFile().getName());
+		document.setName(file.getName());
+		document.setWords(WordUtils.splitFile(file));
+		return document;
 	}
 	
 }

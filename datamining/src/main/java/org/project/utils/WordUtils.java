@@ -20,6 +20,8 @@ import java.util.Vector;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import org.ansj.domain.Term;
+import org.ansj.splitWord.analysis.NlpAnalysis;
 import org.apache.commons.io.IOUtils;
 import org.apache.log4j.Logger;
 import org.tartarus.snowball.SnowballProgram;
@@ -57,6 +59,15 @@ public class WordUtils {
 			IOUtils.closeQuietly(in);
 			IOUtils.closeQuietly(br);
 		}
+	}
+	
+	public static String[] split(String input) {
+		List<String> words = new ArrayList<String>();
+		List<Term> terms = NlpAnalysis.parse(input);
+		for (Term term : terms) {
+			words.add(term.getName());
+		}
+		return removeWords(words.toArray(new String[0])); 
 	}
 	
 	/**
@@ -171,6 +182,14 @@ public class WordUtils {
 		return split(input, "english");
 	}
 	
+	public static String[] splitFile(String path) {
+		File file = new File(path);
+		if (!file.exists()) {
+			logger.error("file not exists");
+		}
+		return splitFile(file);
+	}
+	
 	/**
 	 * 文件分词
 	 * @param path
@@ -183,6 +202,29 @@ public class WordUtils {
 			logger.error("file not exists");
 		}
 		return splitFile(file, seg);
+	}
+	
+	public static String[] splitFile(File file) {
+		String[] words = null;
+		InputStream in = null;
+		BufferedReader reader = null;
+		try {
+			in = new FileInputStream(file);
+			reader = new BufferedReader(new InputStreamReader(in));
+			StringBuilder sb = new StringBuilder();
+			String line = reader.readLine();
+			while (null != line) {
+				sb.append(line);
+				line = reader.readLine();
+			}
+			words = split(sb.toString());
+		} catch (Exception e) {
+			logger.error(e.getMessage());
+		}  finally {
+			IOUtils.closeQuietly(in);
+			IOUtils.closeQuietly(reader);
+		}
+		return removeWords(words);
 	}
 	
 	/**
@@ -235,15 +277,18 @@ public class WordUtils {
 	}
 	
 	public static String[] removeWords(String[] words) {
-		return removeNumericalWords(removeStopWords(words));
+		return removeStopWords(words);
 	}
 	
 	public static String[] removeStopWords(String[] words) {
 		List<String> filterWords = new ArrayList<String>();
+		String regEx = "[0-9]";
+		Pattern pattern = Pattern.compile(regEx);
 		for (String word : words) {
-			if (!stopWords.contains(word)) {
-				filterWords.add(word);
-			}
+			if (stopWords.contains(word)) continue;
+			Matcher matcher = pattern.matcher(word);
+			if (matcher.find()) continue; 
+			filterWords.add(word);
 		}
 		return filterWords.toArray(new String[0]);
 	}
@@ -282,7 +327,6 @@ public class WordUtils {
 		String path = "D:\\resources\\data\\enter\\1.txt";
 		String[] words = splitFile(path, new ComplexSeg(Dictionary.getInstance()));
 		ShowUtils.printToConsole(words);
-		ShowUtils.printToConsole(removeNumericalWords(words));
 		String dicPath = WordUtils.class.getClassLoader().getResource("dic/chinese/word.dic").toURI().getPath();
 		System.out.println(dicPath);
 		words = splitFile(path, new ComplexSeg(Dictionary.getInstance(dicPath)));

@@ -3,9 +3,16 @@ package org.project.common;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Test {
+import org.project.utils.FileUtils;
+import org.project.utils.ShowUtils;
+import org.project.utils.WordUtils;
 
-	public static void main(String[] args) {
+import com.chenlb.mmseg4j.ComplexSeg;
+import com.chenlb.mmseg4j.Dictionary;
+
+public class Test {
+	
+	public static void a() {
 		List<P> p1s = new ArrayList<P>();
 		p1s.add(new P(1.0, 1.0, "one"));
 		p1s.add(new P(2.0, 2.0, "two"));
@@ -17,6 +24,19 @@ public class Test {
 		for (P p : p2s) {
 			System.out.println("p2s: " + p.getX() + "-" + p.getY() + "-" + p.getCategory());
 		}
+	}
+	
+	public static void b() {
+		String path = "D:\\resources\\data\\enter\\1.txt";
+		String content = FileUtils.readContent(path);
+		ShowUtils.printToConsole(WordUtils.split(content));
+		System.out.println(WordUtils.split(content).length);
+		ShowUtils.printToConsole(WordUtils.split(content, new ComplexSeg(Dictionary.getInstance())));
+		System.out.println(WordUtils.split(content, new ComplexSeg(Dictionary.getInstance())).length);
+	}
+
+	public static void main(String[] args) {
+		b();
 	}
 }
 

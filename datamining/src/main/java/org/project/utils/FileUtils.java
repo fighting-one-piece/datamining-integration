@@ -58,6 +58,25 @@ public class FileUtils {
 			files.add(file);
 		}
 	}
+	
+	public static String[] obtainFilePaths(String path) {
+		List<String> filePaths = new ArrayList<String>();
+		List<File> dirs = new ArrayList<File>();
+		File file = new File(path);
+		if (file.isDirectory()) {
+			dirs.add(file);
+		}
+		while (dirs.size() > 0) {
+			for (File temp : dirs.remove(0).listFiles()) {
+				if (temp.isDirectory()) {
+					dirs.add(temp);
+				} else {
+					filePaths.add(temp.getPath());
+				}
+			}
+		}
+		return filePaths.toArray(new String[0]);
+	}
 
 	public static String obtainOSTmpPath() {
 		String os = System.getProperty("os.name").toLowerCase();
@@ -125,6 +144,27 @@ public class FileUtils {
 			IOUtils.closeQuietly(br);
 		}
 		return lines;
+	}
+	
+	public static String readContent(String path) {
+		StringBuilder sb = new StringBuilder();
+		InputStream in = null;
+		BufferedReader br = null;
+		try {
+			in = new FileInputStream(new File(path));
+			br = new BufferedReader(new InputStreamReader(in));
+			String line = br.readLine();
+			while (null != line) {
+				sb.append(line).append("\n");
+				line = br.readLine();
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			IOUtils.closeQuietly(in);
+			IOUtils.closeQuietly(br);
+		}
+		return sb.toString();
 	}
 	
 	public static String writeToTmpFile(String content) {

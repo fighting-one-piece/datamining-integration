@@ -310,4 +310,5 @@ public class SpectralClusteringBuilder {
 	public static void main(String[] args) {
 		new SpectralClusteringBuilder().build();
 	}
+	
 }
