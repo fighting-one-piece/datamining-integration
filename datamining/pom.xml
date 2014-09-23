@@ -579,18 +579,12 @@
 			<version>3.17</version>
 		</dependency>
 		
-		<dependency>
-			<groupId>edu.fudan</groupId>
-			<artifactId>nlp</artifactId>
-			<version>1.5.7</version>
-		</dependency>
+<!-- 		<dependency> -->
+<!-- 			<groupId>edu.fudan</groupId> -->
+<!-- 			<artifactId>nlp</artifactId> -->
+<!-- 			<version>1.5.7</version> -->
+<!-- 		</dependency> -->
 		 
-		<dependency>
-			<groupId>net.sf.trove4j</groupId>
-			<artifactId>trove4j</artifactId>
-			<version>3.0.3</version>
-		</dependency>
-		
 		<!-- ANSJ -->
 		<dependency>
 			<groupId>org.ansj.ansj_seg</groupId>
@@ -604,18 +598,12 @@
             <version>1.4</version>
         </dependency>
         
-        <dependency>
-			<groupId>org.wltea.IKAnalyzer</groupId>
-			<artifactId>IKAnalyzer</artifactId>
-			<version>3.2.3</version>
-		</dependency>
+<!--         <dependency> -->
+<!-- 			<groupId>org.wltea.IKAnalyzer</groupId> -->
+<!-- 			<artifactId>IKAnalyzer</artifactId> -->
+<!-- 			<version>3.2.3</version> -->
+<!-- 		</dependency> -->
 		
-		<dependency>
-            <groupId>tw.edu.ntu.csie</groupId>
-            <artifactId>libsvm</artifactId>
-            <version>3.17</version>
-        </dependency>
-
 	</dependencies>
 
 </project>

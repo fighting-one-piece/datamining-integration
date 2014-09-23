@@ -27,13 +27,12 @@ import org.jsoup.select.Elements;
 import org.project.utils.FileUtils;
 import org.project.utils.IdentityUtils;
 import org.project.utils.RandomUtils;
+import org.project.utils.SegUtils;
 import org.project.utils.WordUtils;
 import org.project.utils.http.HttpClientUtils;
 import org.project.utils.http.HttpUtils;
 import org.project.utils.jdbc.JDBCUtils;
 
-import com.chenlb.mmseg4j.ComplexSeg;
-import com.chenlb.mmseg4j.Dictionary;
 import com.chenlb.mmseg4j.Seg;
 
 public class DocumentLoader {
@@ -44,7 +43,7 @@ public class DocumentLoader {
 			Executors.newFixedThreadPool(Runtime.getRuntime().availableProcessors());
 	
 	public static void main(String[] args) throws Exception {
-//		loadURLToFile();
+		System.out.println();
 		String path = "D:\\resources\\data\\res1\\";
 		DocumentSet documentSet = DocumentLoader.loadDocumentSetByThread(path);
 		List<Document> documents = documentSet.getDocuments();
@@ -65,7 +64,7 @@ public class DocumentLoader {
 	
 	public static List<Document> loadDocumentList(String path) {
 		List<Document> docs = new ArrayList<Document>();
-		Seg seg = new ComplexSeg(Dictionary.getInstance());
+		Seg seg = SegUtils.getComplexSeg();
 		File[] files = FileUtils.obtainFiles(path);
 		for (File file : files) {
 			Document document = new Document();
@@ -79,7 +78,6 @@ public class DocumentLoader {
 	
 	public static List<Document> loadDocumentListByThread(String path) {
 		List<Future<Document>> futures = new ArrayList<Future<Document>>();
-//		Seg seg = new ComplexSeg(Dictionary.getInstance());
 		String[] filePaths = FileUtils.obtainFilePaths(path);
 		for (String filePath : filePaths) {
 			futures.add(executorService.submit(new FileToDocumentThread(filePath)));
@@ -196,30 +194,19 @@ public class DocumentLoader {
 
 class FileToDocumentThread implements Callable<Document> {
 
-	private Seg seg = null;
-	
 	private String filePath = null;
 	
 	public FileToDocumentThread(String filePath) {
-		super();
-//		this.seg = new ComplexSeg(Dictionary.getInstance());
 		this.filePath = filePath;
 	}
 	
-	public FileToDocumentThread(Seg seg, String filePath) {
-		super();
-		this.seg = seg;
-		this.filePath = filePath;
-	}
-
-
 	@Override
 	public Document call() throws Exception {
 		File file = new File(filePath);
 		Document document = new Document();
 		document.setCategory(file.getParentFile().getName());
 		document.setName(file.getName());
-		document.setWords(WordUtils.splitFile(file));
+		document.setWords(WordUtils.splitFile(file, SegUtils.getComplexSeg()));
 		return document;
 	}
 	

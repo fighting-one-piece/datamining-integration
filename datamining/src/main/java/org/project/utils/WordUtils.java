@@ -26,8 +26,6 @@ import org.apache.commons.io.IOUtils;
 import org.apache.log4j.Logger;
 import org.tartarus.snowball.SnowballProgram;
 
-import com.chenlb.mmseg4j.ComplexSeg;
-import com.chenlb.mmseg4j.Dictionary;
 import com.chenlb.mmseg4j.MMSeg;
 import com.chenlb.mmseg4j.Seg;
 import com.chenlb.mmseg4j.Word;
@@ -325,11 +323,7 @@ public class WordUtils {
 	
 	public static void main(String[] args) throws Exception {
 		String path = "D:\\resources\\data\\enter\\1.txt";
-		String[] words = splitFile(path, new ComplexSeg(Dictionary.getInstance()));
-		ShowUtils.printToConsole(words);
-		String dicPath = WordUtils.class.getClassLoader().getResource("dic/chinese/word.dic").toURI().getPath();
-		System.out.println(dicPath);
-		words = splitFile(path, new ComplexSeg(Dictionary.getInstance(dicPath)));
+		String[] words = splitFile(path, SegUtils.getComplexSeg());
 		ShowUtils.printToConsole(words);
 		String str = "sssss";
 		String regEx = "[0-9]";
