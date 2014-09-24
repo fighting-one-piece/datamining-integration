@@ -19,13 +19,15 @@ import org.project.modules.algorithm.featureselect.FSInformationGain;
 import org.project.modules.algorithm.featureselect.IFeatureSelect;
 import org.project.modules.clustering.dbscan.data.DataPoint;
 import org.project.utils.DistanceUtils;
+import org.project.utils.ShowUtils;
 
 public class BDocDBScanBuilder {
 
 	// 半径
-	public static double EPISLON = 0.04;
+//	public static double EPISLON = 0.04;
+	public static double EPISLON = 0.025;
 	// 密度、最小点个数
-	public static int MIN_POINTS = 15;
+	public static int MIN_POINTS = 10;
 	// 开方检验词限制
 	public static int CHI_WORD_LIMIT = 100;
 	// 期望交叉熵词限制
@@ -38,9 +40,9 @@ public class BDocDBScanBuilder {
 		List<DataPoint> dataPoints = new ArrayList<DataPoint>();
 		try {
 			long start = System.currentTimeMillis();
-			String path = "D:\\resources\\data\\res1\\";
+			String path = "D:\\resources\\data\\res2\\";
 			DocumentSet documentSet = DocumentLoader.loadDocumentSetByThread(path);
-			reduceDimensionsByCHI(documentSet);
+//			reduceDimensionsByCHI(documentSet);
 			// reduceDimensionsByECE(documentSet);
 			// reduceDimensionsByIG(documentSet);
 			// 计算TFIDF
@@ -74,6 +76,7 @@ public class BDocDBScanBuilder {
 			for (int i = 0; i < len; i++) {
 				words[i] = list.get(i).getKey();
 			}
+			ShowUtils.printToConsole(words);
 			document.setWords(words);
 		}
 	}
@@ -135,7 +138,7 @@ public class BDocDBScanBuilder {
 		for (DataPoint point : points) {
 			double distance = DistanceUtils.cosine(current.getValues(),
 					point.getValues());
-			// System.out.println("distance: " + distance);
+			 System.out.println("distance: " + distance);
 			if (distance > EPISLON) {
 				neighbors.add(point);
 			}
@@ -243,5 +246,6 @@ public class BDocDBScanBuilder {
 
 	public static void main(String[] args) {
 		new BDocDBScanBuilder().run();
+		System.exit(0);
 	}
 }

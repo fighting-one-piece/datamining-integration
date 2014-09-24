@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Random;
@@ -15,25 +16,44 @@ import org.project.common.document.DocumentLoader;
 import org.project.common.document.Document;
 import org.project.common.document.DocumentSet;
 import org.project.common.document.DocumentUtils;
+import org.project.modules.algorithm.featureselect.FSChiSquare;
+import org.project.modules.algorithm.featureselect.FSExpectedCrossEntropy;
+import org.project.modules.algorithm.featureselect.FSInformationGain;
+import org.project.modules.algorithm.featureselect.IFeatureSelect;
 import org.project.modules.clustering.kmeans.data.DataPoint;
 import org.project.modules.clustering.kmeans.data.DataPointCluster;
 import org.project.utils.DistanceUtils;
 
-public class DocKMediodsCluster extends AbstractCluster {
+public class DocKMediodsOptCluster extends AbstractCluster {
 	
-	//阀值
+	//阀值 CHI
 	public static final double THRESHOLD = 0.028;
+	//阀值 ECE
+//	public static final double THRESHOLD = 0.12;
+	//阀值 IG
+//	public static final double THRESHOLD = 0.12;
 	//迭代次数
 	public static final int ITER_NUM = 10;
+	//开方检验词限制
+	public static int CHI_WORD_LIMIT = 100;
+	//期望交叉熵词限制
+	public static int ECE_WORD_LIMIT = 700;
+	//信息增益词限制
+	public static int IG_WORD_LIMIT = 600;
 	
 	/*
 	 * 初始化数据
+	 * 先通过开方检验进行降维
 	 */
 	public List<DataPoint> initData() {
 		List<DataPoint> dataPoints = new ArrayList<DataPoint>();
 		try {
-			String path = DocKMediodsCluster.class.getClassLoader().getResource("测试").toURI().getPath();
-			DocumentSet documentSet = DocumentLoader.loadDocumentSetByThread(path);
+			String path = DocKMediodsOptCluster.class.getClassLoader().getResource("测试").toURI().getPath();
+			DocumentSet documentSet = DocumentLoader.loadDocumentSet(path);
+			reduceDimensionsByCHI(documentSet);
+//			reduceDimensionsByECE(documentSet);
+//			reduceDimensionsByIG(documentSet);
+			//计算TFIDF
 			List<Document> documents = documentSet.getDocuments();
 			DocumentUtils.calculateTFIDF_0(documents);
 			for(Document document : documents) {
@@ -46,6 +66,73 @@ public class DocKMediodsCluster extends AbstractCluster {
 			e.printStackTrace();
 		}
 		return dataPoints;
+	}
+	
+	//开方检验特征选择降维
+	public void reduceDimensionsByCHI(DocumentSet documentSet) {
+		IFeatureSelect featureSelect = new FSChiSquare();
+		featureSelect.handle(documentSet);
+		List<Document> documents = documentSet.getDocuments();
+		for (Document document : documents) {
+			Map<String, Double> chiWords = document.getChiWords();
+			List<Map.Entry<String, Double>> list = sortMap(chiWords);
+			int len = list.size() < CHI_WORD_LIMIT ? list.size() : CHI_WORD_LIMIT;
+			String[] words = new String[len];
+			for (int i = 0; i < len; i++) {
+				words[i] = list.get(i).getKey();
+			}
+			document.setWords(words);
+		}
+	}
+	
+	//期望交叉熵特征选择降维
+	public void reduceDimensionsByECE(DocumentSet documentSet) {
+		IFeatureSelect featureSelect = new FSExpectedCrossEntropy();
+		featureSelect.handle(documentSet);
+		Map<String, Double> eceWords = documentSet.getFeatureSelect();
+		List<Map.Entry<String, Double>> list = sortMap(eceWords);
+		int len = list.size() < ECE_WORD_LIMIT ? list.size() : ECE_WORD_LIMIT;
+		List<String> wordList = new ArrayList<String>();
+		for (int i = 0; i < len; i++) {
+			wordList.add(list.get(i).getKey());
+		}
+		List<Document> documents = documentSet.getDocuments();
+		for (Document document : documents) {
+			Set<String> wordSet = document.getWordSet();
+			Iterator<String> iter = wordSet.iterator();
+			while (iter.hasNext()) {
+				String word = iter.next();
+				if (!wordList.contains(word)) {
+					iter.remove();
+				}
+			}
+			document.setWords(wordSet.toArray(new String[0]));
+		}
+	}
+	
+	//信息增益特征选择降维
+	public void reduceDimensionsByIG(DocumentSet documentSet) {
+		IFeatureSelect featureSelect = new FSInformationGain();
+		featureSelect.handle(documentSet);
+		Map<String, Double> eceWords = documentSet.getFeatureSelect();
+		List<Map.Entry<String, Double>> list = sortMap(eceWords);
+		int len = list.size() < IG_WORD_LIMIT ? list.size() : IG_WORD_LIMIT;
+		List<String> wordList = new ArrayList<String>();
+		for (int i = 0; i < len; i++) {
+			wordList.add(list.get(i).getKey());
+		}
+		List<Document> documents = documentSet.getDocuments();
+		for (Document document : documents) {
+			Set<String> wordSet = document.getWordSet();
+			Iterator<String> iter = wordSet.iterator();
+			while (iter.hasNext()) {
+				String word = iter.next();
+				if (!wordList.contains(word)) {
+					iter.remove();
+				}
+			}
+			document.setWords(wordSet.toArray(new String[0]));
+		}
 	}
 	
 	//随机生成中心点，并生成初始的K个聚类
@@ -152,7 +239,8 @@ public class DocKMediodsCluster extends AbstractCluster {
 	}
 	
 	public static void main(String[] args) {
-		new DocKMediodsCluster().build();
+		DocKMediodsOptCluster builder = new DocKMediodsOptCluster();
+		builder.build();
 	}
 	
 }

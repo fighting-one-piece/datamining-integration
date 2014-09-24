@@ -41,7 +41,6 @@ public class StringUtils {
 				return -o1.getValue().compareTo(o2.getValue());
 			}
 		});
-		ShowUtils.printToConsole(list);
 		if (list.size() == 0) return null;
 		return list.get(0).getKey();
 	}

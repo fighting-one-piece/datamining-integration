@@ -280,7 +280,8 @@
 		<junit.version>4.10</junit.version>
 		<json.version>2.4</json.version>
 		<jama.version>1.1.1</jama.version>
-		<jackson.version>1.9.9</jackson.version>
+		<jackson.version>1.6.1</jackson.version>
+<!-- 		<jackson.version>1.9.9</jackson.version> -->
 		<fastjson.version>1.1.41</fastjson.version>
 		<mmseg4j.version>1.9.1</mmseg4j.version>
 		<!-- <hadoop.version>1.0.4</hadoop.version> -->
@@ -355,11 +356,12 @@
 			<artifactId>jackson-core-asl</artifactId>
 			<version>${jackson.version}</version>
 		</dependency>
-
+		
 		<dependency>
 			<groupId>org.codehaus.jackson</groupId>
 			<artifactId>jackson-mapper-asl</artifactId>
 			<version>${jackson.version}</version>
+			<scope>compile</scope> 
 		</dependency>
 
 		<!--FASTJSON依赖包 -->

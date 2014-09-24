@@ -1,4 +1,4 @@
-package org.project.modules.hadoop.mr.a;
+package org.project.modules.hadoop.mapreduce.a;
 
 import java.io.IOException;
 import java.util.Iterator;
@@ -76,7 +76,7 @@ public class TableJoin {
 			System.err.println("Usage:...");
 			System.exit(2);
 		}
-		Job job = new Job(conf, "single table join");
+		Job job = Job.getInstance(conf, "single table join");
 		job.setJarByClass(TableJoin.class);
 		job.setMapperClass(Map.class);
 		job.setReducerClass(Reduce.class);

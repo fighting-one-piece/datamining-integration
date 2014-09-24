@@ -1,4 +1,4 @@
-package org.project.modules.hadoop.mr;
+package org.project.modules.hadoop.mapreduce;
 
 import java.io.IOException;
 
@@ -43,7 +43,7 @@ public class CombineSmallFileMR {
 				System.exit(2);
 			}
 			configuration.set("mapred.job.queue.name", "q_hudong");
-			Job job = new Job(configuration, "CombineSmallFile");
+			Job job = Job.getInstance(configuration, "CombineSmallFile");
 			
 			FileInputFormat.addInputPath(job, new Path(inputArgs[0]));
 			FileOutputFormat.setOutputPath(job, new Path(inputArgs[1]));

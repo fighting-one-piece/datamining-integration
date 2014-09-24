@@ -1,4 +1,4 @@
-package org.project.modules.hadoop.mr.a.writable;
+package org.project.modules.hadoop.mapreduce.a.writable;
 
 import java.io.DataInput;
 import java.io.DataOutput;

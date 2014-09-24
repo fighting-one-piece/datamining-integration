@@ -1,4 +1,4 @@
-package org.project.modules.hadoop.mr;
+package org.project.modules.hadoop.mapreduce;
 
 import java.io.DataInput;
 import java.io.DataOutput;
@@ -33,7 +33,7 @@ public class TopNJob {
 	
 	public static Job wordCountJob(Configuration conf, String input,
 			String output) throws Exception {
-		Job job = new Job(conf);
+		Job job = Job.getInstance(conf);
 		
 		FileInputFormat.addInputPath(job, new Path(input));
 		FileOutputFormat.setOutputPath(job, new Path(output));
@@ -55,7 +55,7 @@ public class TopNJob {
 	
 	public static Job topNJob(Configuration conf, String input, 
 			String output) throws Exception {
-		Job job = new Job(conf);
+		Job job = Job.getInstance(conf);
 		
 		preHandle(conf, input);
 		FileInputFormat.addInputPath(job, new Path(input));
@@ -77,6 +77,7 @@ public class TopNJob {
 		return job;
 	}
 	
+	@SuppressWarnings("deprecation")
 	public static void preHandle(Configuration conf, String output) throws Exception {
 		Path path = new Path(output);
 		FileSystem fs = path.getFileSystem(conf);

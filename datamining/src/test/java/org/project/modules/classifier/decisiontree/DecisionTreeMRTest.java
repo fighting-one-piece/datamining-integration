@@ -51,7 +51,7 @@ import org.project.modules.classifier.decisiontree.mr.writable.TreeNodeWritable;
 import org.project.modules.classifier.decisiontree.node.BranchNode;
 import org.project.modules.classifier.decisiontree.node.TreeNode;
 import org.project.modules.classifier.decisiontree.node.TreeNodeHelper;
-import org.project.modules.hadoop.mr.a.writable.DateTableWritable;
+import org.project.modules.hadoop.mapreduce.a.writable.DateTableWritable;
 import org.project.utils.HDFSUtils;
 import org.project.utils.JSONUtils;
 import org.project.utils.ShowUtils;

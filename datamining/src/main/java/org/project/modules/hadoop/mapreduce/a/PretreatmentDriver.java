@@ -1,4 +1,4 @@
-package org.project.modules.hadoop.mr.a;
+package org.project.modules.hadoop.mapreduce.a;
 
 import java.io.IOException;
 import java.util.Iterator;

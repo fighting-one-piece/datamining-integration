@@ -9,7 +9,165 @@ import net.sf.json.JsonConfig;
 import net.sf.json.util.CycleDetectionStrategy;
 import net.sf.json.util.PropertyFilter;
 
+import java.io.IOException;
+import java.text.SimpleDateFormat;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import org.apache.commons.lang.math.NumberUtils;
+import org.codehaus.jackson.JsonParser;
+import org.codehaus.jackson.map.DeserializationConfig;
+import org.codehaus.jackson.map.ObjectMapper;
+import org.codehaus.jackson.map.type.TypeFactory;
+
 public class JSONUtils {
+	
+	private static final ObjectMapper defaultObjectMapper;
+	private static final ObjectMapper numAsStringObjectMapper = new ObjectMapper();
+	
+	static {
+//		numAsStringObjectMapper.configure(
+//				JsonGenerator.Feature.WRITE_NUMBERS_AS_STRINGS, true);
+		defaultObjectMapper = new ObjectMapper().configure(
+				JsonParser.Feature.ALLOW_UNQUOTED_FIELD_NAMES, true);
+
+		defaultObjectMapper.getDeserializationConfig().setDateFormat(
+				new SimpleDateFormat("yyyy-MM-dd HH:mm:ss"));
+
+		defaultObjectMapper
+				.configure(JsonParser.Feature.ALLOW_UNQUOTED_FIELD_NAMES, true)
+				.configure(JsonParser.Feature.ALLOW_SINGLE_QUOTES, true)
+				.configure(
+						DeserializationConfig.Feature.FAIL_ON_UNKNOWN_PROPERTIES,
+						false);
+	}
+
+	public static String toFilterNumberString(Object object) {
+		return toString(object, numAsStringObjectMapper);
+	}
+
+	public static String toString(Object object, ObjectMapper mapper) {
+		String json = "";
+		try {
+			json = mapper.writeValueAsString(object);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		return json;
+	}
+
+	public static String toJson(Object object) {
+		return toString(object, defaultObjectMapper);
+	}
+
+	public static long getLong(Object o, long defaltValue) {
+		if ((o instanceof String))
+			return NumberUtils.toLong((String) o, defaltValue);
+		if ((o instanceof Number)) {
+			return ((Number) o).longValue();
+		}
+		return defaltValue;
+	}
+
+	public static String getStr(String remarks) {
+		if ((remarks == null) || (remarks.trim().equalsIgnoreCase("null"))) {
+			return null;
+		}
+		return remarks;
+	}
+
+	public static <T> T json2Bean(String json, Class<T> clazz) {
+		try {
+			return defaultObjectMapper.readValue(json, clazz);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return null;
+	}
+
+	@SuppressWarnings({ "unchecked", "rawtypes" })
+	public static Map<String, String> json2Map(String json) {
+		try {
+			return (Map) defaultObjectMapper.readValue(json,
+					TypeFactory.mapType(Map.class, String.class, String.class));
+		} catch (Exception e) {
+		}
+		return null;
+	}
+
+	@SuppressWarnings({ "unchecked", "rawtypes" })
+	public static Map<String, Object> json2ObjMap(String json) {
+		try {
+			return (Map) defaultObjectMapper.readValue(json,
+					TypeFactory.mapType(Map.class, String.class, Object.class));
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return null;
+	}
+
+	public static Map<String, String> json2StrMap(String json) {
+		Map<String, String> result = new HashMap<String, String>();
+		try {
+			Map<String, Object> tempMap = json2ObjMap(json);
+			if (null != tempMap) {
+				for (Map.Entry<String, Object> entry : tempMap.entrySet()) {
+					result.put(entry.getKey(), entry.getValue().toString());
+				}
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+
+		return result;
+	}
+
+	@SuppressWarnings({ "unchecked", "rawtypes" })
+	public static <T> List<T> json2List(String json, Class<T> clazz) {
+		try {
+			return (List) defaultObjectMapper.readValue(json,
+					TypeFactory.collectionType(List.class, clazz));
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return null;
+	}
+
+	@SuppressWarnings({ "unchecked", "rawtypes" })
+	public static List<Map<String, String>> json2List(String json) {
+		try {
+			return (List) defaultObjectMapper.readValue(json, TypeFactory
+					.collectionType(List.class, TypeFactory.mapType(Map.class,
+							String.class, String.class)));
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return null;
+	}
+
+	@SuppressWarnings("unchecked")
+	public static <T> T[] json2Array(String json, Class<T> clazz) {
+		try {
+			return (T[]) defaultObjectMapper.readValue(json,
+					TypeFactory.arrayType(clazz));
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return null;
+	}
+
+	@SuppressWarnings({ "unchecked" })
+	public static Map<String, String>[] json2Array(String json) {
+		try {
+			return (Map[]) defaultObjectMapper.readValue(json, TypeFactory
+					.arrayType(TypeFactory.mapType(Map.class, String.class,
+							String.class)));
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return null;
+	}
 
 	public static String object2json(Object object) {
 		StringBuffer sb = new StringBuffer();
@@ -72,5 +230,7 @@ public class JSONUtils {
 		}
 		return object;
 	}
+	
+	
 	
 }

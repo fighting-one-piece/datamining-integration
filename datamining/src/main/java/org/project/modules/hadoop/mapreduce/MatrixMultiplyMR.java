@@ -1,4 +1,4 @@
-package org.project.modules.hadoop.mr;
+package org.project.modules.hadoop.mapreduce;
 
 import java.io.IOException;
 import java.util.HashMap;
@@ -50,7 +50,7 @@ public class MatrixMultiplyMR {
 				System.out.println("error, please input two path. input and output");
 				System.exit(2);
 			}
-			Job job = new Job(configuration, "Martrix Multiply");
+			Job job = Job.getInstance(configuration, "Martrix Multiply");
 			
 			FileInputFormat.addInputPath(job, new Path(inputArgs[0]));
 			FileOutputFormat.setOutputPath(job, new Path(inputArgs[1]));

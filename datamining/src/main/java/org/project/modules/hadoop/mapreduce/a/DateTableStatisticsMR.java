@@ -1,6 +1,7 @@
-package org.project.modules.hadoop.mr;
+package org.project.modules.hadoop.mapreduce.a;
 
 import java.io.IOException;
+import java.util.StringTokenizer;
 
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.fs.Path;
@@ -13,24 +14,25 @@ import org.apache.hadoop.mapreduce.Reducer;
 import org.apache.hadoop.mapreduce.lib.input.FileInputFormat;
 import org.apache.hadoop.mapreduce.lib.input.TextInputFormat;
 import org.apache.hadoop.mapreduce.lib.output.FileOutputFormat;
-import org.apache.hadoop.mapreduce.lib.output.TextOutputFormat;
+import org.apache.hadoop.mapreduce.lib.output.SequenceFileOutputFormat;
 import org.apache.hadoop.util.GenericOptionsParser;
+import org.project.modules.hadoop.mapreduce.a.writable.DateTableWritable;
 
-public class WordCountMR {
+public class DateTableStatisticsMR {
 	
 	private static void configureJob(Job job) {
-		job.setJarByClass(WordCountMR.class);
+		job.setJarByClass(DateTableStatisticsMR.class);
 		
-		job.setMapperClass(WordCountMapper.class);
-		job.setMapOutputKeyClass(Text.class);
+		job.setMapperClass(DateTableStatisticsMapper.class);
+		job.setMapOutputKeyClass(DateTableWritable.class);
 		job.setMapOutputValueClass(IntWritable.class);
 
-		job.setReducerClass(WordCountReducer.class);
-		job.setOutputKeyClass(Text.class);
+		job.setReducerClass(DateTableStatisticsReducer.class);
+		job.setOutputKeyClass(DateTableWritable.class);
 		job.setOutputValueClass(IntWritable.class);
 		
 		job.setInputFormatClass(TextInputFormat.class);
-		job.setOutputFormatClass(TextOutputFormat.class);
+		job.setOutputFormatClass(SequenceFileOutputFormat.class);
 	}
 
 	public static void main(String[] args) {
@@ -42,7 +44,8 @@ public class WordCountMR {
 				System.out.println("error, please input two path. input and output");
 				System.exit(2);
 			}
-			Job job = new Job(configuration, "WordCountMR");
+			configuration.set("mapred.job.queue.name", "q_hudong");
+			Job job = Job.getInstance(configuration, "CombineSmallFile");
 			
 			FileInputFormat.addInputPath(job, new Path(inputArgs[0]));
 			FileOutputFormat.setOutputPath(job, new Path(inputArgs[1]));
@@ -56,21 +59,24 @@ public class WordCountMR {
 	}
 }
 
-class WordCountMapper extends Mapper<LongWritable, Text, Text, IntWritable> {
+class DateTableStatisticsMapper extends Mapper<LongWritable, Text, DateTableWritable, IntWritable> {
 	
 	private IntWritable one = new IntWritable(1);
 	
 	@Override
 	protected void map(LongWritable key, Text value, Context context)
 			throws IOException, InterruptedException {
-		context.write(value, one);
+		StringTokenizer token = new StringTokenizer(value.toString());
+		String date = token.nextToken();
+		String table = token.nextToken();
+		context.write(new DateTableWritable(new Text(date), new Text(table)), one);
 	}
 }
 
-class WordCountReducer extends Reducer<Text, IntWritable, Text, IntWritable> {
+class DateTableStatisticsReducer extends Reducer<DateTableWritable, IntWritable, DateTableWritable, IntWritable> {
 	
 	@Override
-	protected void reduce(Text key, Iterable<IntWritable> values, Context context)
+	protected void reduce(DateTableWritable key, Iterable<IntWritable> values, Context context)
 			throws IOException, InterruptedException {
 		int sum = 0;
 		for (IntWritable value : values) {

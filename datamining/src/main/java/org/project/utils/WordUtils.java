@@ -35,7 +35,7 @@ public class WordUtils {
 	public static Logger logger = Logger.getLogger(WordUtils.class);
 	
 	/* 分隔符的集合 */
-	public static final String DELIMITERS = " \t\n\r\f~!@#$%^&*()_+|`-=\\{}[]:\";'<>?,./'";
+	public static final String DELIMITERS = "\t\n\r\f~!@#$%^&*()_+|`-=\\{}[]:\";'<>?,./'";
 	
 	public static Set<String> stopWords = null;
 	

@@ -1,4 +1,4 @@
-package org.project.modules.hadoop.mr;
+package org.project.modules.hadoop.mapreduce;
 
 import java.io.IOException;
 import java.util.HashMap;
@@ -52,7 +52,7 @@ public class MatrixMatrixMultiplyMR {
 				System.out.println("2、 output file path.");
 				System.exit(1);
 			}
-			Job job = new Job(configuration, "Martrix Martrix Multiply");
+			Job job = Job.getInstance(configuration, "Martrix Martrix Multiply");
 			
 			FileInputFormat.addInputPath(job, new Path(inputArgs[0]));
 			FileOutputFormat.setOutputPath(job, new Path(inputArgs[1]));

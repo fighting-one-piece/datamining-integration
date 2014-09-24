@@ -43,11 +43,14 @@ public class DocumentLoader {
 			Executors.newFixedThreadPool(Runtime.getRuntime().availableProcessors());
 	
 	public static void main(String[] args) throws Exception {
-		System.out.println();
-		String path = "D:\\resources\\data\\res1\\";
+		long start = System.currentTimeMillis();
+		String path = "D:\\resources\\data\\res2\\";
 		DocumentSet documentSet = DocumentLoader.loadDocumentSetByThread(path);
 		List<Document> documents = documentSet.getDocuments();
 		DocumentUtils.calculateTFIDF_0(documents);
+		long end = System.currentTimeMillis();
+		System.out.println("spend time: " + (end - start) / 1000);
+		System.exit(0);
 	}
 	
 	public static DocumentSet loadDocumentSet(String path) {

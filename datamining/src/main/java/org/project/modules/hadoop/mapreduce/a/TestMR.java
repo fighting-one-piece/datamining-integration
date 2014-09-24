@@ -1,4 +1,4 @@
-package org.project.modules.hadoop.mr.a;
+package org.project.modules.hadoop.mapreduce.a;
 
 import java.io.DataInput;
 import java.io.DataOutput;
@@ -47,7 +47,7 @@ public class TestMR {
 				System.out.println("error, please input two path. input and output");
 				System.exit(2);
 			}
-			Job job = new Job(configuration, "TestMR");
+			Job job = Job.getInstance(configuration, "TestMR");
 			
 			FileInputFormat.addInputPath(job, new Path(inputArgs[0]));
 			FileOutputFormat.setOutputPath(job, new Path(inputArgs[1]));

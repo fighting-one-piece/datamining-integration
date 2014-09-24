@@ -21,7 +21,7 @@ import org.project.modules.algorithm.featureselect.IFeatureSelect;
 import org.project.modules.clustering.kmeans.data.DataPoint;
 import org.project.modules.clustering.kmeans.data.DataPointCluster;
 
-public class OptKMeansCluster {
+public class KMeansOptCluster {
 	
 	//开方检验词限制
 	public static int CHI_WORD_LIMIT = 100;
@@ -250,7 +250,7 @@ public class OptKMeansCluster {
 	}
 	
 	public static void main(String[] args) {
-		new OptKMeansCluster().build();
+		new KMeansOptCluster().build();
 	}
 
 }
