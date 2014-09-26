@@ -39,6 +39,8 @@ public class LDABuilder {
 	
 	private int ITER_NUMBER = 1000;
 	
+	private int TOPIC_NUMBER = 10;
+	
 	private int SAMPLE_LAG = 10;
 	
 	private int THRESHOLD = 200;
@@ -49,7 +51,7 @@ public class LDABuilder {
 		DocumentSet documentSet = null;
 		try {
 			String path = LDABuilder.class.getClassLoader().getResource("测试").toURI().getPath();
-			documentSet = DocumentLoader.loadDocumentSet(path);
+			documentSet = DocumentLoader.loadDocumentSetByThread(path);
 			Map<String, Integer> wordToCount = documentSet.getWordToCount();
 			Map<String, Integer> wordToIndex = documentSet.getWordToIndex();
 			List<Document> documents = documentSet.getDocuments();
@@ -82,7 +84,7 @@ public class LDABuilder {
 	public void initParameters(DocumentSet documentSet) {
 		D = documentSet.getDocuments().size();
 		W = documentSet.getWordToCount().size();
-		T = 4;
+		T = TOPIC_NUMBER;
 		NDT = new int[D][T];
 		NTW = new int[T][W];
 		NDTSum = new int[D];
@@ -240,6 +242,7 @@ public class LDABuilder {
 	
 	public static void main(String[] args) {
 		new LDABuilder().build();
+		System.exit(0);
 	}
 }
 
