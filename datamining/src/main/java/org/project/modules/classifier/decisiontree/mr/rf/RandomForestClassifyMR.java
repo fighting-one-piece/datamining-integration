@@ -33,6 +33,7 @@ import org.project.modules.classifier.decisiontree.node.TreeNode;
 import org.project.utils.HDFSUtils;
 import org.project.utils.ShowUtils;
 
+@SuppressWarnings("deprecation")
 public class RandomForestClassifyMR {
 	
 	private static void configureJob(Job job) {
@@ -94,7 +95,7 @@ class RandomForestClassifyMapper extends Mapper<LongWritable, Text, IntWritable,
 		instances.add(DataHandler.extract(line, attributes));
 	}
 	
-	@SuppressWarnings("resource")
+	@SuppressWarnings({ "resource", "deprecation" })
 	@Override
 	protected void cleanup(Context context) throws IOException, InterruptedException {
 		super.cleanup(context);

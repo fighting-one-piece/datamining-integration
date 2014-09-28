@@ -40,23 +40,7 @@ public class WordUtils {
 	public static Set<String> stopWords = null;
 	
 	static {
-		stopWords = new HashSet<String>();
-		InputStream in = null;
-		BufferedReader br = null;
-		try {
-			in = WordUtils.class.getClassLoader().getResourceAsStream("dic/stopwords/baidu.dic");
-			br = new BufferedReader(new InputStreamReader(in));
-			String line = br.readLine();
-			while (null != line && !"".equals(line)) {
-				stopWords.add(line);
-				line = br.readLine();
-			}
-		} catch (Exception e) {
-			e.printStackTrace();
-		} finally {
-			IOUtils.closeQuietly(in);
-			IOUtils.closeQuietly(br);
-		}
+		stopWords = DictionaryUtils.getStopWords();
 	}
 	
 	public static String[] split(String input) {

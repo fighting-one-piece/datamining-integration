@@ -32,6 +32,7 @@ import org.project.modules.classifier.knn.data.Point;
 import org.project.modules.classifier.knn.mr.writable.PointWritable;
 import org.project.utils.HDFSUtils;
 
+@SuppressWarnings("deprecation")
 public class KNNClassifier {
 	
 	private static void configureJob(Job job) {
@@ -87,6 +88,7 @@ class KNNMapper extends Mapper<LongWritable, Text, Text, PointWritable> {
 	
 	private List<Point> trainPoints = new ArrayList<Point>();
 	
+	@SuppressWarnings("deprecation")
 	@Override
 	protected void setup(Context context) throws IOException, InterruptedException {
 		super.setup(context);

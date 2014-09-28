@@ -34,6 +34,7 @@ public class FPGrowthJob {
 	}
 	
 	//频繁一项集排序
+	@SuppressWarnings("deprecation")
 	public String frequency_1_itemset_sort(String input) {
 		Map<String, Integer> map = new HashMap<String, Integer>();
 		SequenceFile.Reader reader = null;

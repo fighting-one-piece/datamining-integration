@@ -72,6 +72,7 @@ public class DecisionTreeSprintSJob extends AbstractJob {
 	 * @param output
 	 * @return
 	 */
+	@SuppressWarnings("deprecation")
 	public AttributeGiniWritable chooseBestAttribute(String output) {
 		AttributeGiniWritable minSplitAttribute = null;
 		Path path = new Path(output);

@@ -89,6 +89,7 @@ public class DecisionTreeSprintBJob extends AbstractJob {
 	}
 	
 	/** 初始化工作，主要是获取特征属性集以及属性值的统计，主要是为了填充默认值*/
+	@SuppressWarnings("deprecation")
 	private void initialize(String input) {
 		System.out.println("initialize start.");
 		allAttributes = new HashSet<String>();
@@ -191,7 +192,7 @@ public class DecisionTreeSprintBJob extends AbstractJob {
 		conf.set("mapred.job.queue.name", "q_hudong");
 		Job job = null;
 		try {
-			job = new Job(conf, jobName);
+			job = Job.getInstance(conf, jobName);
 			
 			FileInputFormat.addInputPath(job, new Path(input));
 			FileOutputFormat.setOutputPath(job, new Path(output));
@@ -215,6 +216,7 @@ public class DecisionTreeSprintBJob extends AbstractJob {
 	}
 	
 	/** 根据HDFS上的输出路径选择最佳属性*/
+	@SuppressWarnings("deprecation")
 	private AttributeGiniWritable chooseBestAttribute(String... outputs) {
 		AttributeGiniWritable minSplitAttribute = null;
 		double minSplitPointGini = 1.0;

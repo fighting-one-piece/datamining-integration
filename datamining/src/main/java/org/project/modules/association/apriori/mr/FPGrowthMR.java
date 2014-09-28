@@ -31,6 +31,7 @@ import org.project.modules.association.apriori.data.Data;
 import org.project.modules.association.apriori.data.Instance;
 import org.project.modules.association.apriori.data.ItemSet;
 
+@SuppressWarnings("deprecation")
 public class FPGrowthMR {
 	
 	private static void configureJob(Job job) {
@@ -67,7 +68,7 @@ public class FPGrowthMR {
 			Path sortPath = new Path(inputArgs[2]);
 			DistributedCache.addCacheFile(sortPath.toUri(), configuration);
 			
-			Job job = new Job(configuration, "FPGrowth Algorithm");
+			Job job = Job.getInstance(configuration, "FPGrowth Algorithm");
 			
 			FileInputFormat.setInputPaths(job, new Path(inputArgs[0]));
 			FileOutputFormat.setOutputPath(job, new Path(inputArgs[1]));
@@ -85,6 +86,7 @@ class FPGrowthMapper extends Mapper<LongWritable, Text, Text, Text> {
 	
 	private List<Map.Entry<String, Integer>> entries = null;
 	
+	@SuppressWarnings("deprecation")
 	@Override
 	protected void setup(Context context) throws IOException,
 			InterruptedException {

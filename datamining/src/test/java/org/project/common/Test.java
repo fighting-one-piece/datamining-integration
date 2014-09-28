@@ -1,5 +1,6 @@
 package org.project.common;
 
+import java.net.URLDecoder;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -35,8 +36,11 @@ public class Test {
 		System.out.println(WordUtils.split(content, new ComplexSeg(Dictionary.getInstance())).length);
 	}
 
-	public static void main(String[] args) {
-		b();
+	public static void main(String[] args) throws Exception {
+		String s = "Ò»¸ö";
+		System.out.println(URLDecoder.decode(s, "utf-8"));
+		System.out.println(URLDecoder.decode(s, "gbk"));
+		System.out.println(URLDecoder.decode(s, "gb2312"));
 	}
 }
 

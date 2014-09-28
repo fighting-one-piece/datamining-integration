@@ -49,7 +49,7 @@ public class CalculateSupportMR {
 			}
 			configuration.set("mapred.job.queue.name", "q_hudong");
 			configuration.set("mapred.job.minSupport", inputArgs[2]);
-			Job job = new Job(configuration, "Frequency 1 ItemSet Statistics");
+			Job job = Job.getInstance(configuration, "Frequency 1 ItemSet Statistics");
 			
 			FileInputFormat.setInputPaths(job, new Path(inputArgs[0]));
 			FileOutputFormat.setOutputPath(job, new Path(inputArgs[1]));

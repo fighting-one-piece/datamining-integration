@@ -47,7 +47,7 @@ public class CalculateC45GainRatioMR {
 				System.out.println("error, please input two path. input and output");
 				System.exit(2);
 			}
-			Job job = new Job(configuration, "Decision Tree");
+			Job job = Job.getInstance(configuration, "Decision Tree");
 			
 			FileInputFormat.setInputPaths(job, new Path(inputArgs[0]));
 			FileOutputFormat.setOutputPath(job, new Path(inputArgs[1]));

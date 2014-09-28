@@ -158,7 +158,7 @@ public class DecisionTreeSprintJob extends AbstractJob {
 		Configuration conf = new Configuration();
 		Job job = null;
 		try {
-			job = new Job(conf, jobName);
+			job = Job.getInstance(conf, jobName);
 			
 			FileInputFormat.addInputPath(job, new Path(input));
 			FileOutputFormat.setOutputPath(job, new Path(output));
@@ -181,6 +181,7 @@ public class DecisionTreeSprintJob extends AbstractJob {
 		return job;
 	}
 	
+	@SuppressWarnings("deprecation")
 	private AttributeGiniWritable chooseBestAttribute(String... outputs) {
 		AttributeGiniWritable minSplitAttribute = null;
 		double minSplitPointGini = 1.0;

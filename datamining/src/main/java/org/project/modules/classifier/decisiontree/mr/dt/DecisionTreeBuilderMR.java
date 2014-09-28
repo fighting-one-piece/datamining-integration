@@ -50,7 +50,7 @@ public class DecisionTreeBuilderMR {
 				System.out.println("error");
 				System.exit(2);
 			}
-			Job job = new Job(configuration, "Decision Tree");
+			Job job = Job.getInstance(configuration, "Decision Tree");
 			
 			FileInputFormat.setInputPaths(job, new Path(inputArgs[0]));
 //			FileInputFormat.addInputPath(job, new Path(inputArgs[0]));

@@ -57,7 +57,7 @@ public class DataFileSplitMR {
 			}
 			configuration.set("mapred.job.queue.name", "q_hudong");
 			configuration.set("data.split.number", inputArgs[2]);
-			Job job = new Job(configuration, "Data Split");
+			Job job = Job.getInstance(configuration, "Data Split");
 			
 			FileInputFormat.setInputPaths(job, new Path(inputArgs[0]));
 			FileOutputFormat.setOutputPath(job, new Path(inputArgs[1]));

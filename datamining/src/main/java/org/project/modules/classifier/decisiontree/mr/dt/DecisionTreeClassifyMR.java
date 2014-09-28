@@ -33,6 +33,7 @@ import org.project.utils.HDFSUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+@SuppressWarnings("deprecation")
 public class DecisionTreeClassifyMR {
 	
 	private static void configureJob(Job job) {
@@ -98,7 +99,7 @@ class DecisionTreeClassifyMapper extends Mapper<LongWritable, Text,
 		instances.add(DataHandler.extract(line, attributes));
 	}
 	
-	@SuppressWarnings("resource")
+	@SuppressWarnings({ "resource", "deprecation" })
 	@Override
 	protected void cleanup(Context context) throws IOException, InterruptedException {
 		super.cleanup(context);

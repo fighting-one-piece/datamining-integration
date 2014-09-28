@@ -21,6 +21,7 @@ import org.codehaus.jackson.map.DeserializationConfig;
 import org.codehaus.jackson.map.ObjectMapper;
 import org.codehaus.jackson.map.type.TypeFactory;
 
+@SuppressWarnings("deprecation")
 public class JSONUtils {
 	
 	private static final ObjectMapper defaultObjectMapper;

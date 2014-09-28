@@ -6,7 +6,7 @@ import org.apache.spark.graphx.util.GraphGenerators
 import org.apache.spark.graphx.GraphLoader
 import org.apache.spark.storage.StorageLevel
 
-object SparkGraphx {
+object Graphx {
 
   def main(args:Array[String]) {
     
@@ -34,6 +34,14 @@ object SparkGraphx {
     pageRankGraph.vertices.sortBy(_._2, false).saveAsTextFile("/user/hadoop/data/temp/graph/graph.pr")
 
     pageRankGraph.vertices.top(5)(Ordering.by(_._2)).foreach(println)
+    
+    
+//    val pageRank = graph.outerJoinVertices(pageRankGraph.vertices) {
+//    		case (uid, attrList, Some(pr)) => (pr, attrList)
+//    		case (uid, attrList, None) => (0.0, attrList)
+//    }
+    
+//    println(pageRank.vertices.top(5)(Ordering.by(_._2._1)).mkString(","))
     
     //TriangleCount主要用途之一是用于社区发现 保持sourceId小于destId
     val graph1 = GraphLoader.edgeListFile(sc, path, true)

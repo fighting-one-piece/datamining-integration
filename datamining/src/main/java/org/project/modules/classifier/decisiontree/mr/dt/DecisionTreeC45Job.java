@@ -44,6 +44,7 @@ public class DecisionTreeC45Job extends AbstractJob {
 	}
 	
 	/** 选择最佳属性，读取MapReduce计算后产生的文件，取增益率最大*/
+	@SuppressWarnings("deprecation")
 	public AttributeGainWritable chooseBestAttribute(String output) {
 		AttributeGainWritable maxAttribute = null;
 		Path path = new Path(output);

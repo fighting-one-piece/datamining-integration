@@ -54,7 +54,7 @@ public class RandomForestBuilderMR {
 			configuration.set("forest.tree.number", inputArgs[2]);
 			configuration.set("random.attribute.number", inputArgs[3]);
 			
-			Job job = new Job(configuration, "Random Forest");
+			Job job = Job.getInstance(configuration, "Random Forest");
 			
 			FileInputFormat.setInputPaths(job, new Path(inputArgs[0]));
 			FileOutputFormat.setOutputPath(job, new Path(inputArgs[1]));
