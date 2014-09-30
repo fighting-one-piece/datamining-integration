@@ -37,19 +37,18 @@ public class WordUtils {
 	/* 分隔符的集合 */
 	public static final String DELIMITERS = "\t\n\r\f~!@#$%^&*()_+|`-=\\{}[]:\";'<>?,./'";
 	
-	public static Set<String> stopWords = null;
-	
-	static {
-		stopWords = DictionaryUtils.getStopWords();
-	}
-	
-	public static String[] split(String input) {
+	public static String[] splitByNlp(String input) {
 		List<String> words = new ArrayList<String>();
 		List<Term> terms = NlpAnalysis.parse(input);
 		for (Term term : terms) {
-			words.add(term.getName());
+			String word = term.getName();
+			if (word.length() >= 1) words.add(word);
 		}
 		return removeWords(words.toArray(new String[0])); 
+	}
+	
+	public static String[] splitBySeg(String input) {
+		return split(new StringReader(input), SegUtils.getComplexSeg());
 	}
 	
 	/**
@@ -69,7 +68,7 @@ public class WordUtils {
 		try {
 			while ((word = mmSeg.next()) != null) {
 				String w = word.getString();
-				if (w.length() >=2 ) words.add(w);
+				if (w.length() >= 1) words.add(w);
 			}
 		} catch (IOException e) {
 			logger.error(e.getMessage());
@@ -199,7 +198,7 @@ public class WordUtils {
 				sb.append(line);
 				line = reader.readLine();
 			}
-			words = split(sb.toString());
+			words = splitByNlp(sb.toString());
 		} catch (Exception e) {
 			logger.error(e.getMessage());
 		}  finally {
@@ -262,12 +261,17 @@ public class WordUtils {
 		return removeStopWords(words);
 	}
 	
+	/**
+	 * 移除停用词
+	 * @param words
+	 * @return
+	 */
 	public static String[] removeStopWords(String[] words) {
 		List<String> filterWords = new ArrayList<String>();
 		String regEx = "[0-9]";
 		Pattern pattern = Pattern.compile(regEx);
 		for (String word : words) {
-			if (stopWords.contains(word)) continue;
+			if (isStopWord(word)) continue;
 			Matcher matcher = pattern.matcher(word);
 			if (matcher.find()) continue; 
 			filterWords.add(word);
@@ -275,6 +279,11 @@ public class WordUtils {
 		return filterWords.toArray(new String[0]);
 	}
 	
+	/**
+	 * 移除数字
+	 * @param words
+	 * @return
+	 */
 	public static String[] removeNumericalWords(String[] words) {
 		List<String> filterWords = new ArrayList<String>();
 		String regEx = "[0-9]";
@@ -303,6 +312,92 @@ public class WordUtils {
 			words.add(word);
 		}
 		return words.toArray(new String[0]);
+	}
+	
+	/**
+	 * 是否是停用词
+	 * @param word
+	 * @return
+	 */
+	public static boolean isStopWord(String word) {
+		return DictionaryUtils.getStopWords().contains(word);
+	}
+	
+	/**
+	 * 是否是情感词
+	 * @param word
+	 * @return
+	 */
+	public static boolean isEmotionWord(String word) {
+		Boolean isEmotion = DictionaryUtils.getCommendatoryWords().containsKey(word);
+		if (null == isEmotion || !isEmotion) {
+			isEmotion = DictionaryUtils.getDerogratoryWords().containsKey(word);
+		}
+		return null == isEmotion ? false : isEmotion;
+	}
+	
+	/**
+	 * 是否是副词
+	 * @param word
+	 * @return
+	 */
+	public static boolean isAdverbsWord(String word) {
+		return DictionaryUtils.getAdverbsWords().containsKey(word);
+	}
+	
+	/**
+	 * 是否是否定词
+	 * @param word
+	 * @return
+	 */
+	public static boolean isNegativeWord(String word) {
+		return DictionaryUtils.getNegativeWords().containsKey(word);
+	}
+	
+	/**
+	 * 是否是感叹句
+	 * @param sentence
+	 * @return
+	 */
+	public static boolean isExclamatorySentence(String sentence) {
+		int index = sentence.indexOf("!");
+		if (index == -1) {
+			index = sentence.indexOf("！");
+		}
+		return index == -1 ? false : true;
+	}
+	
+	/**
+	 * 获取词语权重
+	 * @param word
+	 * @return
+	 */
+	public static double getWordWeight(String word) {
+		Double weight = DictionaryUtils.getCommendatoryWords().get(word);
+		if (null == weight) {
+			weight = DictionaryUtils.getDerogratoryWords().get(word);
+		}
+		if (null == weight) {
+			weight = DictionaryUtils.getNegativeWords().get(word);
+		}
+		if (null == weight) {
+			weight = DictionaryUtils.getAdverbsWords().get(word);
+		}
+		if (null == weight) {
+			weight = DictionaryUtils.getRhetoricalWords().get(word);
+		}
+		if (null == weight) {
+			weight = DictionaryUtils.getInterjectionWords().get(word);
+		}
+		return null == weight ? 0 : weight;
+	}
+	
+	/**
+	 * 获取感叹词权重
+	 * @return
+	 */
+	public static double getInterjectionWeight() {
+		return 2;
 	}
 	
 	public static void main(String[] args) throws Exception {

@@ -75,7 +75,7 @@ public class DictionaryUtils {
 			String line = br.readLine();
 			while (null != line && !"".equals(line)) {
 				if (line.indexOf("|") != -1) {
-					String[] splits = line.split("|");
+					String[] splits = line.split("\\|");
 					words.put(splits[0], Double.parseDouble(splits[1]));
 				}
 				line = br.readLine();
@@ -116,6 +116,5 @@ public class DictionaryUtils {
 	public static Map<String, Double> getInterjectionWords() {
 		return interjectionWords;
 	}
-	
 	
 }

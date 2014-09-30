@@ -30,8 +30,8 @@ public class Test {
 	public static void b() {
 		String path = "D:\\resources\\data\\enter\\1.txt";
 		String content = FileUtils.readContent(path);
-		ShowUtils.printToConsole(WordUtils.split(content));
-		System.out.println(WordUtils.split(content).length);
+		ShowUtils.printToConsole(WordUtils.splitByNlp(content));
+		System.out.println(WordUtils.splitByNlp(content).length);
 		ShowUtils.printToConsole(WordUtils.split(content, new ComplexSeg(Dictionary.getInstance())));
 		System.out.println(WordUtils.split(content, new ComplexSeg(Dictionary.getInstance())).length);
 	}
