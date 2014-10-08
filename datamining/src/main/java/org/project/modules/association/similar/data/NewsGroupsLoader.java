@@ -41,7 +41,7 @@ public class NewsGroupsLoader {
 				docs.add(doc);
 				String[] words = doc2words.get(doc);
 				if (null == words) {
-					words = WordUtils.splitFile(docFile, seg);
+					words = WordUtils.splitFile(docFile, seg, 2);
 					ShowUtils.printToConsole(words);
 					doc2words.put(doc, words);
 				} else {

@@ -38,11 +38,15 @@ public class WordUtils {
 	public static final String DELIMITERS = "\t\n\r\f~!@#$%^&*()_+|`-=\\{}[]:\";'<>?,./'";
 	
 	public static String[] splitByNlp(String input) {
+		return splitByNlp(input, 1); 
+	}
+	
+	public static String[] splitByNlp(String input, int minLength) {
 		List<String> words = new ArrayList<String>();
 		List<Term> terms = NlpAnalysis.parse(input);
 		for (Term term : terms) {
 			String word = term.getName();
-			if (word.length() >= 1) words.add(word);
+			if (word.length() >= minLength) words.add(word);
 		}
 		return removeWords(words.toArray(new String[0])); 
 	}
@@ -62,13 +66,17 @@ public class WordUtils {
 	}
 	
 	public static String[] split(Reader reader, Seg seg) {
+		return split(reader, seg, 1);
+	}
+	
+	public static String[] split(Reader reader, Seg seg, int minLength) {
 		List<String> words = new ArrayList<String>();
 		MMSeg mmSeg = new MMSeg(reader, seg);
 		Word word = null;
 		try {
 			while ((word = mmSeg.next()) != null) {
 				String w = word.getString();
-				if (w.length() >= 1) words.add(w);
+				if (w.length() >= minLength) words.add(w);
 			}
 		} catch (IOException e) {
 			logger.error(e.getMessage());
@@ -171,20 +179,6 @@ public class WordUtils {
 		return splitFile(file);
 	}
 	
-	/**
-	 * 文件分词
-	 * @param path
-	 * @param seg
-	 * @return
-	 */
-	public static String[] splitFile(String path, Seg seg) {
-		File file = new File(path);
-		if (!file.exists()) {
-			logger.error("file not exists");
-		}
-		return splitFile(file, seg);
-	}
-	
 	public static String[] splitFile(File file) {
 		String[] words = null;
 		InputStream in = null;
@@ -212,16 +206,31 @@ public class WordUtils {
 	 * 文件分词
 	 * @param path
 	 * @param seg
+	 * @param minLength
 	 * @return
 	 */
-	public static String[] splitFile(File file, Seg seg) {
+	public static String[] splitFile(String path, Seg seg, int minLength) {
+		File file = new File(path);
+		if (!file.exists()) {
+			logger.error("file not exists");
+		}
+		return splitFile(file, seg, minLength);
+	}
+	
+	/**
+	 * 文件分词
+	 * @param path
+	 * @param seg
+	 * @return
+	 */
+	public static String[] splitFile(File file, Seg seg, int minLength) {
 		String[] words = null;
 		InputStream in = null;
 		BufferedReader reader = null;
 		try {
 			in = new FileInputStream(file);
 			reader = new BufferedReader(new InputStreamReader(in));
-			words = split(reader, seg);
+			words = split(reader, seg, minLength);
 		} catch (FileNotFoundException e) {
 			logger.error(e.getMessage());
 		} finally {
@@ -237,14 +246,14 @@ public class WordUtils {
 	 * @param seg
 	 * @return
 	 */
-	public static String[] splitDirectory(String path, Seg seg) {
+	public static String[] splitDirectory(String path, Seg seg, int minLength) {
 		File directory = new File(path);
 		if (!directory.exists()) {
 			logger.error("directory not exists");
 		}
 		String[] all_words = null;
 		for (File file : directory.listFiles()) {
-			String[] words = splitFile(file, seg);
+			String[] words = splitFile(file, seg, minLength);
 			if (null == all_words) {
 				all_words = words;
 				continue;
@@ -368,6 +377,26 @@ public class WordUtils {
 	}
 	
 	/**
+	 * 是否是反问句
+	 * @param sentence
+	 * @return
+	 */
+	public static boolean isRhetoricalSentence(String sentence) {
+		int index = sentence.indexOf("?");
+		if (index == -1) {
+			index = sentence.indexOf("？");
+		}
+		if (index == -1) return false;
+		String[] words = splitByNlp(sentence);
+		for (String word : words) {
+			if (null != DictionaryUtils.getRhetoricalWords().get(word)) {
+				return true;
+			}
+		}
+		return false;
+	}
+	
+	/**
 	 * 获取词语权重
 	 * @param word
 	 * @return
@@ -402,7 +431,7 @@ public class WordUtils {
 	
 	public static void main(String[] args) throws Exception {
 		String path = "D:\\resources\\data\\enter\\1.txt";
-		String[] words = splitFile(path, SegUtils.getComplexSeg());
+		String[] words = splitFile(path, SegUtils.getComplexSeg(), 2);
 		ShowUtils.printToConsole(words);
 		String str = "sssss";
 		String regEx = "[0-9]";

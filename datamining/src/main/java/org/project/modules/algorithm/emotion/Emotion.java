@@ -58,9 +58,11 @@ public class Emotion {
 					double iWeight = WordUtils.getInterjectionWeight();
 					weight = weight * iWeight;
 				}
+				//句子权值等于情感词的权值求和
 				sWeight += weight;
 			}
 			System.out.println("sWeight: " + sWeight);
+			//文本权值等于句子的权值求和
 			cWeight += sWeight;
 		}
 		System.out.println("cWeight: " + cWeight);
@@ -68,9 +70,15 @@ public class Emotion {
 	}
 	
 	public static void main(String[] args) {
-		String content = "我不讨厌这个明星";
+		String content = "我喜欢这个明星";
+		System.out.println(judge(content));
+		content = "我讨厌这个明星";
+		System.out.println(judge(content));
+		content = "我不讨厌这个明星";
 		System.out.println(judge(content));
 		content = "我不是非常喜欢这个明星!";
+		System.out.println(judge(content));
+		content = "这本小说太无聊了，内容枯燥，文笔特别烂。";
 		System.out.println(judge(content));
 		System.exit(0);
 	}

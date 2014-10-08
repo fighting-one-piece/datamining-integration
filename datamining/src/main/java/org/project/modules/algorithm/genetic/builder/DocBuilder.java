@@ -44,7 +44,7 @@ public class DocBuilder {
 			String path = DocumentLoader.class.getClassLoader().getResource("game.txt").toURI().getPath();
 			File file = new File(path);
 			Seg seg = new ComplexSeg(Dictionary.getInstance());
-			String [] words = WordUtils.splitFile(file, seg);
+			String [] words = WordUtils.splitFile(file, seg, 2);
 			int words_len = words.length;
 			for (int i = 1; i < words_len; i++) {
 				String word = words[i];

@@ -589,16 +589,28 @@
 		 
 		<!-- ANSJ -->
 		<dependency>
-			<groupId>org.ansj.ansj_seg</groupId>
-			<artifactId>org-ansj-ansj_seg</artifactId>
-			<version>1.4.1</version>
+			<groupId>org.ansj</groupId>
+			<artifactId>ansj_seg</artifactId>
+			<version>0.9</version>
 		</dependency>
+		
+		<dependency>
+			<groupId>org.ansj</groupId>
+			<artifactId>tree_split</artifactId>
+			<version>1.0.1</version>
+		</dependency>
+		
+<!-- 		<dependency> -->
+<!-- 			<groupId>org.ansj.ansj_seg</groupId> -->
+<!-- 			<artifactId>org-ansj-ansj_seg</artifactId> -->
+<!-- 			<version>1.4.1</version> -->
+<!-- 		</dependency> -->
 
-        <dependency>
-            <groupId>org.ansj.tree_split</groupId>
-            <artifactId>org-ansj-tree_split</artifactId>
-            <version>1.4</version>
-        </dependency>
+<!--         <dependency> -->
+<!--             <groupId>org.ansj.tree_split</groupId> -->
+<!--             <artifactId>org-ansj-tree_split</artifactId> -->
+<!--             <version>1.4</version> -->
+<!--         </dependency> -->
         
 <!--         <dependency> -->
 <!-- 			<groupId>org.wltea.IKAnalyzer</groupId> -->

@@ -73,7 +73,7 @@ public class DocumentLoader {
 			Document document = new Document();
 			document.setCategory(file.getParentFile().getName());
 			document.setName(file.getName());
-			document.setWords(WordUtils.splitFile(file, seg));
+			document.setWords(WordUtils.splitFile(file, seg, 2));
 			docs.add(document);
 		}
 		return docs;
@@ -209,7 +209,7 @@ class FileToDocumentThread implements Callable<Document> {
 		Document document = new Document();
 		document.setCategory(file.getParentFile().getName());
 		document.setName(file.getName());
-		document.setWords(WordUtils.splitFile(file, SegUtils.getComplexSeg()));
+		document.setWords(WordUtils.splitFile(file, SegUtils.getComplexSeg(), 2));
 		return document;
 	}
 	
