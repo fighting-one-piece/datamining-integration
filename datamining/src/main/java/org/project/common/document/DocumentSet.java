@@ -106,6 +106,8 @@ public class DocumentSet {
 	
 	/** 全局特征选择*/
 	public static final String FEATURE_SELECT = "feature_select";
+	/** 局部特征选择*/
+	public static final String FEATURE_SELECT_LOCAL = "feature_select_local";
 	
 	@SuppressWarnings("unchecked")
 	public Map<String, Double> getFeatureSelect() {
@@ -120,6 +122,21 @@ public class DocumentSet {
 
 	public void setFeatureSelect(Map<String, Double> featureSelect) {
 		getProperties().put(FEATURE_SELECT, featureSelect);
+	}
+	
+	@SuppressWarnings("unchecked")
+	public Map<String, Map<String, Double>> getFeatureSelectLocal() {
+		Map<String, Map<String, Double>> featureSelect = (Map<String, Map<String, Double>>) 
+				getProperties().get(FEATURE_SELECT_LOCAL);
+		if (null == featureSelect) {
+			featureSelect = new HashMap<String, Map<String, Double>>();
+			setFeatureSelectLocal(featureSelect);		
+		}
+		return featureSelect;
+	}
+
+	public void setFeatureSelectLocal(Map<String, Map<String, Double>> featureSelect) {
+		getProperties().put(FEATURE_SELECT_LOCAL, featureSelect);
 	}
 	
 	/** 词数量映射*/

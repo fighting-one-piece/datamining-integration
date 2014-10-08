@@ -147,13 +147,17 @@ public class SemanticOrientationPointMutualInformation {
 				if (value != 0) System.out.println("value: " + value);
 				if (value > 0) {
 					cs.add(word);
+					commendatories.add(word);
 				} else if (value < 0) {
 					ds.add(word);
+					derogratories.add(word);
 				}
 			}
 		}
 		System.out.println(cs);
 		System.out.println(ds);
+		System.out.println(commendatories);
+		System.out.println(derogratories);
 	}
 	
 	public static void main(String[] args) {
