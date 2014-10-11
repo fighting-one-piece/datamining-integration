@@ -628,6 +628,13 @@
 			<version>2.1.0</version>
 		</dependency>
 		
+		<dependency>
+			<groupId>org.apache.cassandra</groupId>
+			<artifactId>cassandra-thrift</artifactId>
+			<version>2.1.0</version>
+		</dependency>
+		
+		
 <!-- 		<dependency> -->
 <!-- 			<groupId>org.ansj.ansj_seg</groupId> -->
 <!-- 			<artifactId>org-ansj-ansj_seg</artifactId> -->
