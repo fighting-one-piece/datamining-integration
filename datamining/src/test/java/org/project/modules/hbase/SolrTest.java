@@ -22,6 +22,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.project.modules.hbase.solr.SolrManager;
 
+@SuppressWarnings("deprecation")
 public class SolrTest {
 
 	private HttpSolrServer solrServer = null;
@@ -151,6 +152,7 @@ public class SolrTest {
 		}
 	}
 	
+	@SuppressWarnings({ "resource" })
 	@Test
 	public void testIndex() throws ClientProtocolException, IOException {
 		HttpClient client = new DefaultHttpClient();  
