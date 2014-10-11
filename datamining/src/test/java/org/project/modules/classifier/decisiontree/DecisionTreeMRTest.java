@@ -277,6 +277,7 @@ public class DecisionTreeMRTest {
 		}
 	}
 
+	@SuppressWarnings("deprecation")
 	@Test
 	public void writeSequenceFile() {
 		SequenceFile.Writer writer = null;
@@ -307,6 +308,7 @@ public class DecisionTreeMRTest {
 		}
 	}
 	
+	@SuppressWarnings("deprecation")
 	@Test
 	public void writeSequenceFile1() {
 		SequenceFile.Writer writer = null;
@@ -362,6 +364,7 @@ public class DecisionTreeMRTest {
 		System.out.println("inputs size: " + inputs.size());
 	}
 
+	@SuppressWarnings("deprecation")
 	@Test
 	public void readSequenceFile() {
 		SequenceFile.Reader reader = null;
@@ -385,6 +388,7 @@ public class DecisionTreeMRTest {
 		}
 	}
 	
+	@SuppressWarnings("deprecation")
 	@Test
 	public void readSequenceFile1() {
 		SequenceFile.Reader reader = null;
@@ -407,6 +411,7 @@ public class DecisionTreeMRTest {
 		}
 	}
 	
+	@SuppressWarnings("deprecation")
 	@Test
 	public void readReducerFile() {
 		SequenceFile.Reader reader = null;
@@ -429,6 +434,7 @@ public class DecisionTreeMRTest {
 		}
 	}
 	
+	@SuppressWarnings("deprecation")
 	@Test
 	public void readAttributeStatisticsFile() {
 		SequenceFile.Reader reader = null;
