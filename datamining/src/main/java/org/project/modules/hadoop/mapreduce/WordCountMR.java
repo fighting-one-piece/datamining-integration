@@ -28,6 +28,7 @@ public class WordCountMR {
 		job.setReducerClass(WordCountReducer.class);
 		job.setOutputKeyClass(Text.class);
 		job.setOutputValueClass(IntWritable.class);
+		job.setNumReduceTasks(6);
 		
 		job.setInputFormatClass(TextInputFormat.class);
 		job.setOutputFormatClass(TextOutputFormat.class);
