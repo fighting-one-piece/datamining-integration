@@ -38,7 +38,7 @@ public class SimpleTest {
 //		cluster = Cluster.builder().addContactPoint("192.168.10.20").build();
 		cluster = Cluster.builder().addContactPoint("220.181.29.16").build();
 		session = cluster.connect("tkeyspace");
-		transport = new TFramedTransport(new TSocket("127.0.0.1", 9160));  
+		transport = new TFramedTransport(new TSocket("220.181.29.16", 9160));  
 		protocol = new TBinaryProtocol(transport);  
 	}
 	
