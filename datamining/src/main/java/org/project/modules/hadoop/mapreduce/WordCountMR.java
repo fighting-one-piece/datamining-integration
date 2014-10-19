@@ -28,7 +28,6 @@ public class WordCountMR {
 		job.setReducerClass(WordCountReducer.class);
 		job.setOutputKeyClass(Text.class);
 		job.setOutputValueClass(IntWritable.class);
-		job.setNumReduceTasks(6);
 		
 		job.setInputFormatClass(TextInputFormat.class);
 		job.setOutputFormatClass(TextOutputFormat.class);
@@ -51,6 +50,10 @@ public class WordCountMR {
 			configureJob(job);
 			
 			System.out.println(job.waitForCompletion(true) ? 0 : 1);
+			System.out.println("start time: " + job.getStartTime());
+			System.out.println("finish time: " + job.getFinishTime());
+			System.out.println("status start time: " + job.getStatus().getStartTime());
+			System.out.println("status finish time: " + job.getStatus().getFinishTime());
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
