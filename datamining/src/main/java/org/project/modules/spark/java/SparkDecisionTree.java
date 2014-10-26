@@ -8,11 +8,7 @@ import org.apache.spark.mllib.linalg.DenseVector;
 import org.apache.spark.mllib.linalg.Vector;
 import org.apache.spark.mllib.regression.LabeledPoint;
 import org.apache.spark.mllib.tree.DecisionTree;
-import org.apache.spark.mllib.tree.configuration.Algo;
-import org.apache.spark.mllib.tree.configuration.QuantileStrategy;
 import org.apache.spark.mllib.tree.configuration.Strategy;
-import org.apache.spark.mllib.tree.impurity.Gini;
-import org.apache.spark.mllib.tree.impurity.Impurity;
 import org.apache.spark.mllib.tree.model.DecisionTreeModel;
 import org.apache.spark.rdd.RDD;
 
@@ -57,17 +53,18 @@ public class SparkDecisionTree {
 		System.out.println("JavaRDD1: " + labeledPoints1.take(1).get(0).getClass());
 		System.out.println("------");
 		
-		Strategy strategy = new Strategy(Algo.Classification(), new Impurity() {
-			@Override
-			public double calculate(double arg0, double arg1, double arg2) {
-				return Gini.calculate(arg0, arg1, arg2);
-			}
-
-			@Override
-			public double calculate(double arg0, double arg1) {
-				return Gini.calculate(arg0, arg1);
-			}
-		}, 5, 100, QuantileStrategy.Sort(), null, 256);
+//		Strategy strategy = new Strategy(Algo.Classification(), new Impurity() {
+//			@Override
+//			public double calculate(double arg0, double arg1, double arg2) {
+//				return Gini.calculate(arg0, arg1, arg2);
+//			}
+//
+//			@Override
+//			public double calculate(double arg0, double arg1) {
+//				return Gini.calculate(arg0, arg1);
+//			}
+//		}, 5, 100, QuantileStrategy.Sort(), null, 256);
+		Strategy strategy = null;
 		DecisionTree decisionTree = new DecisionTree(strategy);
 		final DecisionTreeModel decisionTreeModel = decisionTree.train(rddLabeledPoints);
 		System.out.println("id: " + decisionTreeModel.topNode().id());
