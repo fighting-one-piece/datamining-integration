@@ -5,10 +5,11 @@ import org.apache.spark.SparkContext._
 import org.apache.spark.SparkConf
 
 object SparkWordCount {
+  
   def main(args: Array[String]) {
-    val sc = new SparkContext(new SparkConf().setAppName("Spark Count"))
+    val sc = new SparkContext(new SparkConf().setAppName("Spark Word Count"))
     
-    val threshold = args(1).toInt
+    val threshold = args(2).toInt
 
     // split each document into words
     val tokenized = sc.textFile(args(0)).flatMap(_.split(" "))
@@ -23,5 +24,7 @@ object SparkWordCount {
     val charCounts = filtered.flatMap(_._1.toCharArray).map((_, 1)).reduceByKey(_ + _)
 
     System.out.println(charCounts.collect().mkString(", "))
+    
+    charCounts.saveAsTextFile(args(1))
   }
 }
