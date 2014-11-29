@@ -19,8 +19,8 @@ public class DBScanBuilder {
 	//密度、最小点个数
 	public static int MinPoints = 5;
 	
-	public List<Point> initData() {
-		List<Point> points = new ArrayList<Point>();
+	public List<Point<Double>> initData() {
+		List<Point<Double>> points = new ArrayList<Point<Double>>();
 		InputStream in = null;
 		BufferedReader br = null;
 		try {
@@ -31,7 +31,7 @@ public class DBScanBuilder {
 				StringTokenizer tokenizer = new StringTokenizer(line);
 				double x = Double.parseDouble(tokenizer.nextToken());
 				double y = Double.parseDouble(tokenizer.nextToken());
-				points.add(new Point(x , y));
+				points.add(new Point<Double>(x , y));
 				line = br.readLine();
 			}
 		} catch (Exception e) {
@@ -44,15 +44,15 @@ public class DBScanBuilder {
 	}
 	
 	//计算两点之间的欧氏距离
-	public double euclideanDistance(Point a, Point b) {
+	public double euclideanDistance(Point<Double> a, Point<Double> b) {
 		double sum =  Math.pow(a.getX() - b.getX(), 2) + Math.pow(a.getY() - b.getY(), 2);
 		return Math.sqrt(sum);
 	}
 	
 	//获取当前点的邻居
-	public List<Point> obtainNeighbors(Point current, List<Point> points) {
-		List<Point> neighbors = new ArrayList<Point>();
-		for (Point point : points) {
+	public List<Point<Double>> obtainNeighbors(Point<Double> current, List<Point<Double>> points) {
+		List<Point<Double>> neighbors = new ArrayList<Point<Double>>();
+		for (Point<Double> point : points) {
 			double distance = euclideanDistance(current, point);
 			if (distance < Epislon) {
 				neighbors.add(point);
@@ -61,17 +61,17 @@ public class DBScanBuilder {
 		return neighbors;
 	}
 	
-	public void mergeCluster(Point point, List<Point> neighbors,
-			int clusterId, List<Point> points) {
+	public void mergeCluster(Point<Double> point, List<Point<Double>> neighbors,
+			int clusterId, List<Point<Double>> points) {
 		point.setClusterId(clusterId);
-		for (Point neighbor : neighbors) {
+		for (Point<Double> neighbor : neighbors) {
 			//邻域点中未被访问的点先观察是否是核心对象
 			//如果是核心对象，则其邻域范围内未被聚类的点归入当前聚类中
 			if (!neighbor.isAccessed()) {
 				neighbor.setAccessed(true);
-				List<Point> nneighbors = obtainNeighbors(neighbor, points);
+				List<Point<Double>> nneighbors = obtainNeighbors(neighbor, points);
 				if (nneighbors.size() > MinPoints) {
-					for (Point nneighbor : nneighbors) {
+					for (Point<Double> nneighbor : nneighbors) {
 						if (nneighbor.getClusterId() <= 0) {
 							nneighbor.setClusterId(clusterId);
 						}
@@ -85,19 +85,19 @@ public class DBScanBuilder {
 		}
 	}
 	
-	public void cluster(List<Point> points) {
+	public void cluster(List<Point<Double>> points) {
 		//clusterId初始为0表示未分类,分类后设置为一个正数,如果设置为-1表示噪声 
 		int clusterId = 0;
 		boolean flag = true;
 		//所有点都被访问完成即停止遍历
 		while (flag) {
-			for (Point point : points) {
+			for (Point<Double> point : points) {
 				if (point.isAccessed()) {
 					continue;
 				}
 				point.setAccessed(true);
 				flag = true;
-				List<Point> neighbors = obtainNeighbors(point, points);
+				List<Point<Double>> neighbors = obtainNeighbors(point, points);
 				System.out.println("neighbors: " + neighbors.size());
 				if (neighbors.size() >= MinPoints) {
 					//满足核心对象条件的点创建一个新簇
@@ -116,20 +116,20 @@ public class DBScanBuilder {
 	}
 	
 	//打印结果
-	public void print(List<Point> points) {
-		Collections.sort(points, new Comparator<Point>() {
+	public void print(List<Point<Double>> points) {
+		Collections.sort(points, new Comparator<Point<Double>>() {
 			@Override
-			public int compare(Point o1, Point o2) {
+			public int compare(Point<Double> o1, Point<Double> o2) {
 				return Integer.valueOf(o1.getClusterId()).compareTo(o2.getClusterId());
 			}
 		});
-		for (Point point : points) {
+		for (Point<Double> point : points) {
 			System.out.println(point.getClusterId() + " - " + point);
 		}
 	}
 
 	public void build() {
-		List<Point> points = initData();
+		List<Point<Double>> points = initData();
 		cluster(points);
 		print(points);
 	}
