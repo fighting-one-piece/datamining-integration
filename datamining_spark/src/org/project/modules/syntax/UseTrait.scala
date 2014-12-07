@@ -4,6 +4,7 @@ class UseTrait {
   
 }
 
+//类似与接口，通过with实现多个继承
 trait Logger {
   def log(msg:String) {
     println("log: " + msg)

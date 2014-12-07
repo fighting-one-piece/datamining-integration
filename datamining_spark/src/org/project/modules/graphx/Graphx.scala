@@ -1,10 +1,13 @@
 package org.project.modules.graphx
 
 import org.apache.spark.SparkContext
+import org.apache.spark._
+import org.apache.spark.graphx._
 import org.apache.spark.graphx.Graph
 import org.apache.spark.graphx.util.GraphGenerators
 import org.apache.spark.graphx.GraphLoader
 import org.apache.spark.storage.StorageLevel
+import org.apache.spark.rdd.RDD
 
 object Graphx {
 
@@ -12,45 +15,21 @@ object Graphx {
     
     val sc = new SparkContext("spark://centos.host1:7077", "Spark Graphx")
     
-    var path = "/user/hadoop/data/temp/graph/graph.txt"
-    var minEdgePartitions = 1
-    var canonicalOrientation = false // if sourceId < destId this value is true
-    val graph = GraphLoader.edgeListFile(sc, path, canonicalOrientation, minEdgePartitions, 
-        StorageLevel.MEMORY_ONLY, StorageLevel.MEMORY_ONLY)
+     //创建点RDD
+    val users: RDD[(Long, (String, String))] = sc.parallelize(Array(
+        (3L, ("rxin", "student")), (7L, ("jgonzal", "postdoc")),
+        (5L, ("franklin", "prof")), (2L, ("istoica", "prof"))))
+    //创建边RDD
+    val relationships: RDD[Edge[String]] = sc.parallelize(Array(
+        Edge(3L, 7L, "collab"), Edge(5L, 3L, "advisor"),
+        Edge(2L, 5L, "colleague"), Edge(5L, 7L, "pi")))
+    //定义一个默认用户，避免有不存在用户的关系
+    val defaultUser = ("John Doe", "Missing")
+    //构造Graph
+    val g:Graph[(String, String), String] = Graph(users, relationships)
     
-    val verticesCount = graph.vertices.count
-    println(s"verticesCount: $verticesCount")
+    g.vertices.collect.foreach(println)
     
-    graph.vertices.collect().foreach(println)
-    
-    val edgesCount = graph.edges.count
-    println(s"edgesCount: $edgesCount")
-    
-    graph.edges.collect().foreach(println)
-    
-    //PageRank
-    val pageRankGraph = graph.pageRank(0.001)
-    
-    pageRankGraph.vertices.sortBy(_._2, false).saveAsTextFile("/user/hadoop/data/temp/graph/graph.pr")
-
-    pageRankGraph.vertices.top(5)(Ordering.by(_._2)).foreach(println)
-    
-    
-//    val pageRank = graph.outerJoinVertices(pageRankGraph.vertices) {
-//    		case (uid, attrList, Some(pr)) => (pr, attrList)
-//    		case (uid, attrList, None) => (0.0, attrList)
-//    }
-    
-//    println(pageRank.vertices.top(5)(Ordering.by(_._2._1)).mkString(","))
-    
-    //TriangleCount主要用途之一是用于社区发现 保持sourceId小于destId
-    val graph1 = GraphLoader.edgeListFile(sc, path, true)
-    
-    val triangleCountGraph = graph1.triangleCount()
-    
-    triangleCountGraph.vertices.sortBy(_._2, false).saveAsTextFile("/user/hadoop/data/temp/graph/graph.tc")
-    
-    triangleCountGraph.vertices.top(5)(Ordering.by(_._2)).foreach(println)
     
   }
 }
