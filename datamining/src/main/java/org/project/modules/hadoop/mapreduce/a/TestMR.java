@@ -53,7 +53,10 @@ public class TestMR {
 			FileOutputFormat.setOutputPath(job, new Path(inputArgs[1]));
 
 			configureJob(job);
-
+			
+//			ChainMapper.addMapper(job, klass, inputKeyClass, inputValueClass, outputKeyClass, outputValueClass, mapperConf);
+//			ChainReducer.setReducer(job, klass, inputKeyClass, inputValueClass, outputKeyClass, outputValueClass, reducerConf);
+			
 			System.out.println(job.waitForCompletion(true) ? 0 : 1);
 		} catch (Exception e) {
 			e.printStackTrace();

@@ -12,21 +12,18 @@ import org.project.common.document.DocumentSet;
 
 public class LDABuilder {
 
-	private int[][] docWordIndex = null;
-	
-	/** document number - topic number - word number*/
+	/** 文档数、主题数、单词数*/
 	private int D = 0, T = 0, W = 0;
-	
-	/** 
-	 * Dirichlet parameter alpha (document--topic associations) 
-	 * Dirichlet parameter beta (topic--word associations) 
-     */  
+	/** Dirichlet parameter alpha (document--topic associations) */ 
+	/** Dirichlet parameter beta (topic--word associations) */  
 	private float alpha = 0.5f, beta = 0.1f;
-
+	/** 单词索引数组*/
+	private int[][] docWordIndex = null;
+    /** 单词主题数组*/
 	private int[][] wordTopic = null;
-	
+	/** 文档主题数组*/
 	private int[][] NDT = null;
-	
+	/** 主题单词数组*/
 	private int[][] NTW = null;
 	
 	private int[] NDTSum = null;
@@ -36,9 +33,9 @@ public class LDABuilder {
 	private double[][] thetaSum = null;
 
 	private double[][] phiSum = null;
-	
+	/** 迭代次数*/
 	private int ITER_NUMBER = 1000;
-	
+	/** 主题数目*/
 	private int TOPIC_NUMBER = 10;
 	
 	private int SAMPLE_LAG = 10;
