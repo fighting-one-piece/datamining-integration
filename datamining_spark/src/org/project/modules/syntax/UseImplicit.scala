@@ -16,7 +16,7 @@ class RichA(a:AA) {
   
 }
 
-object Implicit extends App {
+object UseImplicit extends App {
   implicit def a2RichA(a:AA) = new RichA(a)
   val a = new AA
   a.rich

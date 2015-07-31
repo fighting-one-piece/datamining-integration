@@ -80,4 +80,17 @@ object console {
   println(map.get("one"))                         //> Some(1)
   println(map.get("three"))                       //> None
   println(map.getOrElse("three", 3))              //> 3
+  
+  import java.util.{Date, Locale}
+  import java.text.DateFormat
+  import java.text.DateFormat._
+  
+  val date = new Date                             //> date  : java.util.Date = Sun Jul 19 01:10:24 CST 2015
+  println(date)                                   //> Sun Jul 19 01:10:24 CST 2015
+	println(date.getTime())                   //> 1437239424931
+	
+	val df = getDateInstance(LONG,Locale.FRANCE)
+                                                  //> df  : java.text.DateFormat = java.text.SimpleDateFormat@f8749a64
+	println(df format date)                   //> 19 juillet 2015
+	
 }
