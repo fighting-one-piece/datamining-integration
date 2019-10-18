@@ -299,7 +299,7 @@
 		<hadoop.mapred.client.core.version>2.4.1</hadoop.mapred.client.core.version>
 		<hadoop.mapred.client.job.version>2.4.1</hadoop.mapred.client.job.version>
 		<hbase.version>0.92.0</hbase.version>
-		<hive.version>0.12.0</hive.version>
+		<hive.version>3.1.2</hive.version>
 		<spark.version>1.1.0</spark.version>
 		<spark.mllib.version>1.0.0</spark.mllib.version>
 		<spark.assembly.version>1.0.0</spark.assembly.version>
