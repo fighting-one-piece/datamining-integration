@@ -304,7 +304,7 @@
 		<spark.mllib.version>1.0.0</spark.mllib.version>
 		<spark.assembly.version>1.0.0</spark.assembly.version>
 		<solr.version>4.5.1</solr.version>
-		<solr.core.version>4.5.1</solr.core.version>
+		<solr.core.version>8.8.2</solr.core.version>
 		<solr.solrj.version>4.5.1</solr.solrj.version>
 		<jsoup.version>1.7.3</jsoup.version>
 		<mysql.version>5.1.27</mysql.version>
