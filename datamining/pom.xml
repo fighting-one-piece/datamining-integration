@@ -306,7 +306,7 @@
 		<solr.version>4.5.1</solr.version>
 		<solr.core.version>4.5.1</solr.core.version>
 		<solr.solrj.version>4.5.1</solr.solrj.version>
-		<jsoup.version>1.7.3</jsoup.version>
+		<jsoup.version>1.14.2</jsoup.version>
 		<mysql.version>5.1.27</mysql.version>
 		<commons.dbcp.version>1.4</commons.dbcp.version>
 		<commons.httpclient.version>4.3.6</commons.httpclient.version>
