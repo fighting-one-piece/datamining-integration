@@ -292,7 +292,7 @@
 		<mmseg4j.version>1.9.1</mmseg4j.version>
 		<!-- <hadoop.version>1.0.4</hadoop.version> -->
 		<hadoop.core.version>1.0.4</hadoop.core.version>
-		<hadoop.common.version>2.4.1</hadoop.common.version>
+		<hadoop.common.version>2.10.1</hadoop.common.version>
 		<hadoop.hdfs.version>2.4.1</hadoop.hdfs.version>
 		<hadoop.client.version>2.4.1</hadoop.client.version>
 		<hadoop.yarn.common.version>2.4.1</hadoop.yarn.common.version>
