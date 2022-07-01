@@ -294,7 +294,7 @@
 		<hadoop.core.version>1.0.4</hadoop.core.version>
 		<hadoop.common.version>2.4.1</hadoop.common.version>
 		<hadoop.hdfs.version>2.4.1</hadoop.hdfs.version>
-		<hadoop.client.version>2.4.1</hadoop.client.version>
+		<hadoop.client.version>2.7.0</hadoop.client.version>
 		<hadoop.yarn.common.version>2.4.1</hadoop.yarn.common.version>
 		<hadoop.mapred.client.core.version>2.4.1</hadoop.mapred.client.core.version>
 		<hadoop.mapred.client.job.version>2.4.1</hadoop.mapred.client.job.version>
